@@ -12,12 +12,22 @@ namespace UserService.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Define the relationship between User and Role
+            // Configures one-to-many relationship: one Role can have many Users, and a Role cannot be deleted if referenced by any User
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany()
                 .HasForeignKey(u => u.RoleId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent role deletion if it is referenced by Users
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Prevents duplicate emails
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique(); 
+
+            // Defines unique constraint on the Role.Name field
+            modelBuilder.Entity<Role>()
+                .HasIndex(r => r.Name)
+                .IsUnique();
         }
     }
 }
