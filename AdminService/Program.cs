@@ -1,9 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using AdminService.Data; // Assuming DbContext is in Data folder
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Add DbContext for AdminService and configure it to use SQL Server
+builder.Services.AddDbContext<AdminContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add controllers
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Add Swagger for API testing and documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
