@@ -1,8 +1,10 @@
-﻿namespace UserService.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UserService.DTOs
 {
     public record UserLoginDto(
-        string Email,
-        string Password
+        [Required] string Email,
+        [Required] string Password
     );
 
 }

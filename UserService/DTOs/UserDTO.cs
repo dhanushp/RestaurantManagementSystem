@@ -6,7 +6,6 @@ namespace UserService.DTOs
         [Required] string FullName,
         [Required, EmailAddress] string Email,
         [Required] string PasswordHash,
-        [Required] string PasswordSalt,
-        [Required] string Role
+        [Required] Guid RoleId
     );
 }

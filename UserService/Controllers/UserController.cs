@@ -14,9 +14,9 @@ namespace UserService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserContext _context;
+        private readonly UserDbContext _context;
 
-        public UserController(UserContext context)
+        public UserController(UserDbContext context)
         {
             _context = context;
         }

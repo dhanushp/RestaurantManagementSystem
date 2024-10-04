@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RestaurantManagement.SharedLibrary.Models;
 
 namespace UserService.Models
 {
     public class Role : BaseEntity
     {
-        [Required]
-        [MaxLength(100)]
         public string Name { get; set; } // Name of the role (e.g., admin, staff, customer)
 
         public string? Description { get; set; } // Optional description of the role
