@@ -1,0 +1,35 @@
+﻿@page "/signin"
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Email</label>
+        <InputText @bind-Value="loginModel.Email" />
+    </div>
+
+    <div>
+        <label>Password</label>
+        <InputText @bind-Value="loginModel.Password" type="password" />
+    </div>
+
+    <button type="submit" class="btn-primary">Sign In</button>
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new LoginModel();  // This is the model for binding
+
+    private async Task HandleLogin()
+    {
+        // Handle the login logic here
+        Console.WriteLine($"Logging in with email: {loginModel.Email}");
+    }
+
+    // You can add login-related logic here
+    public class LoginModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+}

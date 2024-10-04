@@ -1,0 +1,9 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Forms
+
+@using WebApp.Services     // Import for services (AuthService, MenuService, etc.)
+@using WebApp.Components   // For reusable components like Menu, OrderSummary, etc.
+
+@inject NavigationManager Navigation           // Inject navigation manager for page navigation
+@inject HttpClient Http                        // Inject HttpClient for API calls

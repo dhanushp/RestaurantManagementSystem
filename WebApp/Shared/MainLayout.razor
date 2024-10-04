@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+
+<div class="layout">
+    <header>
+        <NavMenu />  <!-- Your navigation component -->
+    </header>
+
+    <main>
+        @Body <!-- This will render the page's content -->
+    </main>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Your Company Name</p>
+    </footer>
+</div>
+
+@code {
+    // You can include any layout-level logic here if needed
+}

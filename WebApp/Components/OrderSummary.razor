@@ -1,0 +1,30 @@
+﻿@page "/ordersummary"
+@* @inject OrderService orderService *@
+
+<h3>Order Summary</h3>
+@if ("orderItems" == null)
+{
+    <p>No items in the order yet.</p>
+}
+else
+{
+    <div class="order-summary">
+        @* @foreach (var item in orderItems)
+        {
+            <div class="order-item">
+                <h4>@item.MenuItemName</h4>
+                <p>Quantity: @item.Quantity</p>
+                <p>Status: @item.Status</p>
+            </div>
+        } *@
+    </div>
+}
+
+@* @code {
+    private List<OrderItem> orderItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orderItems = await orderService.GetOrderItemsAsync();
+    }
+} *@
