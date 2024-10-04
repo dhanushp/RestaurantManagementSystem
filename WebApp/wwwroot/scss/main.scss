@@ -1,0 +1,34 @@
+﻿// Abstracts
+@import "abstracts/variables";
+@import "abstracts/functions";
+@import "abstracts/mixins";
+
+// Base
+@import "base/reset";
+@import "base/typography";
+@import "base/base";
+
+// Layout
+@import "layout/header";
+@import "layout/footer";
+@import "layout/grid";
+@import "layout/container";
+
+// Components
+@import "components/button";
+@import "components/form";
+@import "components/card";
+@import "components/tabs";
+
+// Pages
+@import "pages/index";
+@import "pages/login";
+@import "pages/signup";
+@import "pages/table";
+@import "pages/order";
+
+// Themes (Optional)
+//@import "themes/default";
+
+// Vendors (Optional)
+//@import "vendors/bootstrap-overrides"; // If you’re using any third-party libraries like Bootstrap
