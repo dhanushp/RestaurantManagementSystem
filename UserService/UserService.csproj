@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RestaurantManagement\RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj" />
+    <ProjectReference Include="..\RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj" />
   </ItemGroup>
 
 </Project>

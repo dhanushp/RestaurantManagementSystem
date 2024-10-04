@@ -28,7 +28,7 @@ namespace RestaurantManagement.SharedLibrary.DependencyInjection
                 .MinimumLevel.Information()
                 .WriteTo.Debug()
                 .WriteTo.Console()
-                .WriteTo.File(path: $"{fileName}-.txt",
+                .WriteTo.File(path: $"Logs//{fileName}-.txt",
                 restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {message:lj}{NewLine}{Exception}",
                 rollingInterval: RollingInterval.Day)
