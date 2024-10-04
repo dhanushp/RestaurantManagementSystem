@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MenuService.Models
 {
@@ -18,11 +19,15 @@ namespace MenuService.Models
         // Boolean indicating whether the item is non-vegetarian
         public bool IsNonVeg { get; set; }
 
+        // Boolean indicating whether the item is availabe or not
+        public bool IsAvailable { get; set; }
+
+        [Url]
         // URL of the image representing the menu item
         public string ImageUrl { get; set; }
 
         // Foreign key to Category
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         // Navigation property to the Category entity (relationship with Category model)
         public Category Category { get; set; }

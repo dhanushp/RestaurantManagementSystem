@@ -1,0 +1,382 @@
+[
+    // Appetizers
+    {
+        "Name": "Vegetable Spring Rolls",
+        "Description": "Crispy rolls filled with mixed vegetables.",
+        "Price": 5.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Appetizers"
+    },
+    {
+        "Name": "Stuffed Mushrooms",
+        "Description": "Mushrooms stuffed with a savory cheese blend.",
+        "Price": 6.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Appetizers"
+    },
+    {
+        "Name": "Buffalo Wings",
+        "Description": "Spicy chicken wings served with blue cheese dressing.",
+        "Price": 9.49,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Appetizers"
+    },
+    {
+        "Name": "Classic Bruschetta",
+        "Description": "Grilled bread topped with fresh tomatoes, basil, and garlic.",
+        "Price": 7.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Appetizers"
+    },
+
+    // Soups
+    {
+        "Name": "Tom Yum Soup",
+        "Description": "Spicy and sour Thai soup with shrimp and mushrooms.",
+        "Price": 6.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Soups"
+    },
+    {
+        "Name": "Cream of Mushroom",
+        "Description": "Rich and creamy mushroom soup.",
+        "Price": 7.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Soups"
+    },
+    {
+        "Name": "Chicken Noodle Soup",
+        "Description": "Classic chicken noodle soup with tender chicken and vegetables.",
+        "Price": 8.49,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Soups"
+    },
+    {
+        "Name": "Minestrone Soup",
+        "Description": "Classic Italian vegetable soup with pasta.",
+        "Price": 5.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Soups"
+    },
+
+    // Salads
+    {
+        "Name": "Fresh Garden Salad",
+        "Description": "A mix of fresh greens and vegetables.",
+        "Price": 5.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Salads"
+    },
+    {
+        "Name": "Greek Salad",
+        "Description": "Tomatoes, cucumber, olives, and feta cheese with olive oil.",
+        "Price": 8.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Salads"
+    },
+    {
+        "Name": "Chicken Avocado Salad",
+        "Description": "Grilled chicken breast with avocado and mixed greens.",
+        "Price": 10.49,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Salads"
+    },
+    {
+        "Name": "Quinoa Salad",
+        "Description": "Quinoa with vegetables and a light dressing.",
+        "Price": 9.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Salads"
+    },
+
+    // Main Course
+    {
+        "Name": "Grilled Chicken Breast",
+        "Description": "Tender chicken breast served with seasonal vegetables.",
+        "Price": 18.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Main Course"
+    },
+    {
+        "Name": "Vegetable Stir Fry",
+        "Description": "Mixed vegetables stir-fried in a savory sauce.",
+        "Price": 14.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Main Course"
+    },
+    {
+        "Name": "Beef Stroganoff",
+        "Description": "Tender beef in a creamy mushroom sauce over egg noodles.",
+        "Price": 22.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Main Course"
+    },
+    {
+        "Name": "Vegetable Curry",
+        "Description": "Mixed vegetables cooked in a spiced coconut curry sauce.",
+        "Price": 15.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Main Course"
+    },
+
+    // Pasta
+    {
+        "Name": "Fettuccine Alfredo",
+        "Description": "Creamy pasta with parmesan and fettuccine noodles.",
+        "Price": 13.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pasta"
+    },
+    {
+        "Name": "Spaghetti Carbonara",
+        "Description": "Spaghetti tossed with eggs, cheese, pancetta, and pepper.",
+        "Price": 12.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pasta"
+    },
+    {
+        "Name": "Penne Arrabbiata",
+        "Description": "Pasta in a spicy tomato sauce.",
+        "Price": 11.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pasta"
+    },
+    {
+        "Name": "Pesto Pasta",
+        "Description": "Pasta tossed in a fresh basil pesto sauce.",
+        "Price": 14.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pasta"
+    },
+
+    // Pizza
+    {
+        "Name": "Margherita Pizza",
+        "Description": "Tomato, mozzarella, and fresh basil on a classic crust.",
+        "Price": 12.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pizza"
+    },
+    {
+        "Name": "Pepperoni Pizza",
+        "Description": "Classic pizza topped with pepperoni slices.",
+        "Price": 13.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pizza"
+    },
+    {
+        "Name": "BBQ Chicken Pizza",
+        "Description": "Grilled chicken, BBQ sauce, and cheese on a thin crust.",
+        "Price": 14.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pizza"
+    },
+    {
+        "Name": "Veggie Lovers Pizza",
+        "Description": "Topped with fresh vegetables and cheese.",
+        "Price": 12.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Pizza"
+    },
+
+    // Breads
+    {
+        "Name": "Garlic Bread",
+        "Description": "Toasted bread with garlic and butter.",
+        "Price": 4.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Breads"
+    },
+    {
+        "Name": "Herb Focaccia",
+        "Description": "Italian flatbread with herbs and olive oil.",
+        "Price": 5.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Breads"
+    },
+    {
+        "Name": "Cheesy Garlic Bread",
+        "Description": "Garlic bread topped with melted cheese.",
+        "Price": 6.49,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Breads"
+    },
+    {
+        "Name": "Pita Bread",
+        "Description": "Soft flatbread perfect for dipping.",
+        "Price": 3.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Breads"
+    },
+    //Rice and Noodles
+
+    {
+        "Name": "Fried Rice",
+        "Description": "Stir-fried rice with vegetables and soy sauce.",
+        "Price": 9.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Rice and Noodles"
+    },
+    {
+        "Name": "Pad Thai",
+        "Description": "Stir-fried noodles with shrimp and peanuts.",
+        "Price": 11.49,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Rice and Noodles"
+    },
+    {
+        "Name": "Chow Mein",
+        "Description": "Chinese stir-fried noodles with vegetables.",
+        "Price": 10.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Rice and Noodles"
+    },
+    {
+        "Name": "Vegetable Biryani",
+        "Description": "Spiced rice dish with vegetables and herbs.",
+        "Price": 12.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Rice and Noodles"
+    },
+
+    // Desserts
+    {
+        "Name": "Chocolate Lava Cake",
+        "Description": "Warm chocolate cake with a gooey center.",
+        "Price": 6.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Desserts"
+    },
+    {
+        "Name": "Tiramisu",
+        "Description": "Classic Italian coffee-flavored dessert.",
+        "Price": 5.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Desserts"
+    },
+    {
+        "Name": "Cheesecake",
+        "Description": "Rich and creamy cheesecake with a graham cracker crust.",
+        "Price": 7.49,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Desserts"
+    },
+    {
+        "Name": "Fruit Salad",
+        "Description": "A refreshing mix of seasonal fruits.",
+        "Price": 4.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Desserts"
+    },
+
+    //Beverages
+
+    {
+        "Name": "Mint Tea",
+        "Description": "Refreshing hot tea with mint.",
+        "Price": 2.50,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Beverages"
+    },
+    {
+        "Name": "Margarita Cocktail",
+        "Description": "Classic cocktail made with tequila, lime juice, and orange liqueur.",
+        "Price": 10.99,
+        "IsNonVeg": true,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Beverages"
+    },
+    {
+        "Name": "Fruit Punch Mocktail",
+        "Description": "Refreshing mix of fruit juices and soda.",
+        "Price": 5.99,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Beverages"
+    },
+    {
+        "Name": "Coffee",
+        "Description": "Freshly brewed coffee.",
+        "Price": 3.00,
+        "IsNonVeg": false,
+        "IsAvailable": true,
+        "ImageUrl": "url_to_image",
+        "Category": "Beverages"
+    }
+]

@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using UserService.DTOs;
 
 namespace UserService.Controllers
 {
@@ -13,9 +14,9 @@ namespace UserService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserContext _context;
+        private readonly UserDbContext _context;
 
-        public UserController(UserContext context)
+        public UserController(UserDbContext context)
         {
             _context = context;
         }

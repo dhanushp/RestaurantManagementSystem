@@ -4,7 +4,6 @@ using MenuService.Data; // Assuming your DbContext is in the Data folder
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 // Add DbContext for MenuService and configure it to use SQL Server
 builder.Services.AddDbContext<MenuContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -18,6 +17,18 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Apply migrations and seed data in one scope
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<MenuContext>();
+
+    // Apply any pending migrations
+    dbContext.Database.Migrate();
+
+    // Seed data - call your combined seed method here if applicable
+    SeedData(dbContext);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -26,9 +37,33 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
+
+// Method to seed data
+void SeedData(MenuContext dbContext)
+{
+    try
+    {
+        // Check if categories exist, if not, seed them
+        if (!dbContext.Categories.Any())
+        {
+            dbContext.SeedCategories(); // Seed categories
+        }
+
+        // Now seed menu items
+        if (!dbContext.MenuItems.Any())
+        {
+            dbContext.SeedMenuItems(); // Seed menu items
+        }
+
+        // Call SaveChanges to commit the transaction
+        dbContext.SaveChanges();
+    }
+    catch (Exception ex)
+    {
+        // Log the error (consider using a logging framework)
+        Console.WriteLine($"Error seeding data: {ex.Message}");
+    }
+}
