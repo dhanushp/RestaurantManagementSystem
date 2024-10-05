@@ -18,8 +18,8 @@ namespace RestaurantManagement.SharedLibrary.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             // default values
-            string message = "Sorry, internal server errror occured. Kindly try again";
-            int statusCode = (int)HttpStatusCode .InternalServerError;
+            string message = "Sorry, an unknown errror occured. Kindly try again";
+            int statusCode = (int)HttpStatusCode.InternalServerError;
             string title = "Error";
 
             try
@@ -27,35 +27,29 @@ namespace RestaurantManagement.SharedLibrary.Middleware
                 // going to next middleware
                 await _next(context);
 
-                // check if Exception is Too Many Request - 429 status code
-                if (context.Response.StatusCode == StatusCodes.Status429TooManyRequests)
+                if (context.Response.StatusCode == StatusCodes.Status429TooManyRequests ||
+                    context.Response.StatusCode == StatusCodes.Status401Unauthorized ||
+                    context.Response.StatusCode == StatusCodes.Status403Forbidden)
                 {
-                    title = "Warning";
-                    message = "Too many request made.";
-                    statusCode = (int)StatusCodes.Status429TooManyRequests;
+                    title = context.Response.StatusCode switch
+                    {
+                        StatusCodes.Status429TooManyRequests => "Warning",
+                        StatusCodes.Status401Unauthorized => "Alert",
+                        StatusCodes.Status403Forbidden => "Out of Access",
+                        _ => title
+                    };
+
+                    message = context.Response.StatusCode switch
+                    {
+                        StatusCodes.Status429TooManyRequests => "Too many requests made.",
+                        StatusCodes.Status401Unauthorized => "You are not authorized to access.",
+                        StatusCodes.Status403Forbidden => "You are not allowed/required to access.",
+                        _ => message
+                    };
+
+                    statusCode = context.Response.StatusCode;
                     await ModifyHeader(context, title, message, statusCode);
-
                 }
-
-                // if Response is UnAuthorized - 401 Status Code
-                if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
-                {
-                    title = "Alert";
-                    message = "You are not authorized to access.";
-                    statusCode = (int)StatusCodes.Status401Unauthorized;
-                    await ModifyHeader(context, title, message, statusCode);
-                }
-
-                // If Response is Forbidden - 403 status code
-                if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
-                {
-                    title = "Out of Access";
-                    message = "You are not allowed/required to access.";
-                    statusCode = (int)StatusCodes.Status403Forbidden;
-                    await ModifyHeader(context, title, message, statusCode);
-
-                }
-
             }
             catch (Exception ex)
             {

@@ -1,6 +1,6 @@
 ﻿namespace UserService.DTOs
 {
-    public record GetUserDTO(
+    public record UserResponseDTO(
         string FullName,
         string Email,
         string Role

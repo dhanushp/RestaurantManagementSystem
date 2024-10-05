@@ -1,14 +1,15 @@
 ﻿using RestaurantManagement.SharedLibrary.Responses;
+using RestaurantManagement.SharedLibrary.Responses;
 using System.Linq.Expressions;
 namespace RestaurantManagement.SharedLibrary.Interface
 {
     public interface IGenericInterface<T> where T: class
     {
-        Task<Response> CreateAsync(T entity);
+        Task<Response<T>> CreateAsync(T entity);
 
-        Task<Response> UpdateAsync(T entity);
+        Task<Response<T>> UpdateAsync(T entity);
 
-        Task<Response> DeleteAsync(T entity);
+        Task<Response<T>> DeleteAsync(T entity);
 
         Task<IEnumerable<T>> GetAllAsync(T entity);
 
