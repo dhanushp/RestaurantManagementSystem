@@ -16,6 +16,9 @@ namespace UserService.DependencyInjection
 
             // Create Dependency Injection
             services.AddScoped<IAuthentication, AuthenticationRepository>();
+            services.AddScoped<IUser, UserRepository>();
+            services.AddScoped<IRole, RoleRepository>();
+
             return services;
         }
 

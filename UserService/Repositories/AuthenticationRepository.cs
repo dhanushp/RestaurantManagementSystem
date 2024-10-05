@@ -26,7 +26,7 @@ namespace UserService.Repositories
         private async Task<UserResponseDTO?> GetUser(Guid userId)
         {
             var user = await context.Users.FindAsync(userId);
-            return user is not null ? new UserResponseDTO(user.FullName, user.Email, user.Role.Name) : null;
+            return user is not null ? new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name) : null;
         }
 
 
