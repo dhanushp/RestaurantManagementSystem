@@ -5,7 +5,8 @@
         InvalidCredentials = 1001,
         UserAlreadyExists = 1002,
         RegistrationFailed = 1003,
-        UserNotFound
+        UserNotFound,
+        RoleNotFound
     }
 
 }
