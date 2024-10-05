@@ -15,7 +15,10 @@ namespace UserService.DependencyInjection
             SharedServiceContainer.AddSharedServices<UserDbContext>(services, config, config["MySerilog:FileName"]!);
 
             // Create Dependency Injection
+            services.AddScoped<IAuthentication, AuthenticationRepository>();
             services.AddScoped<IUser, UserRepository>();
+            services.AddScoped<IRole, RoleRepository>();
+
             return services;
         }
 
