@@ -1,0 +1,38 @@
+﻿@page "/menu"
+@* @inject OrderService orderService *@
+
+
+<h3>Menu</h3>
+@if ("menuItems" == null)
+{
+    <p>Loading menu...</p>
+}
+else
+{
+    <div class="menu-list">
+        @* @foreach (var item in menuItems)
+        {
+            <div class="menu-item">
+                <img src="@item.ImageUrl" alt="@item.Name" />
+                <h4>@item.Name (@(item.IsNonVeg ? "Non-Veg" : "Veg"))</h4>
+                <p>@item.Description</p>
+                <p>Price: @item.Price</p>
+                <button @onclick="() => AddToOrder(item)">Add to Order</button>
+            </div>
+        } *@
+    </div>
+}
+
+@* @code {
+    private List<MenuItem> menuItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        menuItems = await menuService.GetMenuItemsAsync();
+    }
+
+    private void AddToOrder(MenuItem item)
+    {
+        // Logic for adding item to order
+    }
+} *@

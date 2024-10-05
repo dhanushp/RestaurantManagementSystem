@@ -1,0 +1,31 @@
+﻿@page "/order"
+
+<div class="tabs">
+    <button class="tab-button" @onclick="@( () => ShowTab("menu") )">Menu</button>
+    <button class="tab-button" @onclick="@( () => ShowTab("summary") )">Order Summary</button>
+    <button class="tab-button" @onclick="@( () => ShowTab("ai") )">AI Recommendations</button>
+</div>
+
+<div class="tab-content">
+    @if (activeTab == "menu")
+    {
+        <Menu />
+    }
+    else if (activeTab == "summary")
+    {
+        <OrderSummary />
+    }
+    else if (activeTab == "ai")
+    {
+        <AIRecommendations />
+    }
+</div>
+
+@code {
+    private string activeTab = "menu"; // Default to menu tab
+
+    private void ShowTab(string tabName)
+    {
+        activeTab = tabName;
+    }
+}

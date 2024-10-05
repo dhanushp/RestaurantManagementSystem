@@ -1,0 +1,23 @@
+﻿@page "/"
+
+
+<div class="hero">
+    @* <img src="images/hero.jpg" alt="Restaurant Hero" /> *@
+    <div class="hero-content">
+        <h1>Welcome to Our Restaurant</h1>
+        <button class="btn-primary" @onclick="NavigateToSignIn">Sign In</button>
+        <button class="btn-secondary" @onclick="NavigateToSignUp">Sign Up</button>
+    </div>
+</div>
+
+@code {
+    private void NavigateToSignIn()
+    {
+        Navigation.NavigateTo("/signin");
+    }
+
+    private void NavigateToSignUp()
+    {
+        Navigation.NavigateTo("/signup");
+    }
+}
