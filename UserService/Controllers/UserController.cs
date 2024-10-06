@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UserService.Data;
-using UserService.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using RestaurantManagement.SharedLibrary.Responses;
 using UserService.DTOs;
+using UserService.Interfaces;
 
 namespace UserService.Controllers
 {
@@ -14,60 +9,60 @@ namespace UserService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserDbContext _context;
+        private readonly IUser _userInterface;
 
-        public UserController(UserDbContext context)
+        public UserController(IUser userInterface)
         {
-            _context = context;
+            _userInterface = userInterface;
         }
 
-        // Register a new user
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User user)
+        [HttpGet]
+        public async Task<ActionResult<Response<List<UserResponseDTO>>>> GetAllUsers()
         {
-            // Hash password and save user in the database
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok("User registered successfully");
+            var result = await _userInterface.GetAllUsers();
+            return Ok(result);
         }
 
-        // Log in the user and generate a JWT
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
+        [HttpGet("role/{roleId}")]
+        public async Task<ActionResult<Response<List<UserResponseDTO>>>> GetUsersByRole(Guid roleId)
         {
-            // Validate login credentials and return JWT if successful
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
-            {
-                return Unauthorized("Invalid login attempt");
-            }
-            var token = GenerateJwtToken(user); // Method to generate JWT
-            return Ok(new { Token = token });
+            var result = await _userInterface.GetUsersByRole(roleId);
+            return Ok(result);
         }
 
-        // Generate JWT token for authenticated user
-        private string GenerateJwtToken(User user)
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<Response<UserResponseDTO>>> GetUserByEmail(string email)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("")); // Replace with a secure key
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var result = await _userInterface.GetUserByEmail(email);
+            return Ok(result);
+        }
 
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Add user email as a claim
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique identifier for the token
-                new Claim(ClaimTypes.Role, user.Role.Name) // Add user's role to the token
-            };
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<Response<UserResponseDTO>>> GetUserById(Guid userId)
+        {
+            var result = await _userInterface.GetUserById(userId);
+            return Ok(result);
+        }
 
-            var token = new JwtSecurityToken(
-                issuer: "RestaurantManagementAPI", // Replace with your issuer
-                audience: "RestaurantManagementApp", // Replace with your audience
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30), // Token expiration
-                signingCredentials: credentials
-            );
+        [HttpPut("{userId}/role/{roleId}")]
+        public async Task<ActionResult<Response<string>>> UpdateUserRole(Guid userId, Guid roleId)
+        {
+            var result = await _userInterface.UpdateUserRole(userId, roleId);
+            return Ok(result);
+        }
 
-            return new JwtSecurityTokenHandler().WriteToken(token); // Return the token as a string
+        [HttpPut("{userId}/fullname")]
+        public async Task<ActionResult<Response<string>>> UpdateUserFullName(Guid userId, [FromBody] string fullName)
+        {
+            var result = await _userInterface.UpdateUserFullName(userId, fullName);
+            return Ok(result);
+        }
+
+        [HttpDelete("{userId}")]
+        public async Task<ActionResult<Response<string>>> SoftDeleteUser(Guid userId)
+        {
+            var result = await _userInterface.SoftDeleteUser(userId);
+            return Ok(result);
         }
     }
 }

@@ -1,102 +1,104 @@
-﻿using RestaurantManagement.SharedLibrary.Responses;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantManagement.SharedLibrary.Responses;
 using UserService.DTOs;
 using UserService.Interfaces;
 using UserService.Data;
-using UserService.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.Json;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
+using RestaurantManagement.SharedLibrary.Data;
 
 namespace UserService.Repositories
 {
-    public class UserRepository(UserDbContext context, IConfiguration config) : IUser
+    public class UserRepository(UserDbContext context) : IUser
     {
-        private async Task<User?> GetUserByEmail(string email)
+        // Get all users, excluding soft-deleted ones
+        public async Task<Response<List<UserResponseDTO>>> GetAllUsers()
         {
-            return await context.Users
+            var users = await context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == email);
+                .Where(u => u.DeletedAt == null) // Exclude soft-deleted users
+                .ToListAsync();
+
+            var userDtos = users.Select(u => new UserResponseDTO(u.Id, u.FullName, u.Email, u.Role.Name)).ToList();
+            return Response<List<UserResponseDTO>>.SuccessResponse("Users fetched successfully", userDtos);
         }
 
-        public async Task<GetUserDTO?> GetUser(Guid userId)
+        // Get users by role, excluding soft-deleted ones
+        public async Task<Response<List<UserResponseDTO>>> GetUsersByRole(Guid roleId)
+        {
+            var users = await context.Users
+                .Include(u => u.Role)
+                .Where(u => u.RoleId == roleId && u.DeletedAt == null) // Exclude soft-deleted users
+                .ToListAsync();
+
+            var userDtos = users.Select(u => new UserResponseDTO(u.Id, u.FullName, u.Email, u.Role.Name)).ToList();
+            return Response<List<UserResponseDTO>>.SuccessResponse("Users fetched successfully", userDtos);
+        }
+
+        // Get user by email, excluding soft-deleted users
+        public async Task<Response<UserResponseDTO>> GetUserByEmail(string email)
+        {
+            var user = await context.Users
+                .Include(u => u.Role)
+                .Where(u => u.Email == email && u.DeletedAt == null) // Exclude soft-deleted users
+                .FirstOrDefaultAsync();
+
+            if (user is null)
+                return Response<UserResponseDTO>.ErrorResponse("User not found", ErrorCode.UserNotFound);
+
+            return Response<UserResponseDTO>.SuccessResponse("User fetched successfully", new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name));
+        }
+
+        // Get user by ID, excluding soft-deleted ones
+        public async Task<Response<UserResponseDTO>> GetUserById(Guid userId)
+        {
+            var user = await context.Users
+                .Include(u => u.Role)
+                .Where(u => u.Id == userId && u.DeletedAt == null) // Exclude soft-deleted users
+                .FirstOrDefaultAsync();
+
+            if (user is null)
+                return Response<UserResponseDTO>.ErrorResponse("User not found", ErrorCode.UserNotFound);
+
+            return Response<UserResponseDTO>.SuccessResponse("User fetched successfully", new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name));
+        }
+
+        // Update user role
+        public async Task<Response<string>> UpdateUserRole(Guid userId, Guid roleId)
         {
             var user = await context.Users.FindAsync(userId);
-            return user is not null ? new GetUserDTO(user.FullName, user.Email, user.Role.Name) : null;
+            if (user is null || user.DeletedAt != null)
+                return Response<string>.ErrorResponse("User not found or has been soft deleted", ErrorCode.UserNotFound);
+
+            user.RoleId = roleId;
+            user.UpdatedAt = DateTime.UtcNow; // Set update timestamp
+
+            await context.SaveChangesAsync();
+            return Response<string>.SuccessResponse("User role updated successfully", userId.ToString());
         }
 
-
-        public async Task<Response> Login(UserLoginDto loginDTO)
+        // Update user full name
+        public async Task<Response<string>> UpdateUserFullName(Guid userId, string fullName)
         {
-            var getUser = await GetUserByEmail(loginDTO.Email);
-            if (getUser is null)
-                return new Response(false, "Invalid Credentials");
+            var user = await context.Users.FindAsync(userId);
+            if (user is null || user.DeletedAt != null)
+                return Response<string>.ErrorResponse("User not found or has been soft deleted", ErrorCode.UserNotFound);
 
-            bool verifyPassword = BCrypt.Net.BCrypt.Verify(loginDTO.Password, getUser.PasswordHash);
-            if (!verifyPassword)
-            {
-                return new Response(false, "Invalid Credentials");
-            }
+            user.FullName = fullName;
+            user.UpdatedAt = DateTime.UtcNow; // Set update timestamp
 
-            string token = GenerateJwtToken(getUser);
-            return new Response(true, token);
-            
+            await context.SaveChangesAsync();
+            return Response<string>.SuccessResponse("User full name updated successfully", userId.ToString());
         }
 
-        private string GenerateJwtToken(User user)
+        // Soft delete user
+        public async Task<Response<string>> SoftDeleteUser(Guid userId)
         {
-            var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
-            if (string.IsNullOrEmpty(jwtSecret))
-            {
-                throw new InvalidOperationException("JWT Secret not found in environment variables.");
-            }
+            var user = await context.Users.FindAsync(userId);
+            if (user is null || user.DeletedAt != null)
+                return Response<string>.ErrorResponse("User not found or already soft deleted", ErrorCode.UserNotFound);
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Add user email as a claim
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique identifier for the token
-                new Claim(ClaimTypes.Role, user.Role.Name) // Add user's role to the token
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: config["Authentication:Issuer"],
-                audience: config["Authentication:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30), // Token expiration
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token); // Return the token as a string
-        }
-
-        public async Task<Response> Register(UserDTO userDTO)
-        {
-            var getUser = await GetUserByEmail(userDTO.Email);
-            if (getUser is not null)
-            {
-                return new Response(false, "User Already Exists");
-            }
-
-            var result = context.Users.Add(new User()
-            {
-                FullName = userDTO.FullName,
-                Email = userDTO.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDTO.PasswordHash),
-                RoleId = userDTO.RoleId
-            });
-
-            var saveResult = await context.SaveChangesAsync();
-            if (saveResult == 0)
-            {
-                return new Response(false, "Failed to Register User");
-            }
-            return new Response(true, "User Registered Successfully");
+            user.DeletedAt = DateTime.UtcNow; // Set soft deletion timestamp
+            await context.SaveChangesAsync();
+            return Response<string>.SuccessResponse("User deleted successfully", userId.ToString());
         }
     }
 }

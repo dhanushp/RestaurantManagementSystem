@@ -25,7 +25,7 @@ namespace RestaurantManagement.SharedLibrary.DependencyInjection
 
             // configure serilog logging
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Debug()
                 .WriteTo.Debug()
                 .WriteTo.Console()
                 .WriteTo.File(path: $"Logs//{fileName}-.txt",

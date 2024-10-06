@@ -2,9 +2,9 @@
 
 namespace UserService.DTOs
 {
-    public record UserLoginDTO(
+    public record UserRegisterDTO(
+        [Required] string FullName,
         [Required] string Email,
         [Required] string Password
     );
-
 }
