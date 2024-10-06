@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantManagement.SharedLibrary.Responses;
 using UserService.DTOs;
 using UserService.Interfaces;
@@ -7,16 +8,19 @@ namespace UserService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : ControllerBase
+    [AllowAnonymous]
+
+    public class RolesController : ControllerBase
     {
         private readonly IRole _roleInterface;
 
-        public RoleController(IRole roleInterface)
+        public RolesController(IRole roleInterface)
         {
             _roleInterface = roleInterface;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<Response<List<RoleResponseDTO>>>> GetAllRoles()
         {
             var result = await _roleInterface.GetAllRoles();

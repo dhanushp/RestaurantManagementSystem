@@ -6,7 +6,8 @@
         UserAlreadyExists = 1002,
         RegistrationFailed = 1003,
         UserNotFound,
-        RoleNotFound
+        RoleNotFound,
+        ServiceUnavailable
     }
 
 }
