@@ -17,7 +17,7 @@ namespace UserService.Repositories
                 .Where(u => u.DeletedAt == null) // Exclude soft-deleted users
                 .ToListAsync();
 
-            var userDtos = users.Select(u => new UserResponseDTO(u.Id, u.FullName, u.Email, u.Role.Name)).ToList();
+            var userDtos = users.Select(u => new UserResponseDTO(u.Id, u.FullName, u.Email, u.Role.Name, u.RoleId)).ToList();
             return Response<List<UserResponseDTO>>.SuccessResponse("Users fetched successfully", userDtos);
         }
 
@@ -29,7 +29,7 @@ namespace UserService.Repositories
                 .Where(u => u.RoleId == roleId && u.DeletedAt == null) // Exclude soft-deleted users
                 .ToListAsync();
 
-            var userDtos = users.Select(u => new UserResponseDTO(u.Id, u.FullName, u.Email, u.Role.Name)).ToList();
+            var userDtos = users.Select(u => new UserResponseDTO(u.Id, u.FullName, u.Email, u.Role.Name, u.RoleId)).ToList();
             return Response<List<UserResponseDTO>>.SuccessResponse("Users fetched successfully", userDtos);
         }
 
@@ -44,7 +44,7 @@ namespace UserService.Repositories
             if (user is null)
                 return Response<UserResponseDTO>.ErrorResponse("User not found", ErrorCode.UserNotFound);
 
-            return Response<UserResponseDTO>.SuccessResponse("User fetched successfully", new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name));
+            return Response<UserResponseDTO>.SuccessResponse("User fetched successfully", new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name, user.RoleId));
         }
 
         // Get user by ID, excluding soft-deleted ones
@@ -58,7 +58,7 @@ namespace UserService.Repositories
             if (user is null)
                 return Response<UserResponseDTO>.ErrorResponse("User not found", ErrorCode.UserNotFound);
 
-            return Response<UserResponseDTO>.SuccessResponse("User fetched successfully", new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name));
+            return Response<UserResponseDTO>.SuccessResponse("User fetched successfully", new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name, user.RoleId));
         }
 
         // Update user role
