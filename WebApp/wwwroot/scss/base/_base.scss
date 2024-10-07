@@ -1,40 +1,42 @@
-﻿html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿@import '../abstracts/_variables.scss';
+
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-h1:focus {
-    outline: none;
+html {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    background-color: $background;
+
+    // This defines what 1rem is
+    font-size: 62.5%; // 1rem = 10px    10px/16px = 62.5%
+
+    @include respond(lg) {
+        //width < 1200?
+        font-size: 56.25%; // 1rem = 9px, 9/16 = 56.25%
+    }
+
+    @include respond(md) {
+        //width < 900?
+        font-size: 50%; // 1rem = 8px, 8/16 = 50%
+    }
+
+    @include respond(big-desktop) {
+        font-size: 75%; // 1rem = 12px, 12/16 = 75%
+    }
 }
 
-a, .btn-link {
-    color: #0071c1;
+body {
+    padding: 0;
+    margin: 0;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-.content {
-    padding-top: 1.1rem;
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: red;
-}
 
 #blazor-error-ui {
     background: lightyellow;
@@ -96,8 +98,4 @@ a, .btn-link {
 
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");
-}
-
-code {
-    color: #c02d76;
 }

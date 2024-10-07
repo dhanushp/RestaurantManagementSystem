@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewService", "ReviewService\ReviewService.csproj", "{EEE72AE5-4C26-4091-97DA-315B6E7EF543}"
+<<<<<<< HEAD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantManagement.SharedLibrary", "RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj", "{3CB3F780-C304-4731-82FB-76F5BC8433AB}"
 <<<<<<< HEAD
@@ -31,6 +32,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantManagement.Shared
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{05389AD6-688B-497F-B50E-A4EAC6E929D5}"
 >>>>>>> f764001 (Added API Gateway and connected with User Service)
+=======
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantManagement.SharedLibrary", "RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj", "{3CB3F780-C304-4731-82FB-76F5BC8433AB}"
+>>>>>>> 56ee3aa (Add new pages)
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

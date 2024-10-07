@@ -1,35 +1,55 @@
 ﻿@page "/signin"
+@layout LoginLayout
+@using System.ComponentModel.DataAnnotations
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="signin">
+    <img src="images/auth_logo.png" alt="Dine Master Logo" class="signin__logo" />
+    <h2 class="signin__heading">Welcome Back!</h2>
+    <p class="signin__description">Please enter your details</p>
 
-    <div>
-        <label>Email</label>
-        <InputText @bind-Value="loginModel.Email" />
+    <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin" class="signin__form">
+        <DataAnnotationsValidator />
+
+        <div class="signin__input-group">
+            <label for="email" class="signin__label">Email</label>
+            <InputText @bind-Value="loginModel.Email" id="email" class="signin__input" placeholder="Enter your email" />
+            <ValidationMessage For="@(() => loginModel.Email)" class="signin__validation-message" />
+        </div>
+
+        <div class="signin__input-group">
+            <label for="password" class="signin__label">Password</label>
+            <InputText @bind-Value="loginModel.Password" type="password" id="password" class="signin__input" placeholder="Enter your password" />
+            <ValidationMessage For="@(() => loginModel.Password)" class="signin__validation-message" />
+        </div>
+
+        <button type="submit" class="signin__button">Login</button>
+    </EditForm>
+
+    <div class="signin__link">
+        <p class="signin__link-url">
+            <a href="/forgotpassword" class="signin__link-url--text">Forgot password?</a>
+        </p>
+        <p class="signin__link-url">
+            New to Dine Master? <a href="/signup" class="signin__link-url--text">Create Account</a>
+        </p>
     </div>
-
-    <div>
-        <label>Password</label>
-        <InputText @bind-Value="loginModel.Password" type="password" />
-    </div>
-
-    <button type="submit" class="btn-primary">Sign In</button>
-</EditForm>
+</div>
 
 @code {
-    private LoginModel loginModel = new LoginModel();  // This is the model for binding
+    private LoginModel loginModel = new LoginModel();
 
-    private async Task HandleLogin()
+    private void HandleLogin()
     {
-        // Handle the login logic here
-        Console.WriteLine($"Logging in with email: {loginModel.Email}");
+        // Handle login logic here
     }
 
-    // You can add login-related logic here
     public class LoginModel
     {
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
         public string Email { get; set; }
+
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
     }
 }

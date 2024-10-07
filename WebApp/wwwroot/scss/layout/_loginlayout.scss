@@ -1,0 +1,44 @@
+@import '../abstracts/_variables.scss';
+
+.auth-layout {
+    display: flex;
+    height: 100vh; // Full viewport height
+    flex-direction: row;
+
+
+
+    .auth-layout__left {
+        flex: 2;
+        background-image: url('../../images/wallpaper.png'); // Path to the image
+        background-size: cover; // Ensures image covers the entire area
+        background-position: center; // Keeps the image centered
+        background-repeat: no-repeat; // Prevents repeating of the image
+        padding: 5rem;
+        color: $white;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: start;
+
+        .auth-layout__heading {
+            font-size: 7.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .auth-layout__description {
+            font-size: 3.2rem;
+            margin-top: 1rem;
+        }
+    }
+
+    .auth-layout__right {
+        flex: 1;
+        background-color: $background; // Matches the design color
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}

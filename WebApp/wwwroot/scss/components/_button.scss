@@ -1,1 +1,41 @@
-﻿
+﻿@import "../abstracts/_variables.scss";
+
+@mixin button-primary($bg-color, $text-color) {
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 1rem;
+    color: $text-color;
+    background-color: $bg-color;
+    font-size: $text-md;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: darken($bg-color, 5%);
+    }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+}
+
+@mixin button-secondary($outline-color, $text-color) {
+    background: none;
+    padding: 1rem 3rem;
+    border: 2px solid $outline-color;
+    border-radius: 1rem; 
+    color: $text-color;
+    font-size: $text-md;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        
+    }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+}
