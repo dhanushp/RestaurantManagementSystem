@@ -12,7 +12,7 @@ using UserService.Data;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20241004062917_InitialMigration")]
+    [Migration("20241005165758_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -57,15 +57,15 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("406309e7-57f2-4f79-924e-7b73a56c32e8"),
-                            CreatedAt = new DateTime(2024, 10, 4, 6, 29, 17, 43, DateTimeKind.Utc).AddTicks(8358),
+                            Id = new Guid("a0eb2dc8-c76e-4653-821a-e9392dac608d"),
+                            CreatedAt = new DateTime(2024, 10, 5, 16, 57, 57, 891, DateTimeKind.Utc).AddTicks(9576),
                             Description = "Default customer role",
                             Name = "Customer"
                         },
                         new
                         {
-                            Id = new Guid("86dce64c-4b0c-4ea1-a233-04210be48c2e"),
-                            CreatedAt = new DateTime(2024, 10, 4, 6, 29, 17, 43, DateTimeKind.Utc).AddTicks(8361),
+                            Id = new Guid("250bcdbd-071a-44ae-ac48-ef378f27ab7e"),
+                            CreatedAt = new DateTime(2024, 10, 5, 16, 57, 57, 891, DateTimeKind.Utc).AddTicks(9580),
                             Description = "Administrator role",
                             Name = "Admin"
                         });
@@ -92,10 +92,6 @@ namespace UserService.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

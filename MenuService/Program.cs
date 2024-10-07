@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using MenuService.Data; // Assuming your DbContext is in the Data folder
+using MenuService.Services; // Add this for MenuItemService
+using MenuService.Interfaces; // Add this for IMenuItem
+using MenuService.Repositories; // Add this for MenuItemRepository
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add DbContext for MenuService and configure it to use SQL Server
 builder.Services.AddDbContext<MenuContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register the repository and service for DI
+builder.Services.AddScoped<IMenuItem, MenuItemRepository>();
+builder.Services.AddScoped<MenuItemService>();
 
 // Add controllers
 builder.Services.AddControllers();
