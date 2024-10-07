@@ -1,5 +1,31 @@
-﻿<h3>NavMenu</h3>
+﻿@inject NavigationManager Navigation
+
+<nav>
+	<div class="nav_logo">
+	<img src="/images/logo_hero.png" alt="logo" />
+	</div>
+	<div class="nav_navigation">
+		<ul class="nav_navigation_items">
+			<li class="nav_navigation_items-active">Home</li>
+			<li>Features</li>
+			<li>How it works</li>
+			<li>Pricing</li>
+		</ul>
+	</div>
+	<div class="nav_cta">
+		<button class="nav_cta-primary" @onclick="NavigationToSignIn">Sign In</button>
+		<button class="nav_cta-secondary" @onclick="NavigateToSignUp">Sign Up</button>
+	</div>
+</nav>
 
 @code {
+	private void NavigationToSignIn()
+	{
+		Navigation.NavigateTo("/signin");
+	} 
 
+	private void NavigateToSignUp()
+	{
+		Navigation.NavigateTo("/signup");
+	}
 }

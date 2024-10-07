@@ -1,1 +1,53 @@
-﻿
+﻿@import '../abstracts/_variables.scss';
+@import '../components/_button.scss';
+
+.hero {
+    height: calc(100dvh - 13rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    .hero_text {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        .hero_text-title {
+            color: $red;
+            font-size: $text-2xl;
+            text-transform:uppercase;
+            letter-spacing: 10px;
+        }
+
+        .hero_text-subtitle {
+            font-size: $text-3xl;
+            font-weight: 600;
+            color: $brown;
+        }
+
+        .hero_text-para {
+            font-size: $text-md;
+            color: $brown;
+        }
+
+        .hero_text_button {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+
+            .hero_text_button-primary {
+                @include button-primary($red, $white);
+            }
+
+            .hero_text_button-secondary {
+                @include button-primary($white, $black);
+            }
+        }
+    }
+
+    
+}
