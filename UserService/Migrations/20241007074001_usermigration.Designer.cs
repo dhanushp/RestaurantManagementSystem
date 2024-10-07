@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserService.Data;
 
@@ -11,9 +12,11 @@ using UserService.Data;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241007074001_usermigration")]
+    partial class usermigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,15 +57,15 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2efdcf78-bef2-4b24-bae7-021a2dce3c50"),
-                            CreatedAt = new DateTime(2024, 10, 4, 17, 44, 6, 420, DateTimeKind.Utc).AddTicks(106),
+                            Id = new Guid("f33ed39b-961d-4945-ac8b-eb8977396e30"),
+                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6899),
                             Description = "Default customer role",
                             Name = "Customer"
                         },
                         new
                         {
-                            Id = new Guid("e08fd565-0c29-4465-959e-3a9474d0288d"),
-                            CreatedAt = new DateTime(2024, 10, 4, 17, 44, 6, 420, DateTimeKind.Utc).AddTicks(109),
+                            Id = new Guid("45b114e8-c1b8-447b-8034-1d96261652f3"),
+                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6903),
                             Description = "Administrator role",
                             Name = "Admin"
                         });

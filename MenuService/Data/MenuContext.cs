@@ -6,8 +6,11 @@ namespace MenuService.Data
 {
     public class MenuContext : DbContext
     {
-        public MenuContext(DbContextOptions<MenuContext> options) : base(options)
+        private readonly IWebHostEnvironment _env;
+
+        public MenuContext(DbContextOptions<MenuContext> options, IWebHostEnvironment env) : base(options)
         {
+            _env = env;
         }
 
         public DbSet<MenuItem> MenuItems { get; set; }
@@ -70,7 +73,10 @@ namespace MenuService.Data
 
         public void SeedMenuItems()
         {
-            var menuItems = LoadMenuItemsFromJson("C:\\Users\\sneba\\source\\repos\\RestaurantManagementSystem\\MenuService\\Data\\MenuItems.json");
+            var filePath = Path.Combine(_env.ContentRootPath, "Data", "MenuItems.json");
+            var menuItems = LoadMenuItemsFromJson(filePath);
+
+            //var menuItems = LoadMenuItemsFromJson("C:\\Users\\sneba\\source\\repos\\RestaurantManagementSystem\\MenuService\\Data\\MenuItems.json");
             if (menuItems != null && !MenuItems.Any())
             {
                 MenuItems.AddRange(menuItems);

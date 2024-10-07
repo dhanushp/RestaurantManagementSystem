@@ -10,7 +10,7 @@ namespace MenuService.Models
         public string Name { get; set; }
 
         // Description of the menu item
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         // Price of the menu item, defined with decimal precision for accurate pricing
         [Column(TypeName = "decimal(18,2)")]
@@ -23,13 +23,12 @@ namespace MenuService.Models
         public bool IsAvailable { get; set; }
 
         [Url]
-        // URL of the image representing the menu item
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; } = "default_image_url.jpg";
 
         // Foreign key to Category
         public Guid CategoryId { get; set; }
 
         // Navigation property to the Category entity (relationship with Category model)
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
     }
 }

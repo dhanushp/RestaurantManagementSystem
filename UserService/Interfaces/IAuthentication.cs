@@ -15,6 +15,5 @@ namespace UserService.Interfaces
         Task<Response<string>> ResetPassword(UserRegisterDTO userDTO);
 
         */
-        //Task<GetUserDTO> GetUser(Guid userId);
     }
 }
