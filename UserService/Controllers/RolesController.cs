@@ -8,8 +8,7 @@ namespace UserService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
-
+    [Authorize(Roles = "Admin")]
     public class RolesController : ControllerBase
     {
         private readonly IRole _roleInterface;
@@ -20,7 +19,6 @@ namespace UserService.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult<Response<List<RoleResponseDTO>>>> GetAllRoles()
         {
             var result = await _roleInterface.GetAllRoles();

@@ -17,7 +17,7 @@ namespace UserService.Controllers
             _userInterface = userInterface;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Response<List<UserResponseDTO>>>> GetAllUsers()
         {
             var result = await _userInterface.GetAllUsers();
@@ -25,6 +25,7 @@ namespace UserService.Controllers
         }
 
         [HttpGet("role/{roleId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Response<List<UserResponseDTO>>>> GetUsersByRole(Guid roleId)
         {
             var result = await _userInterface.GetUsersByRole(roleId);
@@ -45,21 +46,24 @@ namespace UserService.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPut("{userId}/role/{roleId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Response<string>>> UpdateUserRole(Guid userId, Guid roleId)
         {
             var result = await _userInterface.UpdateUserRole(userId, roleId);
             return Ok(result);
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpPut("{userId}/fullname")]
         public async Task<ActionResult<Response<string>>> UpdateUserFullName(Guid userId, [FromBody] string fullName)
         {
+
             var result = await _userInterface.UpdateUserFullName(userId, fullName);
             return Ok(result);
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpDelete("{userId}")]
         public async Task<ActionResult<Response<string>>> SoftDeleteUser(Guid userId)
         {

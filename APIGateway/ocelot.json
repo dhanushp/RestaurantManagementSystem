@@ -15,7 +15,7 @@
             "RateLimitOptions": {
                 "ClientWhitelist": [],
                 "EnableRateLimiting": true,
-                "Period": "60s",
+                "Period": "10s",
                 "Limit": 1,
                 "PeriodTimespan": 10
             }
@@ -101,7 +101,49 @@
                 "AuthenticationProviderKey": "Bearer",
                 "AllowedScopes": []
             }
+        },
+
+        // MenuItems - GET
+        {
+            "DownstreamPathTemplate": "/api/menuitems/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/menuitems/{everything}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "FileCacheOptions": {
+                "TtlSeconds": 60,
+                "Region": "default",
+                "Header": "RestaurantManagement-Caching-Control"
+            },
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        // MenuItems - POST, PUT, PATCH, DELETE
+        {
+            "DownstreamPathTemplate": "/api/menuitems/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/menuitems/{everything}",
+            "UpstreamHttpMethod": [ "PUT", "PATCH", "POST", "DELETE" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
         }
+
     ],
     "GlobalConfiguration": {
         "BaseURL": "https://localhost:5003",

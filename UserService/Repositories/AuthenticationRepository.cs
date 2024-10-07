@@ -25,7 +25,7 @@ namespace UserService.Repositories
         private async Task<UserResponseDTO?> GetUser(Guid userId)
         {
             var user = await context.Users.FindAsync(userId);
-            return user is not null ? new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name) : null;
+            return user is not null ? new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name, user.RoleId) : null;
         }
 
 
@@ -42,6 +42,9 @@ namespace UserService.Repositories
             }
 
             JwtResponseDto jwtResponse = GenerateJwtToken(getUser);
+
+            jwtResponse.UserInfo = new UserResponseDTO(getUser.Id, getUser.FullName, getUser.Email, getUser.Role.Name, getUser.RoleId);
+
 
             return Response<JwtResponseDto>.SuccessResponse("Logged In Succesfully",jwtResponse);
             
