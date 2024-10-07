@@ -45,7 +45,7 @@ namespace RestaurantManagement.SharedLibrary.DependencyInjection
             app.UseMiddleware<GlobalException>();
 
             // Register middle to block all outsiders API calls
-            //app.UseMiddleware<ListenToOnlyAPIGateway>();
+            app.UseMiddleware<ListenToOnlyAPIGateway>();
 
             return app;
         }

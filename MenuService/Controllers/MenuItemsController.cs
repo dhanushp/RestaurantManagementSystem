@@ -1,17 +1,14 @@
 ﻿using MenuService.DTOs;
 using MenuService.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MenuItemController : ControllerBase
+public class MenuItemsController : ControllerBase
 {
     private readonly MenuItemService _menuItemService;
 
-    public MenuItemController(MenuItemService menuItemService)
+    public MenuItemsController(MenuItemService menuItemService)
     {
         _menuItemService = menuItemService;
     }

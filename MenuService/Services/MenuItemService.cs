@@ -1,9 +1,6 @@
 ﻿using MenuService.DTOs;
 using MenuService.Interfaces;
 using RestaurantManagement.SharedLibrary.Responses;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MenuService.Services
 {
