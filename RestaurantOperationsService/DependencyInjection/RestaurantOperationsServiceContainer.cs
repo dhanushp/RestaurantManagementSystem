@@ -1,23 +1,21 @@
 ﻿using RestaurantManagement.SharedLibrary.DependencyInjection;
-using UserService.Data;
-using UserService.Interfaces;
-using UserService.Repositories;
+using RestaurantOperationsService.Data;
+using RestaurantOperationsService.Interfaces;
+using RestaurantOperationsService.Repositories;
 
-namespace UserService.DependencyInjection
+namespace RestaurantOperationsService.DependencyInjection
 {
-    public static class ServiceContainer
+    public static class RestaurantOperationsServiceContainer
     {
         public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration config)
         {
             // Add database connectivity
 
             // Add JWT Authentication Scheme
-            SharedServiceContainer.AddSharedServices<UserDbContext>(services, config, config["MySerilog:FileName"]!);
+            SharedServiceContainer.AddSharedServices<RestaurantOperationsDbContext>(services, config, config["MySerilog:FileName"]!);
 
             // Create Dependency Injection
-            services.AddScoped<IAuthentication, AuthenticationRepository>();
-            services.AddScoped<IUser, UserRepository>();
-            services.AddScoped<IRole, RoleRepository>();
+            services.AddScoped<ITable, TableRepository>();
 
             return services;
         }
