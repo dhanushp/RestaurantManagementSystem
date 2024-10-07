@@ -1,0 +1,120 @@
+@import '../abstracts/_variables.scss';
+
+.signin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 2rem;
+    background-color: $background;
+    width: 100%;
+
+    &__logo {
+        max-width: 150px;
+        margin-bottom: 1rem;
+    }
+
+    &__heading {
+        font-size: $text-2xl;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        color: $brown;
+    }
+
+    &__description {
+        font-size: $text-md;
+        margin-bottom: 3rem;
+        color: $brown;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 350px;
+    }
+
+    &__input-group {
+        margin-bottom: 2.5rem; 
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: relative; // Necessary for absolute positioning of validation messages
+
+        .signin__label {
+            font-size: $text-md;
+            margin-bottom: 0.5rem;
+            color: $brown;
+            font-weight: 400;
+        }
+
+        .signin__input {
+            width: 100%;
+            padding: 1.5rem;
+            border-radius: 5px;
+            font-size: $text-md;
+            background-color: $brown-light;
+            border: 1px solid transparent;
+            color: $brown;
+
+            &:focus {
+                border: 1px solid $brown;
+                outline: none;
+            }
+        }
+
+        .signin__validation-message {
+            position: absolute; // Positioned absolutely to prevent UI movement
+            top: calc(100% + 0.5rem); // Adjust to leave space between the input and the message
+            left: 0; // Align with the left edge of the input
+            color: $red; // Red for error indication
+            font-size: $text-xs; // Smaller font size
+            font-weight: 400; // Normal weight to differentiate from the label
+        }
+    }
+
+    &__button {
+        width: 100%;
+        padding: 1.5rem;
+        margin-top: 2rem; // Space between form and button to prevent overlap with validation messages
+        font-size: $text-md;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 5px;
+        background-color: $red;
+        color: white;
+
+        &:hover {
+            background-color: #b80020;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &__link {
+        text-align: center;
+        margin-top: 3rem;
+
+        &-url {
+            font-size: $text-sm;
+            color: $brown;
+
+            &:last-child {
+                margin-top: 1rem;
+            }
+
+            &--text {
+                color: #0077B6; // Blue for links
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

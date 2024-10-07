@@ -1,8 +1,52 @@
 ﻿@page "/select-table"
+@layout LoginLayout
+@using System.ComponentModel.DataAnnotations
 
 
-<h3>SelectTable</h3>
+<div class="select-table">
+    <div class="select-table__header">
+        <img src="images/auth_logo.png" alt="Dine Master Logo" class="select-table__header-logo" />
+        <h2 class="select-table__header-heading">Welcome Back, User!</h2>
+        <p class="select-table__header-description">Please select the table number displayed on your table</p>
+    </div>
+
+    <EditForm Model="@tableSelectionModel" OnValidSubmit="@HandleTableSelection" class="select-table__form">
+        <DataAnnotationsValidator />
+
+        <div class="select-table__form-input-group">
+            <label for="tableNumber" class="select-table__form-label">Table number</label>
+            <InputSelect @bind-Value="tableSelectionModel.TableNumber" id="tableNumber" class="select-table__form-select">
+                <option value="">Select table...</option>
+                @foreach (var table in availableTables)
+                {
+                    <option value="@table">@table</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => tableSelectionModel.TableNumber)" class="select-table__form-validation-message" />
+        </div>
+
+        <button type="submit" class="select-table__form-button select-table__form-button--primary">Proceed</button>
+        <button type="button" @onclick="NavigateBack" class="select-table__form-button select-table__form-button--secondary">Go back</button>
+    </EditForm>
+</div>
 
 @code {
+    private TableSelectionModel tableSelectionModel = new TableSelectionModel();
+    private List<int> availableTables = new List<int> { 1, 2, 3, 4, 5 }; // Sample available tables
 
+    private void HandleTableSelection()
+    {
+        // Handle table selection logic here
+    }
+
+    private void NavigateBack()
+    {
+        // Navigate back to the previous page
+    }
+
+    public class TableSelectionModel
+    {
+        [Required(ErrorMessage = "Table number is required")]
+        public int? TableNumber { get; set; }
+    }
 }
