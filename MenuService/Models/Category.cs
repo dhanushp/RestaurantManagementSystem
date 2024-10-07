@@ -4,10 +4,10 @@
     public class Category : BaseEntity
     {
         // Name of the category (e.g., Appetizers, Main Course)
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         // Optional description for the category
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
      
         // Navigation property for the one-to-many relationship with MenuItem

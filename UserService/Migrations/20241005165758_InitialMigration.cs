@@ -37,7 +37,6 @@ namespace UserService.Migrations
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -59,8 +58,8 @@ namespace UserService.Migrations
                 columns: new[] { "Id", "CreatedAt", "DeletedAt", "Description", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("406309e7-57f2-4f79-924e-7b73a56c32e8"), new DateTime(2024, 10, 4, 6, 29, 17, 43, DateTimeKind.Utc).AddTicks(8358), null, "Default customer role", "Customer", null },
-                    { new Guid("86dce64c-4b0c-4ea1-a233-04210be48c2e"), new DateTime(2024, 10, 4, 6, 29, 17, 43, DateTimeKind.Utc).AddTicks(8361), null, "Administrator role", "Admin", null }
+                    { new Guid("250bcdbd-071a-44ae-ac48-ef378f27ab7e"), new DateTime(2024, 10, 5, 16, 57, 57, 891, DateTimeKind.Utc).AddTicks(9580), null, "Administrator role", "Admin", null },
+                    { new Guid("a0eb2dc8-c76e-4653-821a-e9392dac608d"), new DateTime(2024, 10, 5, 16, 57, 57, 891, DateTimeKind.Utc).AddTicks(9576), null, "Default customer role", "Customer", null }
                 });
 
             migrationBuilder.CreateIndex(

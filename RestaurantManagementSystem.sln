@@ -8,6 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService", "OrderService\OrderService.csproj", "{737FFCA8-1A12-46B3-B6BF-9258B25E7D4E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuService", "MenuService\MenuService.csproj", "{5D6D7839-953E-46E9-A366-DAA090CCE208}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3CB3F780-C304-4731-82FB-76F5BC8433AB} = {3CB3F780-C304-4731-82FB-76F5BC8433AB}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService", "PaymentService\PaymentService.csproj", "{9BDEE89D-F185-41C2-8BDF-D9845A0587E7}"
 EndProject
@@ -21,11 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewService", "ReviewService\ReviewService.csproj", "{EEE72AE5-4C26-4091-97DA-315B6E7EF543}"
-<<<<<<< HEAD
-=======
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantManagement.SharedLibrary", "RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj", "{3CB3F780-C304-4731-82FB-76F5BC8433AB}"
->>>>>>> d1773c627c751c0fbe3ec4db9a3ab4394eff6f2b
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantManagement.SharedLibrary", "RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj", "{3CB3F780-C304-4731-82FB-76F5BC8433AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
