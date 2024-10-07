@@ -1,19 +1,20 @@
-﻿namespace OrderService.Models
+﻿using OrderService.Models;
+
+namespace OrderService.Models
 {
     public class Order : BaseEntity
     {
         public int UserId { get; set; } // Reference to the user who placed the order
         public List<OrderItem> OrderItems { get; set; } // List of items in the order
+        public OrderStatus Status { get; set; } // Current status of the order
 
-        public OrderStatus Status { get; set; } // Enum for order status (Pending, InPreparation, Served, Paid)
-    }
+        // Computed property for total order price
+        public decimal TotalPrice => OrderItems?.Sum(item => item.TotalPrice) ?? 0;
 
-    // Enum for predefined order statuses
-    public enum OrderStatus
-    {
-        Pending,
-        InPreparation,
-        Served,
-        Paid // Paid status for marking completed payments
+        // Constructor ensures the list is initialized to avoid null references
+        public Order()
+        {
+            OrderItems = new List<OrderItem>();
+        }
     }
 }

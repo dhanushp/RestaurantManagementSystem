@@ -12,8 +12,8 @@ using UserService.Data;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20241005165850_InitialMigration2")]
-    partial class InitialMigration2
+    [Migration("20241007074001_usermigration")]
+    partial class usermigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,15 +57,15 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1b778710-1349-4fde-ba71-90e6a8d04138"),
-                            CreatedAt = new DateTime(2024, 10, 5, 16, 58, 50, 263, DateTimeKind.Utc).AddTicks(4036),
+                            Id = new Guid("f33ed39b-961d-4945-ac8b-eb8977396e30"),
+                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6899),
                             Description = "Default customer role",
                             Name = "Customer"
                         },
                         new
                         {
-                            Id = new Guid("38ef36c0-372c-4a8c-8680-dcd54d1d11a5"),
-                            CreatedAt = new DateTime(2024, 10, 5, 16, 58, 50, 263, DateTimeKind.Utc).AddTicks(4041),
+                            Id = new Guid("45b114e8-c1b8-447b-8034-1d96261652f3"),
+                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6903),
                             Description = "Administrator role",
                             Name = "Admin"
                         });

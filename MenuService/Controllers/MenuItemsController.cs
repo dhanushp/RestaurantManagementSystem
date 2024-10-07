@@ -21,7 +21,7 @@ public class MenuItemsController : ControllerBase
         return Ok(response); // Return success response
     }
 
-    // GET: api/menuitems/category/{category}
+    // GET:     
     [HttpGet("category/{category}")]
     public async Task<IActionResult> GetMenuItemsByCategory(string category)
     {

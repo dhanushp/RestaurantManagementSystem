@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UserService.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class usermigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,8 +58,8 @@ namespace UserService.Migrations
                 columns: new[] { "Id", "CreatedAt", "DeletedAt", "Description", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("250bcdbd-071a-44ae-ac48-ef378f27ab7e"), new DateTime(2024, 10, 5, 16, 57, 57, 891, DateTimeKind.Utc).AddTicks(9580), null, "Administrator role", "Admin", null },
-                    { new Guid("a0eb2dc8-c76e-4653-821a-e9392dac608d"), new DateTime(2024, 10, 5, 16, 57, 57, 891, DateTimeKind.Utc).AddTicks(9576), null, "Default customer role", "Customer", null }
+                    { new Guid("45b114e8-c1b8-447b-8034-1d96261652f3"), new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6903), null, "Administrator role", "Admin", null },
+                    { new Guid("f33ed39b-961d-4945-ac8b-eb8977396e30"), new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6899), null, "Default customer role", "Customer", null }
                 });
 
             migrationBuilder.CreateIndex(

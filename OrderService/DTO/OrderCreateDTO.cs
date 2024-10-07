@@ -15,6 +15,8 @@
     public class OrderItemCreateDTO
     {
         public int MenuItemId { get; set; } // Reference to the menu item
+        public string MenuItemName { get; set; }
+        public decimal MenuItemPrice { get; set; }
         public int Quantity { get; set; } // Quantity of the item being ordered
     }
 }

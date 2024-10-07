@@ -54,15 +54,15 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("44d5ab06-d392-4c7a-8544-e1d2d8d1a301"),
-                            CreatedAt = new DateTime(2024, 10, 6, 12, 38, 21, 120, DateTimeKind.Utc).AddTicks(183),
+                            Id = new Guid("f33ed39b-961d-4945-ac8b-eb8977396e30"),
+                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6899),
                             Description = "Default customer role",
                             Name = "Customer"
                         },
                         new
                         {
-                            Id = new Guid("75782bf0-dbc0-422a-9aaf-10d10ec086ab"),
-                            CreatedAt = new DateTime(2024, 10, 6, 12, 38, 21, 120, DateTimeKind.Utc).AddTicks(186),
+                            Id = new Guid("45b114e8-c1b8-447b-8034-1d96261652f3"),
+                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6903),
                             Description = "Administrator role",
                             Name = "Admin"
                         });
