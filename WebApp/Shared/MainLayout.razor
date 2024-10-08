@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.JSInterop
+@inherits LayoutComponentBase
+@inject IJSRuntime _jsRuntime
+@inject NavigationManager NavigationManager
 
 <div>
     <!-- Navbar -->
@@ -15,3 +18,16 @@
         <Footer />
     </footer> *@
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwtToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            // Automatically sign in logic, such as fetching user info
+            // For example, you can redirect to the main page or set user info in a service
+
+        }
+    }
+}
