@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderService.DTO;
-using OrderService.DTOs;
 using OrderService.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,14 +29,14 @@ namespace OrderService.Controllers
             }
 
             var createdOrder = await _orderService.CreateOrderAsync(orderCreateDTO);
-            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
+            return CreatedAtAction(nameof(GetOrderById), new { orderId = createdOrder.Id }, createdOrder);
         }
 
         /// <summary>
         /// Update the status of an existing order.
         /// </summary>
         [HttpPut("{orderId}/status")]
-        public async Task<ActionResult<OrderResponseDTO>> UpdateOrderStatus(int orderId, [FromBody] OrderStatusUpdateDTO orderStatusUpdateDTO)
+        public async Task<ActionResult<OrderResponseDTO>> UpdateOrderStatus(Guid orderId, [FromBody] OrderStatusUpdateDTO orderStatusUpdateDTO) // Changed int to Guid
         {
             if (orderStatusUpdateDTO == null)
             {
@@ -57,7 +56,7 @@ namespace OrderService.Controllers
         /// Cancel an existing order.
         /// </summary>
         [HttpDelete("{orderId}")]
-        public async Task<IActionResult> CancelOrder(int orderId)
+        public async Task<IActionResult> CancelOrder(Guid orderId) // Changed int to Guid
         {
             var isCancelled = await _orderService.CancelOrderAsync(orderId);
             if (!isCancelled)
@@ -72,7 +71,7 @@ namespace OrderService.Controllers
         /// Get details of a specific order by ID.
         /// </summary>
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<OrderResponseDTO>> GetOrderById(int orderId)
+        public async Task<ActionResult<OrderResponseDTO>> GetOrderById(Guid orderId) // Changed int to Guid
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null)
@@ -87,7 +86,7 @@ namespace OrderService.Controllers
         /// Get all orders for a specific user.
         /// </summary>
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<List<OrderResponseDTO>>> GetOrdersByUserId(int userId)
+        public async Task<ActionResult<List<OrderResponseDTO>>> GetOrdersByUserId(Guid userId) // Changed int to Guid
         {
             var orders = await _orderService.GetOrdersByUserIdAsync(userId);
             return Ok(orders);

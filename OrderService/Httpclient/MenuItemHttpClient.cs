@@ -3,11 +3,13 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MenuService.DTOs; // Assuming you have a MenuItemDetailResponseDTO defined
+using MenuService.Interfaces;
+using OrderService.Interfaces;
 using RestaurantManagement.SharedLibrary.Responses;
 
-namespace OrderAPI.Infrastructure.HttpClients
+namespace OrderService.HttpClients
 {
-    public class MenuItemHttpClient
+    public class MenuItemHttpClient : IMenuItems
     {
         private readonly HttpClient _httpClient;
 

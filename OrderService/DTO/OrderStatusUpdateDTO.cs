@@ -1,6 +1,6 @@
 ﻿using OrderService.Models; // Use the namespace where the OrderStatus enum is defined
 
-namespace OrderService.DTOs
+namespace OrderService.DTO
 {
     public class OrderStatusUpdateDTO
     {

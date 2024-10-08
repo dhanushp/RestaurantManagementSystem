@@ -15,6 +15,7 @@ namespace MenuService.Interfaces
         Task<Response<MenuItemResponseDTO>> AddMenuItem(MenuItemCreateUpdateDTO menuItemCreateDTO);
         Task<Response<MenuItemResponseDTO>> UpdateMenuItem(Guid menuItemId, MenuItemCreateUpdateDTO menuItemUpdateDTO);
         Task<Response<string>> DeleteMenuItem(Guid menuItemId);
+        Task<Response<MenuItemDetailResponseDTO>> GetMenuItemById(Guid menuItemId);
     }
     // Interface definition ends
 }

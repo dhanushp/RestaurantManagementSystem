@@ -109,6 +109,36 @@ namespace MenuService.Repositories
             return Response<MenuItemResponseDTO>.SuccessResponse("Menu item fetched successfully", menuItem);
         }
 
+        public async Task<Response<MenuItemDetailResponseDTO>> GetMenuItemById(Guid menuItemId)
+        {
+            try
+            {
+                var menuItem = await _context.MenuItems
+                    .Include(item => item.Category) // Include category if necessary
+                    .FirstOrDefaultAsync(item => item.Id == menuItemId && item.IsAvailable);
+
+                if (menuItem == null)
+                {
+                    return Response<MenuItemDetailResponseDTO>.ErrorResponse("Menu item not found.");
+                }
+
+                var menuItemDetailResponse = new MenuItemDetailResponseDTO
+                {
+                    Id = menuItem.Id,
+                    Name = menuItem.Name,
+                    Description = menuItem.Description,
+                    Price = menuItem.Price,
+                    Category = menuItem.Category != null ? menuItem.Category.Name : "Unknown",
+                    IsAvailable = menuItem.IsAvailable
+                };
+
+                return Response<MenuItemDetailResponseDTO>.SuccessResponse("Menu item fetched successfully", menuItemDetailResponse);
+            }
+            catch (Exception ex)
+            {
+                return Response<MenuItemDetailResponseDTO>.ErrorResponse($"An error occurred while fetching the menu item: {ex.Message}");
+            }
+        }
         // Add a new menu item
         public async Task<Response<MenuItemResponseDTO>> AddMenuItem(MenuItemCreateUpdateDTO menuItemCreateDTO)
         {
