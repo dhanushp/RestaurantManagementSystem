@@ -1,8 +1,90 @@
 ﻿@page "/signup"
+@layout LoginLayout
+@using System.ComponentModel.DataAnnotations
+@using WebApp.DTOs.SignUp
+@inject IAuthenticationService AuthenticationService 
+@inject NavigationManager Navigation
 
 
-<h3>SignUp</h3>
+<div class="signup">
+    <div class="signup__header">
+        <img src="images/auth_logo.png" alt="Dine Master Logo" class="signup__header-logo" />
+        <h2 class="signup__header-heading">Create an account</h2>
+        <p class="signup__header-link">Already have an account? <a href="/signin" class="signup__header-link--text">Log in</a></p>
+    </div>
+
+    <EditForm Model="@signupModel" OnValidSubmit="@HandleSignup" class="signup__form">
+        <DataAnnotationsValidator />
+
+        <div class="signup__form-input-group">
+            <label for="fullName" class="signup__form-label">Full Name</label>
+            <InputText @bind-Value="signupModel.FullName" id="fullName" class="signup__form-input" placeholder="Enter your full name" />
+            <ValidationMessage For="@(() => signupModel.FullName)" class="signup__form-validation-message" />
+        </div>
+
+        <div class="signup__form-input-group">
+            <label for="email" class="signup__form-label">Email</label>
+            <InputText @bind-Value="signupModel.Email" id="email" class="signup__form-input" placeholder="Enter your email" />
+            <ValidationMessage For="@(() => signupModel.Email)" class="signup__form-validation-message" />
+        </div>
+
+        <div class="signup__form-input-group">
+            <label for="password" class="signup__form-label">Password</label>
+            <InputText @bind-Value="signupModel.Password" type="password" id="password" class="signup__form-input" placeholder="Enter your password" />
+            <ValidationMessage For="@(() => signupModel.Password)" class="signup__form-validation-message" />
+        </div>
+
+        <div class="signup__form-input-group">
+            <label for="confirmPassword" class="signup__form-label">Confirm Password</label>
+            <InputText @bind-Value="signupModel.ConfirmPassword" type="password" id="confirmPassword" class="signup__form-input" placeholder="Confirm your password" />
+            <ValidationMessage For="@(() => signupModel.ConfirmPassword)" class="signup__form-validation-message" />
+        </div>
+
+        <button type="submit" class="signup__form-button" disabled="@isLoading">Create account</button>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="signup__error">@errorMessage</p>
+        }
+    </EditForm>
+</div>
 
 @code {
+    private SignupModel signupModel = new SignupModel();
+    private bool isLoading = false;
+    private string? errorMessage = null;
+
+    private async Task HandleSignup()
+    {
+        isLoading = true;
+        // Reset error message
+        errorMessage = null;
+
+        try
+        {
+            // Call the register method in AuthenticationService
+            var result = await AuthenticationService.Register(signupModel);
+
+            if (result.Success)
+            {
+                // Handle successful registration, e.g., redirect to login
+                Navigation.NavigateTo("/signin");
+            }
+            else
+            {
+                // Display error message
+                errorMessage = result.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    
+    }
+     
 
 }

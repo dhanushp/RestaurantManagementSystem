@@ -1,35 +1,82 @@
 ﻿@page "/signin"
+@layout LoginLayout
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using WebApp.DTOs.SignIn
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager Navigation
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
 
-    <div>
-        <label>Email</label>
-        <InputText @bind-Value="loginModel.Email" />
+<div class="signin">
+    <img src="images/auth_logo.png" alt="Dine Master Logo" class="signin__logo" />
+    <h2 class="signin__heading">Welcome Back!</h2>
+    <p class="signin__description">Please enter your details</p>
+
+    <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin" class="signin__form">
+        <DataAnnotationsValidator />
+
+        <div class="signin__input-group">
+            <label for="email" class="signin__label">Email</label>
+            <InputText @bind-Value="loginModel.Email" id="email" class="signin__input" placeholder="Enter your email" />
+            <ValidationMessage For="@(() => loginModel.Email)" class="signin__validation-message" />
+        </div>
+
+        <div class="signin__input-group">
+            <label for="password" class="signin__label">Password</label>
+            <InputText @bind-Value="loginModel.Password" type="password" id="password" class="signin__input" placeholder="Enter your password" />
+            <ValidationMessage For="@(() => loginModel.Password)" class="signin__validation-message" />
+        </div>
+
+        <button type="submit" class="signin__button" disabled="@isLoading">Login</button>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="signin__error">@errorMessage</p>
+        }
+    </EditForm>
+
+    <div class="signin__link">
+        <p class="signin__link-url">
+            <a href="/forgot-password" class="signin__link-url--text">Forgot password?</a>
+        </p>
+        <p class="signin__link-url">
+            New to Dine Master? <a href="/signup" class="signin__link-url--text">Create Account</a>
+        </p>
     </div>
-
-    <div>
-        <label>Password</label>
-        <InputText @bind-Value="loginModel.Password" type="password" />
-    </div>
-
-    <button type="submit" class="btn-primary">Sign In</button>
-</EditForm>
+</div>
 
 @code {
-    private LoginModel loginModel = new LoginModel();  // This is the model for binding
+    private LoginModel loginModel = new LoginModel();
+    private bool isLoading = false;
+    private string? errorMessage = null;
 
     private async Task HandleLogin()
     {
-        // Handle the login logic here
-        Console.WriteLine($"Logging in with email: {loginModel.Email}");
-    }
+        // make ui changes when isLoading is true
+        isLoading = true;
+        errorMessage = null;
 
-    // You can add login-related logic here
-    public class LoginModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        try
+        {
+            var loginResponse = await AuthenticationService.Login(loginModel);
+
+            if (loginResponse.Success)
+            {
+                // Handle successful login
+                Navigation.NavigateTo("/select-table");
+            }
+            else
+            {
+                errorMessage = loginResponse.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+
     }
 }

@@ -7,7 +7,8 @@
         RegistrationFailed = 1003,
         UserNotFound,
         RoleNotFound,
-        ServiceUnavailable
+        ServiceUnavailable,
+        TableNotFound
     }
 
 }

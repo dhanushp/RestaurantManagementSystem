@@ -9,10 +9,11 @@
 @import "base/base";
 
 // Layout
-@import "layout/header";
+@import "layout/_navbar.scss";
 @import "layout/footer";
 @import "layout/grid";
 @import "layout/container";
+@import "layout/loginlayout.scss";
 
 // Components
 @import "components/button";
@@ -22,11 +23,11 @@
 
 // Pages
 @import "pages/index";
-@import "pages/login";
+@import "pages/signin";
 @import "pages/signup";
 @import "pages/table";
 @import "pages/order";
-
+@import "pages/forgotpassword";
 // Themes (Optional)
 //@import "themes/default";
 

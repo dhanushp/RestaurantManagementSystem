@@ -1,2 +1,124 @@
-﻿body {
+﻿@import '../abstracts/_variables.scss';
+
+.signup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 2rem;
+    background-color: $background;
+    width: 100%;
+
+    &__header {
+        width: 100%;
+        max-width: 350px; // Aligns with the form width for consistent layout
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+
+        &-logo {
+            max-width: 100px;
+            margin-bottom: 1rem;
+        }
+
+        &-heading {
+            font-size: $text-2xl;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: $brown;
+        }
+
+        &-link {
+            font-size: $text-md;
+            margin-bottom: 2rem;
+            color: $brown;
+
+            &--text {
+                color: #0077B6; // Blue for links
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 350px;
+
+        &-input-group {
+            margin-bottom: 2.5rem; // Space between input groups
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative; // Necessary for absolute positioning of validation messages
+            width: 100%;
+
+            .signup__form-label {
+                font-size: $text-md;
+                margin-bottom: 0.5rem;
+                color: $brown;
+                font-weight: 400;
+            }
+
+            .signup__form-input {
+                width: 100%; // Ensure input matches the container's width
+                padding: 1.5rem;
+                border-radius: 5px;
+                font-size: $text-md;
+                background-color: $brown-light;
+                border: 1px solid transparent;
+                color: $brown;
+
+                &:focus {
+                    border: 1px solid $brown;
+                    outline: none;
+                }
+            }
+
+            .signup__form-validation-message {
+                position: absolute; // Positioned absolutely to prevent UI movement
+                top: calc(100% + 0.5rem); // Adjust to leave space between the input and the message
+                left: 0; // Align with the left edge of the input
+                color: $red; // Red for error indication
+                font-size: $text-xs; // Smaller font size
+                font-weight: 400; // Normal weight to differentiate from the label
+            }
+
+            .signup__form-hint {
+                margin-top: 0.25rem;
+                color: $red; // Red to indicate it's related to password requirements
+                font-size: $text-xs;
+                font-weight: 400;
+            }
+        }
+
+        &-button {
+            width: 100%; // Match button width to input fields
+            padding: 1.5rem;
+            margin-top: 2rem; // Space between form and button
+            font-size: $text-md;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            background-color: $red;
+            color: white;
+
+            &:hover {
+                background-color: #b80020;
+            }
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
 }
