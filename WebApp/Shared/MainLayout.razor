@@ -2,7 +2,7 @@
 @inherits LayoutComponentBase
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager NavigationManager
-@inject IAuthenticationService AuthenticationService
+@inject ITokenService TokenService
 
 <div>
     <!-- Navbar -->
@@ -23,7 +23,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        var token = await AuthenticationService.GetAccessToken();
+        var token = await TokenService.GetAccessToken();
         if (token == null)
         {
             // No valid token; 
