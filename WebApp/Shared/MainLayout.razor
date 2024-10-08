@@ -2,6 +2,7 @@
 @inherits LayoutComponentBase
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
 
 <div>
     <!-- Navbar -->
@@ -22,12 +23,17 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwtToken");
-        if (!string.IsNullOrEmpty(token))
+        var token = await AuthenticationService.GetAccessToken();
+        if (token == null)
         {
-            // Automatically sign in logic, such as fetching user info
-            // For example, you can redirect to the main page or set user info in a service
-
+            // No valid token; 
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // Token is valid; proceed to main content
+            NavigationManager.NavigateTo("/select-table");
         }
     }
+
 }
