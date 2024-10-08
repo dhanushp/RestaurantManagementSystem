@@ -1,12 +1,16 @@
-﻿using OrderService.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OrderService.Models;
 
 namespace OrderService.Models
 {
     public class Order : BaseEntity
     {
-        public int UserId { get; set; } // Reference to the user who placed the order
+        public Guid UserId { get; set; } // Reference to the user who placed the order
         public List<OrderItem> OrderItems { get; set; } // List of items in the order
         public OrderStatus Status { get; set; } // Current status of the order
+
+        // Navigation property for the parent OrderSummary
+        public OrderSummary OrderSummary { get; set; }
 
         // Computed property for total order price
         public decimal TotalPrice => OrderItems?.Sum(item => item.TotalPrice) ?? 0;

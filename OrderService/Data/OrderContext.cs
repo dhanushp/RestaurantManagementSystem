@@ -8,7 +8,7 @@ namespace OrderService.Data
         public OrderContext(DbContextOptions<OrderContext> options) : base(options)
         {
         }
-
+        public DbSet<OrderSummary> OrderSummaries { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 

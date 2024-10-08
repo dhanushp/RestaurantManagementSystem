@@ -1,7 +1,6 @@
 ﻿using OrderService.Models;
 using OrderService.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
 using OrderService.Data;
 
 namespace OrderService.Repositories
@@ -22,22 +21,22 @@ namespace OrderService.Repositories
             return order;
         }
 
-        public async Task<Order> GetOrderByIdAsync(int orderId)
+        public async Task<Order?> GetOrderByIdAsync(Guid orderId)
         {
             return await _context.Orders
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
-        public async Task<List<Order>> GetOrdersByUserIdAsync(int userId)
+        public async Task<List<Order>> GetOrdersByUserIdAsync(Guid userId)
         {
             return await _context.Orders
-                .Where(o => o.UserId == userId)
+                .Where(o => o.UserId == userId && o.DeletedAt == null) // Exclude deleted orders
                 .Include(o => o.OrderItems)
                 .ToListAsync();
         }
 
-        public async Task<Order> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+        public async Task<Order?> UpdateOrderStatusAsync(Guid orderId, OrderStatus newStatus)
         {
             var order = await GetOrderByIdAsync(orderId);
             if (order == null)
@@ -49,13 +48,13 @@ namespace OrderService.Repositories
             return order;
         }
 
-        public async Task<bool> CancelOrderAsync(int orderId)
+        public async Task<bool> CancelOrderAsync(Guid orderId)
         {
             var order = await GetOrderByIdAsync(orderId);
             if (order == null)
                 return false;
 
-            order.DeletedAt = DateTime.UtcNow;
+            order.DeletedAt = DateTime.UtcNow; // Soft delete
             await _context.SaveChangesAsync();
             return true;
         }
