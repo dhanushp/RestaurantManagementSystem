@@ -1,7 +1,9 @@
 ﻿using MenuService.DTOs;
 using MenuService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/[controller]")]
 public class MenuItemsController : ControllerBase
@@ -13,7 +15,17 @@ public class MenuItemsController : ControllerBase
         _menuItemService = menuItemService;
     }
 
+    // GET: api/menuitems
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetAllMenuItems()
+    {
+        var response = await _menuItemService.GetAllMenuItems(); // Assuming you have this method in your service
+        return Ok(response); // Return success response
+    }
+
     // GET: api/menuitems/available
+    [AllowAnonymous]
     [HttpGet("available")]
     public async Task<IActionResult> GetAvailableMenuItems()
     {
@@ -22,6 +34,7 @@ public class MenuItemsController : ControllerBase
     }
 
     // GET:     
+    [AllowAnonymous]
     [HttpGet("category/{category}")]
     public async Task<IActionResult> GetMenuItemsByCategory(string category)
     {
@@ -32,7 +45,20 @@ public class MenuItemsController : ControllerBase
         return Ok(response);
     }
 
+    // GET: api/menuitems/{id}
+    [AllowAnonymous]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetMenuItemById(Guid id)
+    {
+        var response = await _menuItemService.GetMenuItemById(id);
+        if (!response.Success)
+            return NotFound(response.Message);
+
+        return Ok(response);
+    }
+
     // GET: api/menuitems/name/{name}
+    [AllowAnonymous]
     [HttpGet("name/{name}")]
     public async Task<IActionResult> GetMenuItemByName(string name)
     {
@@ -43,7 +69,10 @@ public class MenuItemsController : ControllerBase
         return Ok(response);
     }
 
+
+
     // POST: api/menuitems
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> AddMenuItem(MenuItemCreateUpdateDTO menuItemCreateDTO)
     {
@@ -60,6 +89,7 @@ public class MenuItemsController : ControllerBase
     }
 
     // PUT: api/menuitems/{id}
+    [AllowAnonymous]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateMenuItem(Guid id, MenuItemCreateUpdateDTO menuItemUpdateDTO)
     {
@@ -71,10 +101,47 @@ public class MenuItemsController : ControllerBase
     }
 
     // DELETE: api/menuitems/{id}
+    [AllowAnonymous]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMenuItem(Guid id)
     {
         var response = await _menuItemService.DeleteMenuItem(id);
+        if (!response.Success)
+            return NotFound(response.Message);
+
+        return Ok(response.Message);
+    }
+
+    // POST: api/menuitems/category
+    [AllowAnonymous]
+    [HttpPost("category")]
+    public async Task<IActionResult> AddCategory(CategoryCreateUpdateDTO categoryCreateDTO)
+    {
+        var response = await _menuItemService.AddCategory(categoryCreateDTO);
+        if (!response.Success)
+            return BadRequest(response.Message);
+
+        return CreatedAtAction(nameof(GetMenuItemsByCategory), new { category = response.Data.Name }, response.Data);
+    }
+
+    // PUT: api/menuitems/category/{id}
+    [AllowAnonymous]
+    [HttpPut("category/{id:guid}")]
+    public async Task<IActionResult> UpdateCategory(Guid id, CategoryCreateUpdateDTO categoryUpdateDTO)
+    {
+        var response = await _menuItemService.UpdateCategory(id, categoryUpdateDTO);
+        if (!response.Success)
+            return NotFound(response.Message);
+
+        return Ok(response.Data);
+    }
+
+    // DELETE: api/menuitems/category/{id}
+    [AllowAnonymous]
+    [HttpDelete("category/{id:guid}")]
+    public async Task<IActionResult> DeleteCategory(Guid id)
+    {
+        var response = await _menuItemService.DeleteCategory(id);
         if (!response.Success)
             return NotFound(response.Message);
 

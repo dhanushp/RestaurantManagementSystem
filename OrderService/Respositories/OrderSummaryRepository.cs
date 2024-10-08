@@ -9,7 +9,7 @@ namespace OrderAPI.Infrastructure.Repositories
     {
         private readonly OrderContext _context;
 
-        public OrderSummaryRepository(OrderContext context)
+            public OrderSummaryRepository(OrderContext context)
         {
             _context = context;
         }

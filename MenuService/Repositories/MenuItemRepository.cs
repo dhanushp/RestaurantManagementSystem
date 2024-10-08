@@ -19,7 +19,30 @@ namespace MenuService.Repositories
         {
             _context = context;
         }
+        // Get all menu items
+        public async Task<Response<List<MenuItemResponseDTO>>> GetAllMenuItems()
+        {
+            try
+            {
+                var menuItems = await _context.MenuItems
+                    .Select(item => new MenuItemResponseDTO
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Price = item.Price,
+                        Category = item.Category != null ? item.Category.Name : "Unknown",
+                        IsAvailable = item.IsAvailable
+                    })
+                    .ToListAsync();
 
+                return Response<List<MenuItemResponseDTO>>.SuccessResponse("All menu items fetched successfully", menuItems);
+            }
+            catch (Exception ex)
+            {
+                return Response<List<MenuItemResponseDTO>>.ErrorResponse($"An error occurred while fetching the menu items: {ex.Message}");
+            }
+        }
         // Get all available menu items
         public async Task<Response<List<MenuItemResponseDTO>>> GetAvailableMenuItems()
         {
@@ -261,6 +284,89 @@ namespace MenuService.Repositories
             catch (Exception ex)
             {
                 return Response<string>.ErrorResponse($"An error occurred while deleting the menu item: {ex.Message}");
+            }
+        }
+        public async Task<Response<CategoryDTO>> AddCategory(CategoryCreateUpdateDTO categoryCreateDTO)
+        {
+            if (string.IsNullOrWhiteSpace(categoryCreateDTO.Name))
+            {
+                return Response<CategoryDTO>.ErrorResponse("Category name cannot be empty.");
+            }
+
+            var category = new Category
+            {
+                Name = categoryCreateDTO.Name,
+                Description = categoryCreateDTO.Description
+            };
+
+            try
+            {
+                await _context.Categories.AddAsync(category);
+                await _context.SaveChangesAsync();
+
+                var categoryDTO = new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description
+                };
+
+                return Response<CategoryDTO>.SuccessResponse("Category added successfully", categoryDTO);
+            }
+            catch (Exception ex)
+            {
+                return Response<CategoryDTO>.ErrorResponse($"An error occurred while adding the category: {ex.Message}");
+            }
+        }
+
+        public async Task<Response<CategoryDTO>> UpdateCategory(Guid categoryId, CategoryCreateUpdateDTO categoryUpdateDTO)
+        {
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null)
+            {
+                return Response<CategoryDTO>.ErrorResponse("Category not found.");
+            }
+
+            category.Name = categoryUpdateDTO.Name;
+            category.Description = categoryUpdateDTO.Description;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                var categoryDTO = new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description
+                };
+
+                return Response<CategoryDTO>.SuccessResponse("Category updated successfully", categoryDTO);
+            }
+            catch (Exception ex)
+            {
+                return Response<CategoryDTO>.ErrorResponse($"An error occurred while updating the category: {ex.Message}");
+            }
+        }
+
+        public async Task<Response<string>> DeleteCategory(Guid categoryId)
+        {
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null)
+            {
+                return Response<string>.ErrorResponse("Category not found.");
+            }
+
+            try
+            {
+                _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
+
+                return Response<string>.SuccessResponse("Category deleted successfully", "Category removed.");
+            }
+            catch (Exception ex)
+            {
+                return Response<string>.ErrorResponse($"An error occurred while deleting the category: {ex.Message}");
             }
         }
     }
