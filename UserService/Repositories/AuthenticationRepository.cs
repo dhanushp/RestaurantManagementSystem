@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using RestaurantManagement.SharedLibrary.Data;
+using System.Security.Cryptography;
 
 namespace UserService.Repositories
 {
@@ -28,30 +29,7 @@ namespace UserService.Repositories
             return user is not null ? new UserResponseDTO(user.Id, user.FullName, user.Email, user.Role.Name, user.RoleId) : null;
         }
 
-
-        public async Task<Response<JwtResponseDto>> Login(UserLoginDTO loginDTO)
-        {
-            var getUser = await GetUserByEmail(loginDTO.Email);
-            if (getUser is null)
-                return Response<JwtResponseDto>.ErrorResponse("Invalid Credentials", ErrorCode.InvalidCredentials);
-
-            bool verifyPassword = BCrypt.Net.BCrypt.Verify(loginDTO.Password, getUser.PasswordHash);
-            if (!verifyPassword)
-            {
-                return Response<JwtResponseDto>.ErrorResponse("Invalid Credentials", ErrorCode.InvalidCredentials);
-            }
-
-            JwtResponseDto jwtResponse = GenerateJwtToken(getUser);
-
-            jwtResponse.UserInfo = new UserResponseDTO(getUser.Id, getUser.FullName, getUser.Email, getUser.Role.Name, getUser.RoleId);
-
-
-            return Response<JwtResponseDto>.SuccessResponse("Logged In Succesfully",jwtResponse);
-            
-        }
-
-
-        private JwtResponseDto GenerateJwtToken(User user)
+        private LoginResponseDTO GenerateJwtToken(User user)
         {
             var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
             if (string.IsNullOrEmpty(jwtSecret))
@@ -77,11 +55,95 @@ namespace UserService.Repositories
                 signingCredentials: credentials
             );
 
-            return new JwtResponseDto
+            return new LoginResponseDTO
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ExpiresAt = DateTime.UtcNow.AddDays(1) // Set the expiration time
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(5) // Set the expiration time
             };
+        }
+
+        private string GenerateSecureRefreshToken()
+        {
+            // Generate a secure random token
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                var tokenBytes = new byte[32]; // 32 bytes for a 256-bit token
+                rng.GetBytes(tokenBytes);
+                return Convert.ToBase64String(tokenBytes); // Encode to Base64
+            }
+        }
+
+        public async Task<Response<LoginResponseDTO>> Login(UserLoginDTO loginDTO)
+        {
+            var getUser = await GetUserByEmail(loginDTO.Email);
+            if (getUser is null)
+                return Response<LoginResponseDTO>.ErrorResponse("Invalid Credentials", ErrorCode.InvalidCredentials);
+
+            bool verifyPassword = BCrypt.Net.BCrypt.Verify(loginDTO.Password, getUser.PasswordHash);
+            if (!verifyPassword)
+            {
+                return Response<LoginResponseDTO>.ErrorResponse("Invalid Credentials", ErrorCode.InvalidCredentials);
+            }
+
+            LoginResponseDTO loginResponse = GenerateJwtToken(getUser);
+
+            // Generate Refresh Token
+            var refreshToken = GenerateSecureRefreshToken();
+            var refreshTokenEntity = new RefreshToken
+            {
+                Token = refreshToken,
+                UserId = getUser.Id,
+                ExpiresAt = DateTime.UtcNow.AddDays(30), // Refresh token valid for 30 days
+            };
+
+            // Save refresh token to database
+            getUser.RefreshTokens.Add(refreshTokenEntity);
+            await context.SaveChangesAsync();
+
+            loginResponse.RefreshToken = refreshToken;
+            loginResponse.RefreshTokenExpiresAt = refreshTokenEntity.ExpiresAt;
+
+            loginResponse.UserInfo = new UserResponseDTO(getUser.Id, getUser.FullName, getUser.Email, getUser.Role.Name, getUser.RoleId);
+
+
+            return Response<LoginResponseDTO>.SuccessResponse("Logged In Succesfully",loginResponse);
+            
+        }
+
+
+        public async Task<Response<LoginResponseDTO>> RefreshAccessToken(RefreshTokenDTO refreshTokenDTO)
+        {
+            var tokenEntity = await context.RefreshTokens
+                .Include(rt => rt.User)
+                .ThenInclude(u => u.Role) // To ensure that the Role is loaded
+                .FirstOrDefaultAsync(rt => rt.Token == refreshTokenDTO.RefreshToken && !rt.IsRevoked);
+
+            if (tokenEntity == null || tokenEntity.ExpiresAt <= DateTime.UtcNow)
+            {
+                return Response<LoginResponseDTO>.ErrorResponse("Invalid or expired refresh token", ErrorCode.InvalidCredentials);
+            }
+
+            // Generate new JWT token
+            var jwtResponse = GenerateJwtToken(tokenEntity.User);
+
+            // Optionally: Revoke old refresh token and issue a new one
+            tokenEntity.IsRevoked = true;
+            var newRefreshToken = GenerateSecureRefreshToken();
+            var newRefreshTokenEntity = new RefreshToken
+            {
+                Token = newRefreshToken,
+                UserId = tokenEntity.UserId,
+                ExpiresAt = DateTime.UtcNow.AddDays(30),
+            };
+            tokenEntity.User.RefreshTokens.Add(newRefreshTokenEntity);
+
+            await context.SaveChangesAsync();
+
+            jwtResponse.RefreshToken = newRefreshToken;
+            jwtResponse.RefreshTokenExpiresAt = newRefreshTokenEntity.ExpiresAt;
+            jwtResponse.UserInfo = new UserResponseDTO(tokenEntity.User.Id, tokenEntity.User.FullName, tokenEntity.User.Email, tokenEntity.User.Role.Name, tokenEntity.User.RoleId);
+
+            return Response<LoginResponseDTO>.SuccessResponse("Token Refreshed Successfully", jwtResponse);
         }
 
 

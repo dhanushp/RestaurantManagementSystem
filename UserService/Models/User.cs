@@ -11,5 +11,8 @@ namespace UserService.Models
         // Foreign key to Role
         public Guid RoleId { get; set; }
         public Role Role { get; set; } // Navigation property for the Role
+
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>(); // Navigation property for refresh tokens
+
     }
 }
