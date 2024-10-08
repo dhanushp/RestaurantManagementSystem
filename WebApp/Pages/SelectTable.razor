@@ -1,7 +1,8 @@
 ﻿@page "/select-table"
 @layout LoginLayout
 @using System.ComponentModel.DataAnnotations
-
+@using WebApp.DTOs.Tables
+@inject ITableService TableService
 
 <div class="select-table">
     <div class="select-table__header">
@@ -15,11 +16,11 @@
 
         <div class="select-table__form-input-group">
             <label for="tableNumber" class="select-table__form-label">Table number</label>
-            <InputSelect @bind-Value="tableSelectionModel.TableNumber" id="tableNumber" class="select-table__form-select">
+            <InputSelect @bind-Value="tableSelectionModel.TableId" id="tableNumber" class="select-table__form-select">
                 <option value="">Select table...</option>
                 @foreach (var table in availableTables)
                 {
-                    <option value="@table">@table</option>
+                    <option value="@table.Id">@table.Number</option>
                 }
             </InputSelect>
             <ValidationMessage For="@(() => tableSelectionModel.TableNumber)" class="select-table__form-validation-message" />
@@ -27,16 +28,48 @@
 
         <button type="submit" class="select-table__form-button select-table__form-button--primary">Proceed</button>
         <button type="button" @onclick="NavigateBack" class="select-table__form-button select-table__form-button--secondary">Go back</button>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="signin__error">@errorMessage</p>
+        }
     </EditForm>
 </div>
 
 @code {
     private TableSelectionModel tableSelectionModel = new TableSelectionModel();
-    private List<int> availableTables = new List<int> { 1, 2, 3, 4, 5 }; // Sample available tables
+    private List<TableResponseDTO> availableTables = new List<TableResponseDTO>();
 
-    private void HandleTableSelection()
+    string? errorMessage = null;
+
+    protected override async Task OnInitializedAsync()
     {
-        // Handle table selection logic here
+        var result = await TableService.GetAvailableTables();
+        if (result.Success)
+        {
+            availableTables = result.Data;
+        }
+    }
+
+    private async Task HandleTableSelection()
+    {
+        var selectedTable = availableTables.FirstOrDefault(t => t.Id == tableSelectionModel.TableId);
+        if (selectedTable != null)
+        {
+            // Set the TableNumber in the model after selection
+            tableSelectionModel.TableNumber = selectedTable.Number;
+
+            // Now you can send TableId and TableNumber as needed
+            var response = await TableService.OccupyTable(tableSelectionModel.TableId);
+
+            if (response.Success)
+            {
+                Navigation.NavigateTo("/order");
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
     }
 
     private void NavigateBack()
@@ -47,6 +80,8 @@
     public class TableSelectionModel
     {
         [Required(ErrorMessage = "Table number is required")]
-        public int? TableNumber { get; set; }
+        public Guid TableId { get; set; }
+
+        public string? TableNumber { get; set; }
     }
 }

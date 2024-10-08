@@ -15,9 +15,6 @@ namespace WebApp.Services
         Task<Response<LoginResponseDTO>> Login(LoginModel loginModel);
         Task<Response<string>> Register(SignupModel signupModel);
         Task<Response<LoginResponseDTO>> RefreshAccessToken(); 
-        Task Logout();
-        Task<string?> GetAccessToken();
-
 
     }
 
@@ -96,37 +93,6 @@ namespace WebApp.Services
 
             return refreshResponse;
         }
-
-        public async Task Logout()
-        {
-            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "jwtToken");
-            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "refreshToken");
-            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "accessTokenExpiresAt");
-        }
-
-        public async Task<string?> GetAccessToken()
-        {
-            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwtToken");
-
-            // Check if the token is expired
-            var tokenExpiryString = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "accessTokenExpiresAt");
-            if (DateTime.TryParse(tokenExpiryString, out var tokenExpiry) && DateTime.UtcNow > tokenExpiry)
-            {
-                var refreshResponse = await RefreshAccessToken();
-                if (refreshResponse.Success)
-                {
-                    return refreshResponse.Data.AccessToken;
-                }
-                else
-                {
-                    await Logout(); // Log out user if refresh fails
-                    return null;
-                }
-            }
-
-            return token;
-        }
-
 
     }
 }

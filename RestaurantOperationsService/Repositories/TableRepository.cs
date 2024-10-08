@@ -126,5 +126,23 @@ namespace RestaurantOperationsService.Repositories
 
             return Response<string>.SuccessResponse("Table is now available", $"{tableId}");
         }
+
+
+        public async Task<Response<string>> OccupyTable(Guid tableId)
+        {
+            var table = await _context.Tables.FindAsync(tableId);
+            if (table == null || table.Status != TableStatus.Available)
+            {
+                return Response<string>.ErrorResponse("Table not found or already occupied", ErrorCode.TableNotFound);
+            }
+
+            table.Status = TableStatus.Occupied;
+            table.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Response<string>.SuccessResponse("Table occupied successfully", $"{tableId}");
+        }
+        
     }
 }

@@ -12,5 +12,6 @@ namespace RestaurantOperationsService.Interfaces
         Task<Response<string>> UpdateTable(Guid tableId, TableUpdateDTO tableUpdateDTO);
         Task<Response<string>> SoftDeleteTable(Guid tableId);
         Task<Response<string>> MakeTableAvailable(Guid tableId);
+        Task<Response<string>> OccupyTable(Guid tableId);
     }
 }
