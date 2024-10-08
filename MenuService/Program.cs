@@ -46,6 +46,7 @@ using (var scope = app.Services.CreateScope())
 //    app.UseSwaggerUI();
 //}
 
+app.UseInfrastructurePolicy();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
