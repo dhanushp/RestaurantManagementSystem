@@ -22,7 +22,7 @@ builder.Services.AddDbContext<OrderContext>(options =>
 builder.Services.AddScoped<IOrderService, OrderServiced>(); // Register the OrderService
 builder.Services.AddScoped<IOrderRepository, OrderRepository>(); // Register the OrderRepository
 // Register HttpClient for UserService
-builder.Services.AddHttpClient<IUser, UserHttpClient>(client =>
+/*builder.Services.AddHttpClient<IUser, UserHttpClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["UserService:BaseUrl"]);
 });
@@ -31,7 +31,7 @@ builder.Services.AddHttpClient<IUser, UserHttpClient>(client =>
 builder.Services.AddHttpClient<IMenuItem, MenuItemHttpClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["MenuService:BaseUrl"]);
-});
+});*/
 
 // Add controllers
 builder.Services.AddControllers();

@@ -592,6 +592,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   margin-bottom: 0.5rem;
   font-weight: bold;
   color: #7A502D;
+  text-align: center;
 }
 .select-table__header-description {
   font-size: 1.6rem;
@@ -705,6 +706,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   font-size: 1.6rem;
   margin-bottom: 2rem;
   color: #7A502D;
+  text-align: center;
 }
 .forgot-password__form {
   display: flex;

@@ -54,15 +54,15 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f33ed39b-961d-4945-ac8b-eb8977396e30"),
-                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6899),
+                            Id = new Guid("c04ca036-9615-4629-be45-af8ab5243a4d"),
+                            CreatedAt = new DateTime(2024, 10, 8, 5, 34, 41, 931, DateTimeKind.Utc).AddTicks(4162),
                             Description = "Default customer role",
                             Name = "Customer"
                         },
                         new
                         {
-                            Id = new Guid("45b114e8-c1b8-447b-8034-1d96261652f3"),
-                            CreatedAt = new DateTime(2024, 10, 7, 7, 40, 0, 871, DateTimeKind.Utc).AddTicks(6903),
+                            Id = new Guid("c39511ff-f46c-43cf-83b5-344e25f97230"),
+                            CreatedAt = new DateTime(2024, 10, 8, 5, 34, 41, 931, DateTimeKind.Utc).AddTicks(4165),
                             Description = "Administrator role",
                             Name = "Admin"
                         });
@@ -106,6 +106,17 @@ namespace UserService.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ef6d8bb6-47c8-49fb-8dde-a2ecf0150403"),
+                            CreatedAt = new DateTime(2024, 10, 8, 5, 34, 42, 94, DateTimeKind.Utc).AddTicks(9260),
+                            Email = "admin@eg.dk",
+                            FullName = "Admin User",
+                            PasswordHash = "$2a$11$nVXFsX4w9OQaKjWSCrz9yOAdYRaQBeqZjv7XPxhFBbHJ66HrnTpIm",
+                            RoleId = new Guid("c39511ff-f46c-43cf-83b5-344e25f97230")
+                        });
                 });
 
             modelBuilder.Entity("UserService.Models.User", b =>

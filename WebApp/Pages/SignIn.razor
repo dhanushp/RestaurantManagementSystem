@@ -22,7 +22,7 @@
             <ValidationMessage For="@(() => loginModel.Password)" class="signin__validation-message" />
         </div>
 
-        <button type="submit" class="signin__button">Login</button>
+        <button type="submit" class="signin__button" @onclick="HandleLogin">Login</button>
     </EditForm>
 
     <div class="signin__link">
