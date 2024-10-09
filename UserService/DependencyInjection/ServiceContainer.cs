@@ -22,10 +22,11 @@ namespace UserService.DependencyInjection
             return services;
         }
 
-        public static IApplicationBuilder UserInfrastructurePolicy(this IApplicationBuilder app)
+        public static IApplicationBuilder UseInfrastructurePolicy(this IApplicationBuilder app)
         {
             // Register Middleware such as:
             // Global Exception
+            // API Gateway
             SharedServiceContainer.UseSharedPolicies(app);
             return app;
         }

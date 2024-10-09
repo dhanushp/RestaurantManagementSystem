@@ -13,6 +13,12 @@ namespace MenuService.Services
             _menuItemRepository = menuItemRepository;
         }
 
+        // Get all menu items
+        public async Task<Response<List<MenuItemResponseDTO>>> GetAllMenuItems()
+        {
+            return await _menuItemRepository.GetAllMenuItems();
+        }
+
         // Get all available menu items
         public async Task<Response<List<MenuItemResponseDTO>>> GetAvailableMenuItems()
         {
@@ -30,6 +36,16 @@ namespace MenuService.Services
 
             // Fetch items by category
             return await _menuItemRepository.GetMenuItemsByCategory(category);
+        }
+        public async Task<Response<MenuItemDetailResponseDTO>> GetMenuItemById(Guid menuItemId)
+        {
+            if (menuItemId == Guid.Empty)
+            {
+                return Response<MenuItemDetailResponseDTO>.ErrorResponse("Invalid menu item ID.");
+            }
+
+            // Call the repository method
+            return await _menuItemRepository.GetMenuItemById(menuItemId);
         }
 
         // Get menu item by name 
@@ -88,6 +104,23 @@ namespace MenuService.Services
 
             // Call the repository method
             return await _menuItemRepository.DeleteMenuItem(menuItemId);
+        }
+
+        public async Task<Response<CategoryDTO>> AddCategory(CategoryCreateUpdateDTO categoryCreateDTO)
+        {
+            return await _menuItemRepository.AddCategory(categoryCreateDTO);
+        }
+
+        // Update an existing category
+        public async Task<Response<CategoryDTO>> UpdateCategory(Guid categoryId, CategoryCreateUpdateDTO categoryUpdateDTO)
+        {
+            return await _menuItemRepository.UpdateCategory(categoryId, categoryUpdateDTO);
+        }
+
+        // Delete a category
+        public async Task<Response<string>> DeleteCategory(Guid categoryId)
+        {
+            return await _menuItemRepository.DeleteCategory(categoryId);
         }
     }
 }

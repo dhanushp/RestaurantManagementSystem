@@ -7,7 +7,9 @@ namespace UserService.Interfaces
     {
         Task<Response<string>> Register(UserRegisterDTO userDTO);
 
-        Task<Response<JwtResponseDto>> Login(UserLoginDTO loginDTO);
+        Task<Response<LoginResponseDTO>> RefreshAccessToken(RefreshTokenDTO refreshTokenDTO);
+
+        Task<Response<LoginResponseDTO>> Login(UserLoginDTO loginDTO);
 
         /*
         Task<Response<string>> ForgotPassword(UserRegisterDTO userDTO);

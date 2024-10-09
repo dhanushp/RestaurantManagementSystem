@@ -1,6 +1,10 @@
 ﻿@page "/signup"
 @layout LoginLayout
 @using System.ComponentModel.DataAnnotations
+@using WebApp.DTOs.SignUp
+@inject IAuthenticationService AuthenticationService 
+@inject NavigationManager Navigation
+
 
 <div class="signup">
     <div class="signup__header">
@@ -36,33 +40,51 @@
             <ValidationMessage For="@(() => signupModel.ConfirmPassword)" class="signup__form-validation-message" />
         </div>
 
-        <button type="submit" class="signup__form-button">Create account</button>
+        <button type="submit" class="signup__form-button" disabled="@isLoading">Create account</button>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="signup__error">@errorMessage</p>
+        }
     </EditForm>
 </div>
 
 @code {
     private SignupModel signupModel = new SignupModel();
+    private bool isLoading = false;
+    private string? errorMessage = null;
 
-    private void HandleSignup()
+    private async Task HandleSignup()
     {
-        // Handle signup logic here
+        isLoading = true;
+        // Reset error message
+        errorMessage = null;
+
+        try
+        {
+            // Call the register method in AuthenticationService
+            var result = await AuthenticationService.Register(signupModel);
+
+            if (result.Success)
+            {
+                // Handle successful registration, e.g., redirect to login
+                Navigation.NavigateTo("/signin");
+            }
+            else
+            {
+                // Display error message
+                errorMessage = result.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    
     }
+     
 
-    public class SignupModel
-    {
-        [Required(ErrorMessage = "Full Name is required")]
-        public string FullName { get; set; }
-
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
-        public string Email { get; set; }
-
-        [Required(ErrorMessage = "Password is required")]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
-        public string Password { get; set; }
-
-        [Required(ErrorMessage = "Confirm Password is required")]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
-        public string ConfirmPassword { get; set; }
-    }
 }

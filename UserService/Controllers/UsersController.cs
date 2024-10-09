@@ -18,6 +18,7 @@ namespace UserService.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<ActionResult<Response<List<UserResponseDTO>>>> GetAllUsers()
         {
             var result = await _userInterface.GetAllUsers();

@@ -10,6 +10,8 @@ namespace UserService.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,7 +60,7 @@ namespace UserService.Data
             {
                 throw new InvalidOperationException("Environment variable 'ADMIN_PWD' is not set.");
             }
-
+            
             // Seed an initial admin user with the fetched password
             modelBuilder.Entity<User>().HasData(
                 new User
