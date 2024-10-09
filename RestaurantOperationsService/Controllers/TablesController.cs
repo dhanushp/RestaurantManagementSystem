@@ -36,7 +36,7 @@ namespace RestaurantOperationsService.Controllers
             var response = await _tableRepository.GetTableById(id);
             if (!response.Success) return NotFound(response);
             return Ok(response);
-        }
+        }        
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -72,5 +72,18 @@ namespace RestaurantOperationsService.Controllers
             if (!response.Success) return NotFound(response);
             return Ok(response);
         }
+
+        [HttpPost("occupy")]
+        public async Task<IActionResult> OccupyTable([FromBody] OccupyTableRequestDTO request)
+        {
+            var result = await _tableRepository.OccupyTable(request.TableId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
     }
 }
