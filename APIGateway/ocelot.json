@@ -142,6 +142,47 @@
                 "AuthenticationProviderKey": "Bearer",
                 "AllowedScopes": []
             }
+        },
+
+        // Tables - GET
+        {
+            "DownstreamPathTemplate": "/api/tables/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5002
+                }
+            ],
+            "UpstreamPathTemplate": "/api/tables/{everything}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "FileCacheOptions": {
+                "TtlSeconds": 60,
+                "Region": "default",
+                "Header": "RestaurantManagement-Caching-Control"
+            },
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        // Tables - POST, PUT, PATCH, DELETE
+        {
+            "DownstreamPathTemplate": "/api/tables/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5002
+                }
+            ],
+            "UpstreamPathTemplate": "/api/tables/{everything}",
+            "UpstreamHttpMethod": [ "PUT", "PATCH", "POST", "DELETE" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
         }
 
     ],

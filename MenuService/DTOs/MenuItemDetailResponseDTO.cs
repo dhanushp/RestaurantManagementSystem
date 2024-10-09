@@ -8,5 +8,6 @@
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
         // Add other relevant properties as needed
+        public string? Category { get; set; }
     }
 }

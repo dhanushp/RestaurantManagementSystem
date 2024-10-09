@@ -1,6 +1,11 @@
 ﻿@page "/signin"
 @layout LoginLayout
 @using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using WebApp.DTOs.SignIn
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager Navigation
+
 
 <div class="signin">
     <img src="images/auth_logo.png" alt="Dine Master Logo" class="signin__logo" />
@@ -22,7 +27,11 @@
             <ValidationMessage For="@(() => loginModel.Password)" class="signin__validation-message" />
         </div>
 
-        <button type="submit" class="signin__button" @onclick="HandleLogin">Login</button>
+        <button type="submit" class="signin__button" disabled="@isLoading">Login</button>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="signin__error">@errorMessage</p>
+        }
     </EditForm>
 
     <div class="signin__link">
@@ -37,19 +46,37 @@
 
 @code {
     private LoginModel loginModel = new LoginModel();
+    private bool isLoading = false;
+    private string? errorMessage = null;
 
-    private void HandleLogin()
+    private async Task HandleLogin()
     {
-        // Handle login logic here
-    }
+        // make ui changes when isLoading is true
+        isLoading = true;
+        errorMessage = null;
 
-    public class LoginModel
-    {
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
-        public string Email { get; set; }
+        try
+        {
+            var loginResponse = await AuthenticationService.Login(loginModel);
 
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
+            if (loginResponse.Success)
+            {
+                // Handle successful login
+                Navigation.NavigateTo("/select-table");
+            }
+            else
+            {
+                errorMessage = loginResponse.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+
     }
 }

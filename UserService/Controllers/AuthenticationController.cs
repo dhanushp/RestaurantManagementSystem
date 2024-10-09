@@ -33,12 +33,25 @@ namespace UserService.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<Response<JwtResponseDto>>> Login(UserLoginDTO userLoginDTO)
+        public async Task<ActionResult<Response<LoginResponseDTO>>> Login(UserLoginDTO userLoginDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var result = await _userInterface.Login(userLoginDTO);
+            return result.Success ? Ok(result) : Unauthorized(result);
+        }
+
+        [HttpPost("refreshAccessToken/")]
+        public async Task<ActionResult<Response<LoginResponseDTO>>> RefreshAccessToken(RefreshTokenDTO refreshTokenDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Call the service layer to validate the refresh token and generate a new access token
+            var result = await _userInterface.RefreshAccessToken(refreshTokenDTO);
+
+            // Return appropriate response based on success or failure
             return result.Success ? Ok(result) : Unauthorized(result);
         }
 

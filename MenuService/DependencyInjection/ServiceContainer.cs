@@ -21,7 +21,7 @@ namespace MenuService.DependencyInjection
             return services;
         }
 
-        public static IApplicationBuilder UserInfrastructurePolicy(this IApplicationBuilder app)
+        public static IApplicationBuilder UseInfrastructurePolicy(this IApplicationBuilder app)
         {
             // Register Middleware such as:
             // Global Exception

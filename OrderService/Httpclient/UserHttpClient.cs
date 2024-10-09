@@ -2,12 +2,13 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using OrderService.Interfaces;
 using RestaurantManagement.SharedLibrary.Responses;
 using UserService.DTOs; // Assuming you have a UserDetailResponseDTO defined
 
-namespace OrderAPI.Infrastructure.HttpClients
+namespace OrderService.HttpClients
 {
-    public class UserHttpClient
+    public class UserHttpClient : IUsers
     {
         private readonly HttpClient _httpClient;
 
