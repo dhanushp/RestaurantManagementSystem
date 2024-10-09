@@ -1,11 +1,16 @@
-﻿namespace OrderService.DTO
+﻿using OrderService.Models;
+
+namespace OrderService.DTO
 {
     public class OrderResponseDTO
     {
         public Guid Id { get; set; } // Unique identifier of the order
         public Guid UserId { get; set; } // Reference to the user who placed the order
+        public int TableNumber { get; set; }
         public List<OrderItemResponseDTO> OrderItems { get; set; } // List of items in the order
-        public string Status { get; set; } // Current order status (Pending, InPreparation, Served, Paid)
+
+        public Guid? OrderSummaryId { get; set; }
+        public OrderStatus Status { get; set; }
         public decimal TotalPrice { get; set; } // Total price of the order
         public DateTime CreatedAt { get; set; } // Order creation time
         public DateTime? UpdatedAt { get; set; } // Last update time

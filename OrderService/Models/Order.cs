@@ -7,10 +7,10 @@ namespace OrderService.Models
     {
         public Guid UserId { get; set; } // Reference to the user who placed the order
         public List<OrderItem> OrderItems { get; set; } // List of items in the order
-        public OrderStatus Status { get; set; } // Current status of the order
-
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
+        public Guid? OrderSummaryId { get; set; }
         // Navigation property for the parent OrderSummary
-        public OrderSummary OrderSummary { get; set; }
+        public virtual OrderSummary OrderSummary { get; set; }
 
         // Computed property for total order price
         public decimal TotalPrice => OrderItems?.Sum(item => item.TotalPrice) ?? 0;

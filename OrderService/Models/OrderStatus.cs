@@ -5,6 +5,8 @@
         Pending,
         InPreparation,
         Served,
-        Paid
+        Paid,
+        Cancelled
+
     }
 }
