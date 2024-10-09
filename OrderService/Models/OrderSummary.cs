@@ -2,16 +2,10 @@
 {
     public class OrderSummary : BaseEntity
     {
-        public int TableNumber { get; set; } // The table number associated with this order summary
         public decimal TaxAmount { get; set; } // The tax amount applied to the orders in this summary
-
-        // Navigation property to reference the list of orders in this summary
-        public List<Order> Orders { get; set; }
-
-        // Constructor to initialize the Orders list
-        public OrderSummary()
-        {
-            Orders = new List<Order>();
-        }
+        public Guid OrderSummaryId { get; set; }
+        public int TableNumber { get; set; }
+        public List<Order> Orders { get; set; } = new List<Order>(); // List to store multiple orders
+        public Order Order { get; set; }
     }
 }
