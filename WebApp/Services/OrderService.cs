@@ -1,43 +1,83 @@
 ﻿using System.Net.Http.Json;
+using WebApp.DTOs;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
-using System.Text;
-using WebApp.DTOs.Order;
 
 namespace WebApp.Services
 {
     public interface IOrderService
     {
-        Task<List<OrderDto>> GetUserOrdersAsync();
-        Task<bool> PlaceOrder(OrderCreateDTO order);
-        Task<bool> UpdateOrderStatus(int orderId, OrderStatusUpdateDTO statusUpdate);
+        Task<Response<List<OrderDto>>> GetAllOrdersAsync();
+        Task<Response<OrderDto>> GetOrderByIdAsync(Guid orderId);
+        Task<Response<List<OrderDto>>> GetOrdersByUserIdAsync(Guid userId);
+        Task<Response<string>> UpdateOrderStatusAsync(Guid orderId, OrderStatusUpdateDTO statusUpdate);
+        Task<Response<string>> CancelOrderAsync(Guid orderId);
     }
 
     public class OrderService : IOrderService
     {
         private readonly HttpClient _httpClient;
+        private readonly ITokenService _tokenService;
 
-        public OrderService(HttpClient httpClient)
+        public OrderService(HttpClient httpClient, ITokenService tokenService)
         {
             _httpClient = httpClient;
+            _tokenService = tokenService;
         }
 
-        public async Task<List<OrderDto>> GetUserOrdersAsync()
+        public async Task<Response<List<OrderDto>>> GetAllOrdersAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<List<OrderDto>>("https://localhost:5003/api/orders");
-            return response ?? new List<OrderDto>();
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync("http://localhost:5000/api/orders");
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Response<List<OrderDto>>>(responseBody);
         }
 
-        public async Task<bool> PlaceOrder(OrderCreateDTO order)
+        public async Task<Response<OrderDto>> GetOrderByIdAsync(Guid orderId)
         {
-            var response = await _httpClient.PostAsJsonAsync("https://localhost:5003/api/orders", order);
-            return response.IsSuccessStatusCode;
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"http://localhost:5000/api/orders/{orderId}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Response<OrderDto>>(responseBody);
         }
 
-        public async Task<bool> UpdateOrderStatus(int orderId, OrderStatusUpdateDTO statusUpdate)
+        public async Task<Response<List<OrderDto>>> GetOrdersByUserIdAsync(Guid userId)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(statusUpdate), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync($"https://localhost:5003/api/orders/{orderId}/status", content);
-            return response.IsSuccessStatusCode;
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"http://localhost:5000/api/orders/user/{userId}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Response<List<OrderDto>>>(responseBody);
+        }
+
+        public async Task<Response<string>> UpdateOrderStatusAsync(Guid orderId, OrderStatusUpdateDTO statusUpdate)
+        {
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.PutAsJsonAsync($"http://localhost:5000/api/orders/{orderId}/status", statusUpdate);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Response<string>>(responseBody);
+        }
+
+        public async Task<Response<string>> CancelOrderAsync(Guid orderId)
+        {
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.DeleteAsync($"http://localhost:5000/api/orders/{orderId}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Response<string>>(responseBody);
         }
     }
 }

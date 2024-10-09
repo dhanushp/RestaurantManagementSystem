@@ -1,8 +1,8 @@
 ﻿namespace WebApp.DTOs.Menu
 {
-    public class MenuItemResponseDTO
+    public class MenuItemDetailResponseDTO
     {
-        public int Id { get; set; }           // Unique identifier for the menu item
+        public int Id { get; set; }            // Unique identifier for the menu item
         public string Name { get; set; }       // Name of the menu item
         public string Description { get; set; } // Description of the menu item
         public decimal Price { get; set; }     // Price of the menu item
