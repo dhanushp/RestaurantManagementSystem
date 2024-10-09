@@ -15,4 +15,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RestaurantManagement.SharedDataLibrary\RestaurantManagement.SharedDataLibrary.csproj" />
+    <ProjectReference Include="..\RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
