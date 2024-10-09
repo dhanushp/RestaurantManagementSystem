@@ -7,6 +7,9 @@ namespace OrderService.DTO
         public Guid UserId { get; set; } // Reference to the user who placed the order
         public List<OrderItemCreateDTO> OrderItems { get; set; } // List of items being ordered
 
+        public Guid? OrderSummaryId { get; set; }
+        public int TableNumber { get; set; }
+
         // Ensure the list is initialized to avoid null reference issues
         public OrderCreateDTO()
         {
