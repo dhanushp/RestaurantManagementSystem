@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantManagement.Shared
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{05389AD6-688B-497F-B50E-A4EAC6E929D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantOperationsService", "RestaurantOperationsService\RestaurantOperationsService.csproj", "{6B4E671B-E049-4959-BA39-D04898269E93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantOperationsService", "RestaurantOperationsService\RestaurantOperationsService.csproj", "{6B4E671B-E049-4959-BA39-D04898269E93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

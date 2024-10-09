@@ -1,38 +1,129 @@
 ﻿@page "/menu"
-@* @inject OrderService orderService *@
+@inject CartService cartService
+@inject MenuService menuService
 
+<div class="menu-page">
+    <!-- Left Sidebar (Menu, Payments, AI Recommendations) -->
+    <Sidebar OnTabChange="HandleTabChange" />
 
-<h3>Menu</h3>
-@if ("menuItems" == null)
-{
-    <p>Loading menu...</p>
-}
-else
-{
-    <div class="menu-list">
-        @* @foreach (var item in menuItems)
-        {
-            <div class="menu-item">
-                <img src="@item.ImageUrl" alt="@item.Name" />
-                <h4>@item.Name (@(item.IsNonVeg ? "Non-Veg" : "Veg"))</h4>
-                <p>@item.Description</p>
-                <p>Price: @item.Price</p>
-                <button @onclick="() => AddToOrder(item)">Add to Order</button>
-            </div>
-        } *@
+    <!-- Middle Content: Menu -->
+    <div class="menu-content">
+        <!-- Greeting -->
+        <div class="greeting">
+            <h1>Hello, @UserName</h1>
+            <p>You're in table <span class="table-number">@TableNumber</span></p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="What would you like to eat?" @bind="searchQuery" />
+        </div>
+
+        <!-- Categories (Horizontally Scrollable) -->
+        <div class="categories">
+            @foreach (var category in categories)
+            {
+                <button class="category-btn @(selectedCategory == category ? "active" : "")" @onclick="() => SelectCategory(category)">
+                    @category.Name
+                </button>
+            }
+        </div>
+
+        <!-- Menu Items (Vertically Scrollable) -->
+        <div class="menu-items">
+            @foreach (var item in FilteredMenuItems())
+            {
+                <div class="menu-item">
+                    <img src="@item.ImageUrl" alt="@item.Name" />
+                    <div class="menu-details">
+                        <h4>@item.Name</h4>
+                        <p>@item.Description</p>
+                        <p class="price">$@item.Price</p>
+                        <button class="add-to-cart-btn" @onclick="() => AddToCart(item)">Add to Cart</button>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-}
 
-@* @code {
-    private List<MenuItem> menuItems;
+    <!-- Right Sidebar: Order Summary -->
+    <div class="order-summary">
+        <h3>My Orders</h3>
+        <p>Order #@OrderNumber</p>
+
+        <div class="orders-list">
+            @foreach (var order in orders)
+            {
+                <div class="order-item">
+                    <img src="@order.MenuItem.ImageUrl" alt="@order.MenuItem.Name" />
+                    <div class="order-details">
+                        <h4>@order.MenuItem.Name</h4>
+                        <p>Quantity: @order.Quantity</p>
+                        <p class="status">@order.Status</p>
+                        <p class="price">$@order.TotalPrice</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
+    </div>
+
+    <!-- Cart Summary (Bottom of Menu) -->
+    <div class="cart-summary">
+        <p>@cartService.GetItemCount() Items. <a href="#" @onclick="OpenCart">View Cart</a></p>
+        <p>Cart Total: $@cartService.GetTotalPrice()</p>
+        <button class="place-order-btn" @onclick="PlaceOrder">Place Order</button>
+    </div>
+</div>
+
+@code {
+    private string UserName = "David";
+    private string TableNumber = "07";
+    private string searchQuery = "";
+    private string selectedCategory = "All";
+    private List<MenuItem> categories = new List<MenuItem>();
+    private List<MenuItem> menuItems = new List<MenuItem>();
+    private List<Order> orders = new List<Order>();
+    private int OrderNumber = 21552;
 
     protected override async Task OnInitializedAsync()
     {
+        // Fetch categories and menu items from MenuService
+        categories = await menuService.GetCategoriesAsync();
         menuItems = await menuService.GetMenuItemsAsync();
+        orders = cartService.GetCurrentOrders();
     }
 
-    private void AddToOrder(MenuItem item)
+    private List<MenuItem> FilteredMenuItems()
     {
-        // Logic for adding item to order
+        return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) && 
+                                       (selectedCategory == "All" || item.Category == selectedCategory)).ToList();
     }
-} *@
+
+    private void SelectCategory(string category)
+    {
+        selectedCategory = category;
+    }
+
+    private void AddToCart(MenuItem item)
+    {
+        cartService.AddItem(item);
+        orders = cartService.GetCurrentOrders();
+    }
+
+    private void PlaceOrder()
+    {
+        // Handle place order logic
+    }
+
+    private void NavigateToPayments()
+    {
+        // Navigate to payments tab
+    }
+
+    private void OpenCart()
+    {
+        // Open cart modal (future implementation)
+    }
+}

@@ -1,0 +1,54 @@
+﻿<div class="sidebar @(isSidebarExpanded ? "expanded" : "")">
+    <button class="expand-btn" @onclick="ToggleSidebar">
+        <i class="fas fa-chevron-left"></i> @if (isSidebarExpanded)
+        {
+            <span>Minimize</span>
+        }
+    </button>
+
+    <nav class="nav-icons">
+        <!-- Menu Tab -->
+        <button class="nav-item @(activeTab == "menu" ? "active" : "")" @onclick="() => NavigateToTab('menu')">
+            <i class="fas fa-utensils"></i> @if (isSidebarExpanded)
+            {
+                <span>Menu</span>
+            }
+        </button>
+
+        <!-- Payments Tab -->
+        <button class="nav-item @(activeTab == "payments" ? "active" : "")" @onclick="() => NavigateToTab('payments')">
+            <i class="fas fa-credit-card"></i> @if (isSidebarExpanded)
+            {
+                <span>Payments</span>
+            }
+        </button>
+
+        <!-- AI Recommendations Tab -->
+        <button class="nav-item @(activeTab == "ai" ? "active" : "")" @onclick="() => NavigateToTab('ai')">
+            <i class="fas fa-brain"></i> @if (isSidebarExpanded)
+            {
+                <span>AI Recommendations</span>
+            }
+        </button>
+    </nav>
+</div>
+
+@code {
+    private bool isSidebarExpanded = false;
+    [Parameter] public EventCallback<string> OnTabChange { get; set; }
+    private string activeTab = "menu"; // Default active tab
+
+    private void ToggleSidebar()
+    {
+        isSidebarExpanded = !isSidebarExpanded;
+    }
+
+    private async Task NavigateToTab(string tab)
+    {
+        activeTab = tab;
+        if (OnTabChange.HasDelegate)
+        {
+            await OnTabChange.InvokeAsync(tab);
+        }
+    }
+}

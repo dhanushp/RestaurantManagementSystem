@@ -25,13 +25,14 @@
             <label for="password" class="signin__label">Password</label>
             <InputText @bind-Value="loginModel.Password" type="password" id="password" class="signin__input" placeholder="Enter your password" />
             <ValidationMessage For="@(() => loginModel.Password)" class="signin__validation-message" />
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                    <p class="signin__validation-message">@errorMessage</p>
+            }
         </div>
 
         <button type="submit" class="signin__button" disabled="@isLoading">Login</button>
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <p class="signin__error">@errorMessage</p>
-        }
+        
     </EditForm>
 
     <div class="signin__link">

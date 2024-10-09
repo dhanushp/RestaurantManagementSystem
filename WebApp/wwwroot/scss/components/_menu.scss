@@ -1,0 +1,185 @@
+.menu-page {
+    display: flex;
+    height: 100vh;
+
+    .menu-content {
+        flex: 3;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .greeting {
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .table-number {
+            color: red;
+            font-weight: bold;
+        }
+    }
+
+    .search-bar {
+        margin: 20px 0;
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+    }
+
+    .categories {
+        display: flex;
+        overflow-x: auto;
+        margin-bottom: 20px;
+
+        .category-btn {
+            margin-right: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+
+            &.active {
+                background-color: red;
+                color: white;
+            }
+        }
+    }
+
+    .menu-items {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+
+        .menu-item {
+            display: flex;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 10px;
+                margin-right: 20px;
+            }
+
+            .menu-details {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                h4 {
+                    font-size: 1.2rem;
+                }
+
+                p {
+                    margin: 5px 0;
+                }
+
+                .price {
+                    font-weight: bold;
+                    color: green;
+                }
+
+                .add-to-cart-btn {
+                    background-color: red;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .order-summary {
+        flex: 1;
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-left: 1px solid #ccc;
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .order-item {
+                display: flex;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    margin-right: 20px;
+                    border-radius: 10px;
+                }
+
+                .order-details {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    h4 {
+                        font-size: 1.2rem;
+                    }
+
+                    .status {
+                        font-size: 0.8rem;
+                        color: #999;
+                    }
+
+                    .price {
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+
+        .make-payment-btn {
+            margin-top: 20px;
+            width: 100%;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    }
+
+    .cart-summary {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        background-color: #f8f8f8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #ccc;
+
+        .place-order-btn {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    }
+}

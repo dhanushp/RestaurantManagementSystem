@@ -1,31 +1,28 @@
 ﻿@page "/order"
-@layout SimpleLayout
 
-<div class="tabs">
-    <button class="tab-button" @onclick="@( () => ShowTab("menu") )">Menu</button>
-    <button class="tab-button" @onclick="@( () => ShowTab("summary") )">Order Summary</button>
-    <button class="tab-button" @onclick="@( () => ShowTab("ai") )">AI Recommendations</button>
-</div>
+<div class="order-layout">
+    <Sidebar OnTabChange="HandleTabChange" />
 
-<div class="tab-content">
-    @if (activeTab == "menu")
-    {
-        <Menu />
-    }
-    else if (activeTab == "summary")
-    {
-        <OrderSummary />
-    }
-    else if (activeTab == "ai")
-    {
-        <AIRecommendations />
-    }
+    <div class="main-content">
+        @if (activeTab == "menu")
+        {
+            <Menu />
+        }
+        else if (activeTab == "payments")
+        {
+            <Payments />
+        }
+        else if (activeTab == "ai")
+        {
+            <AIRecommendations />
+        }
+    </div>
 </div>
 
 @code {
     private string activeTab = "menu"; // Default to menu tab
 
-    private void ShowTab(string tabName)
+    private void HandleTabChange(string tabName)
     {
         activeTab = tabName;
     }
