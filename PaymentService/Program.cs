@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using PaymentService.Data; // Assuming DbContext is in Data folder
+using PaymentService.Data;
+using PaymentService.Interfaces;
+using PaymentService.Repositories; // Assuming DbContext is in Data folder
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Services.AddControllers();
 // Add Swagger for API testing and documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
 
 var app = builder.Build();
 
