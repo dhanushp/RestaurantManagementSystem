@@ -17,5 +17,7 @@ builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IOrderService, OrderService>(); // Register OrderService
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IPayPalService, PayPalService>();
+
 
 await builder.Build().RunAsync();
