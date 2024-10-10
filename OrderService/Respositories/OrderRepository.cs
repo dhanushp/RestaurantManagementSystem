@@ -5,14 +5,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Interfaces;
+using OrderService.Data;
 
 namespace OrderService.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly DbContext _dbContext; // Assuming you use Entity Framework
+        private readonly OrderContext _dbContext; // Assuming you use Entity Framework
 
-        public OrderRepository(DbContext dbContext)
+        public OrderRepository(OrderContext dbContext)
         {
             _dbContext = dbContext;
         }

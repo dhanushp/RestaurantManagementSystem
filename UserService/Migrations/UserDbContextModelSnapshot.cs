@@ -22,6 +22,44 @@ namespace UserService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("UserService.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("UserService.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -54,15 +92,15 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bc309ff9-254f-4792-a46e-bf58034fdabf"),
-                            CreatedAt = new DateTime(2024, 10, 8, 11, 29, 25, 910, DateTimeKind.Utc).AddTicks(5692),
+                            Id = new Guid("5708ce14-0674-4dc2-9945-c8daa8c39486"),
+                            CreatedAt = new DateTime(2024, 10, 10, 5, 51, 35, 603, DateTimeKind.Utc).AddTicks(9864),
                             Description = "Default customer role",
                             Name = "Customer"
                         },
                         new
                         {
-                            Id = new Guid("38449280-2c5d-4a5c-8ea5-7725af814570"),
-                            CreatedAt = new DateTime(2024, 10, 8, 11, 29, 25, 910, DateTimeKind.Utc).AddTicks(5695),
+                            Id = new Guid("6731baf9-6911-4902-b406-f8330c4ef492"),
+                            CreatedAt = new DateTime(2024, 10, 10, 5, 51, 35, 603, DateTimeKind.Utc).AddTicks(9867),
                             Description = "Administrator role",
                             Name = "Admin"
                         });
@@ -110,13 +148,24 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2ac4d7c4-97a6-44f8-8f78-a0d50a06aa06"),
-                            CreatedAt = new DateTime(2024, 10, 8, 11, 29, 26, 78, DateTimeKind.Utc).AddTicks(6580),
+                            Id = new Guid("84b0dc18-d151-4c27-9c3d-cb53843c0904"),
+                            CreatedAt = new DateTime(2024, 10, 10, 5, 51, 35, 803, DateTimeKind.Utc).AddTicks(3482),
                             Email = "admin@eg.dk",
                             FullName = "Admin User",
-                            PasswordHash = "$2a$11$Y0bk.VcjNVO0qEx6NbORZ.dlunX95X0PRR8t2olbFU59lsyaSFopu",
-                            RoleId = new Guid("38449280-2c5d-4a5c-8ea5-7725af814570")
+                            PasswordHash = "$2a$11$5rzGIycc0nL3mjCty9ISFeeA.2RqunB8Tm7vhFrPN4cB5fs6P5Qky",
+                            RoleId = new Guid("6731baf9-6911-4902-b406-f8330c4ef492")
                         });
+                });
+
+            modelBuilder.Entity("UserService.Models.RefreshToken", b =>
+                {
+                    b.HasOne("UserService.Models.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UserService.Models.User", b =>
@@ -133,6 +182,11 @@ namespace UserService.Migrations
             modelBuilder.Entity("UserService.Models.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("UserService.Models.User", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

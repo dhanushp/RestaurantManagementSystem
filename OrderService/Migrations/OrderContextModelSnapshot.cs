@@ -34,7 +34,10 @@ namespace OrderService.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrderSummaryId")
+                    b.Property<Guid?>("OrderSummaryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OrderSummaryId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -49,6 +52,10 @@ namespace OrderService.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderSummaryId");
+
+                    b.HasIndex("OrderSummaryId1")
+                        .IsUnique()
+                        .HasFilter("[OrderSummaryId1] IS NOT NULL");
 
                     b.ToTable("Orders");
                 });
@@ -94,6 +101,9 @@ namespace OrderService.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("OrderSummaryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("TableNumber")
                         .HasColumnType("int");
 
@@ -113,8 +123,11 @@ namespace OrderService.Migrations
                     b.HasOne("OrderService.Models.OrderSummary", "OrderSummary")
                         .WithMany("Orders")
                         .HasForeignKey("OrderSummaryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("OrderService.Models.OrderSummary", null)
+                        .WithOne("Order")
+                        .HasForeignKey("OrderService.Models.Order", "OrderSummaryId1");
 
                     b.Navigation("OrderSummary");
                 });
@@ -137,6 +150,9 @@ namespace OrderService.Migrations
 
             modelBuilder.Entity("OrderService.Models.OrderSummary", b =>
                 {
+                    b.Navigation("Order")
+                        .IsRequired();
+
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
