@@ -28,4 +28,8 @@
     <Folder Include="wwwroot\scss\themes\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RestaurantManagement.SharedDataLibrary\RestaurantManagement.SharedDataLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
