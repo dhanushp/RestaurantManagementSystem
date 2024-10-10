@@ -2,7 +2,9 @@
 using System.Text;
 using Newtonsoft.Json;
 using PaymentService.Interfaces;
+using PaymentService.Models;
 using RestaurantManagement.SharedDataLibrary.DTOs.Payment;
+using RestaurantManagement.SharedDataLibrary.Enums;
 
 namespace PaymentService.Repositories
 {
@@ -10,15 +12,18 @@ namespace PaymentService.Repositories
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly IPaymentRepository _paymentRepository;
+
 
         private string PayPalClientId { get; set; } = string.Empty;
         private string PayPalClientSecret { get; set; } = string.Empty;
         private string PayPalUrl { get; set; } = string.Empty;
 
-        public CheckoutRepository(IConfiguration configuration)
+        public CheckoutRepository(IConfiguration configuration, IPaymentRepository paymentRepository)
         {
             _configuration = configuration;
             _httpClient = new HttpClient();
+            _paymentRepository = paymentRepository;
         }
 
         public async Task<string> GetPayPalAccessToken()
@@ -32,6 +37,7 @@ namespace PaymentService.Repositories
             PayPalUrl = _configuration["PayPalSettings:Url"];
 
             var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{PayPalClientId}:{PayPalClientSecret}"));
+
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
 
             var content = new StringContent("grant_type=client_credentials", Encoding.UTF8, "application/x-www-form-urlencoded");
@@ -40,7 +46,7 @@ namespace PaymentService.Repositories
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var accessTokenResponse = JsonConvert.DeserializeObject<PayPalAccessTokenResponse>(responseBody);
-            return accessTokenResponse.AccessToken;
+            return accessTokenResponse.AccessToken ?? "";
         }
 
         public async Task<PayPalOrderResponseDTO> CreateOrder(PayPalCreateOrderDTO createOrderDTO)
@@ -64,7 +70,25 @@ namespace PaymentService.Repositories
             var response = await _httpClient.PostAsync(PayPalUrl + "/v2/checkout/orders", content);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<PayPalOrderResponseDTO>(responseBody);
+            var payPalOrderResponse = JsonConvert.DeserializeObject<PayPalOrderResponseDTO>(responseBody);
+            // Add the payment record to the PaymentRepository
+            if(response.IsSuccessStatusCode)
+            {
+                var payment = new Payment
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.Now,
+                    OrderId = payPalOrderResponse.Id,
+                    Amount = createOrderDTO.Amount,
+                    CurrencyCode = "INR",
+                    PaymentMethod = PaymentMethod.PayPal,
+                    Status = PaymentStatus.Pending
+                };
+
+                await _paymentRepository.AddPaymentAsync(payment);
+            }
+            
+            return payPalOrderResponse;
         }
 
         public async Task<PayPalCaptureOrderResponseDTO> CaptureOrder(string orderId)
@@ -75,8 +99,28 @@ namespace PaymentService.Repositories
             var response = await _httpClient.PostAsync($"https://api-m.sandbox.paypal.com/v2/checkout/orders/{orderId}/capture", null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<PayPalCaptureOrderResponseDTO>(responseBody);
+            var captureResponse = JsonConvert.DeserializeObject<PayPalCaptureOrderResponseDTO>(responseBody);
+
+            // Check if the capture was successful
+            if (captureResponse.Status == "COMPLETED")
+            {
+                // Find the payment record in the repository
+                var payment = await _paymentRepository.GetPaymentByOrderIdAsync(orderId);
+
+                if (payment != null)
+                {
+                    // Update the payment status to Success
+
+                    payment.Status = PaymentStatus.Success;
+                    payment.UpdatedAt = DateTime.Now;
+                    payment.TransactionId = captureResponse.Id;
+                    await _paymentRepository.UpdatePaymentAsync(payment);
+                }
+            }
+
+            return captureResponse;
         }
+
     }
 
 
