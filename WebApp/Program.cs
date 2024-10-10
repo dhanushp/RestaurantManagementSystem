@@ -11,5 +11,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<IPayPalService, PayPalService>();
+
 
 await builder.Build().RunAsync();

@@ -10,7 +10,7 @@ namespace OrderService.Models
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public Guid? OrderSummaryId { get; set; }
         // Navigation property for the parent OrderSummary
-        public virtual OrderSummary OrderSummary { get; set; }
+        public OrderSummary OrderSummary { get; set; }
 
         // Computed property for total order price
         public decimal TotalPrice => OrderItems?.Sum(item => item.TotalPrice) ?? 0;

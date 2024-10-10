@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using RestaurantManagement.SharedLibrary.Models;
 
 namespace PaymentService.Models
 {
@@ -11,7 +12,7 @@ namespace PaymentService.Models
 
         public string PaymentMethod { get; set; } // Payment method (Cash, Credit Card, etc.)
 
-        public string TransactionId { get; set; } // Online transaction ID
+        public string? TransactionId { get; set; } // Online transaction ID
 
         public PaymentStatus Status { get; set; } // Payment status (enum)
     }

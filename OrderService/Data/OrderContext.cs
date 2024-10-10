@@ -25,6 +25,12 @@ namespace OrderService.Data
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.MenuItemPrice)
                 .HasColumnType("decimal(18,2)"); // Precision for prices
+
+            modelBuilder.Entity<Order>()
+           .HasOne(o => o.OrderSummary)
+           .WithMany(os => os.Orders)
+           .HasForeignKey(o => o.OrderSummaryId) // This assumes OrderSummaryId in Order is the foreign key
+           .OnDelete(DeleteBehavior.Restrict); // Set delete behavior as needed
         }
     }
 }
