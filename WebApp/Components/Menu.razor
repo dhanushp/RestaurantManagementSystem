@@ -1,17 +1,19 @@
-﻿@page "/menu"
-@inject CartService cartService
-@inject MenuService menuService
+﻿@inject ITableService tableService
+@inject ICartService cartService
+@inject IMenuService menuService
+@inject IOrderService orderService
+@using WebApp.DTOs.Menu
+@using WebApp.DTOs.Order
+@using WebApp.DTOs
 
 <div class="menu-page">
-    <!-- Left Sidebar (Menu, Payments, AI Recommendations) -->
-    <Sidebar OnTabChange="HandleTabChange" />
 
     <!-- Middle Content: Menu -->
     <div class="menu-content">
         <!-- Greeting -->
         <div class="greeting">
             <h1>Hello, @UserName</h1>
-            <p>You're in table <span class="table-number">@TableNumber</span></p>
+            <p>You're in table <span class="table-number">@TableNumber</span></p> <!-- Dynamically retrieved table number -->
         </div>
 
         <!-- Search Bar -->
@@ -21,9 +23,12 @@
 
         <!-- Categories (Horizontally Scrollable) -->
         <div class="categories">
+            <button class="category-btn @(selectedCategory == "All" ? "active" : "")" @onclick="@(() => SelectCategory("All"))">
+                All
+            </button>
             @foreach (var category in categories)
             {
-                <button class="category-btn @(selectedCategory == category ? "active" : "")" @onclick="() => SelectCategory(category)">
+                <button class="category-btn @(selectedCategory == category.Name ? "active" : "")" @onclick="() => SelectCategory(category.Name)">
                     @category.Name
                 </button>
             }
@@ -31,17 +36,24 @@
 
         <!-- Menu Items (Vertically Scrollable) -->
         <div class="menu-items">
-            @foreach (var item in FilteredMenuItems())
+            @if (FilteredMenuItems().Any())
             {
-                <div class="menu-item">
-                    <img src="@item.ImageUrl" alt="@item.Name" />
-                    <div class="menu-details">
-                        <h4>@item.Name</h4>
-                        <p>@item.Description</p>
-                        <p class="price">$@item.Price</p>
-                        <button class="add-to-cart-btn" @onclick="() => AddToCart(item)">Add to Cart</button>
+                @foreach (var item in FilteredMenuItems())
+                {
+                    <div class="menu-item">
+                        <img src="@item.ImageUrl" alt="@item.Name" />
+                        <div class="menu-details">
+                            <h4>@item.Name</h4>
+                            <p>@item.Description</p>
+                            <p class="price">$@item.Price</p>
+                            <button class="add-to-cart-btn" @onclick="() => AddToCart(item)">Add to Cart</button>
+                        </div>
                     </div>
-                </div>
+                }
+            }
+            else
+            {
+                <p>No items found</p>
             }
         </div>
     </div>
@@ -52,18 +64,7 @@
         <p>Order #@OrderNumber</p>
 
         <div class="orders-list">
-            @foreach (var order in orders)
-            {
-                <div class="order-item">
-                    <img src="@order.MenuItem.ImageUrl" alt="@order.MenuItem.Name" />
-                    <div class="order-details">
-                        <h4>@order.MenuItem.Name</h4>
-                        <p>Quantity: @order.Quantity</p>
-                        <p class="status">@order.Status</p>
-                        <p class="price">$@order.TotalPrice</p>
-                    </div>
-                </div>
-            }
+            <!-- Update this as needed -->
         </div>
 
         <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
@@ -77,28 +78,75 @@
     </div>
 </div>
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="error-message">@errorMessage</div>
+}
+
 @code {
     private string UserName = "David";
-    private string TableNumber = "07";
+    private string TableNumber = "";   // Updated dynamically
     private string searchQuery = "";
-    private string selectedCategory = "All";
-    private List<MenuItem> categories = new List<MenuItem>();
-    private List<MenuItem> menuItems = new List<MenuItem>();
-    private List<Order> orders = new List<Order>();
+    private string selectedCategory = "All"; // Default is All
+    private List<CategoryDTO> categories = new List<CategoryDTO>();
+    private List<MenuItemResponseDTO> menuItems = new List<MenuItemResponseDTO>();
+    private List<OrderItemDto> orders = new List<OrderItemDto>(); // List to store all orders
     private int OrderNumber = 21552;
+    private string errorMessage = "";
+
 
     protected override async Task OnInitializedAsync()
     {
-        // Fetch categories and menu items from MenuService
-        categories = await menuService.GetCategoriesAsync();
-        menuItems = await menuService.GetMenuItemsAsync();
-        orders = cartService.GetCurrentOrders();
+        try
+        {
+            // Fetch categories and menu items from MenuService
+            var categoriesResponse = await menuService.GetCategoriesAsync();
+            var menuItemsResponse = await menuService.GetAllMenuItemsAsync();
+            categories = categoriesResponse.Data;
+            menuItems = menuItemsResponse.Data;
+
+            // Get the tableId from local storage
+            var tableId = await tableService.GetSelectedTableFromLocalStorage();
+            if (tableId.HasValue)
+            {
+                // Fetch the table details from backend using the tableId
+                var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
+
+                if (tableResponse.Success)
+                {
+                    TableNumber = tableResponse.Data.Number; // Assign the fetched table number to be displayed
+                    StateHasChanged(); // Ensure UI updates
+                }
+                else
+                {
+                    errorMessage = "Failed to fetch table details.";
+                }
+            }
+            else
+            {
+                errorMessage = "No table selected.";
+            }
+
+            // Fetch the current orders from the CartService
+            orders = cartService.GetCurrentOrders();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "There was a problem loading the menu. Please try again later.";
+        }
     }
 
-    private List<MenuItem> FilteredMenuItems()
+    private List<MenuItemResponseDTO> FilteredMenuItems()
     {
-        return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) && 
-                                       (selectedCategory == "All" || item.Category == selectedCategory)).ToList();
+        if (selectedCategory == "All")
+        {
+            return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        else
+        {
+            return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) &&
+                                           item.Category == selectedCategory).ToList();
+        }
     }
 
     private void SelectCategory(string category)
@@ -106,15 +154,40 @@
         selectedCategory = category;
     }
 
-    private void AddToCart(MenuItem item)
+    private void AddToCart(MenuItemResponseDTO item)
     {
         cartService.AddItem(item);
-        orders = cartService.GetCurrentOrders();
+        orders = cartService.GetCurrentOrders(); // Update orders after adding an item to cart
     }
 
-    private void PlaceOrder()
+    private async Task PlaceOrder()
     {
-        // Handle place order logic
+        try
+        {
+            var orderCreateDto = new OrderCreateDTO
+            {
+                UserId = Guid.NewGuid(), // Fetch actual user ID
+                TableNumber = TableNumber,
+                OrderItems = cartService.GetCurrentOrders(),
+                TotalPrice = cartService.GetTotalPrice()
+            };
+
+            var response = await orderService.PlaceOrderAsync(orderCreateDto);
+
+            if (response.Success)
+            {
+                orders.AddRange(cartService.GetCurrentOrders());
+                cartService.ClearCart();
+            }
+            else
+            {
+                errorMessage = "Failed to place the order. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while placing the order.";
+        }
     }
 
     private void NavigateToPayments()

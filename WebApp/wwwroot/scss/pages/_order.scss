@@ -1,8 +1,13 @@
-﻿.order-layout {
+﻿@import '../abstracts/_variables.scss'; // Import global variables if needed
+
+.order-layout {
     display: flex;
+    min-height: 100vh; // Ensure it takes up the full height of the viewport
 
     .main-content {
-        flex-grow: 1;
-        padding: 20px;
+        flex-grow: 1; // Allow the main content to grow and fill the space next to the sidebar
+        padding: 2rem; // Add some padding for spacing
+        background-color: $white; // Background color for the content area
+
     }
 }

@@ -29,7 +29,7 @@ builder.Services.AddDbContext<MenuContext>(options =>
 
 
 // Add services
-builder.Services.AddScoped<IOrderService,OrderServiced>(); // Register the OrderService
+builder.Services.AddScoped<IOrderService, OrderServiced>(); // Register the OrderService
 builder.Services.AddScoped<IOrderRepository, OrderRepository>(); // Register the OrderRepository
 // Register services
 builder.Services.AddScoped<IUser, UserRepository>(); // Register IUser and its implementation
@@ -49,9 +49,13 @@ builder.Services.AddTransient<UserHttpClient>(sp =>
 builder.Services.AddTransient<IUsers>(sp => sp.GetRequiredService<UserHttpClient>());
 
 // Register HttpClient for MenuService
-builder.Services.AddHttpClient<IMenuItem, MenuItemHttpClient>(client =>
+builder.Services.AddTransient<MenuItemHttpClient>(sp =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["MenuService:BaseUrl"]);
+    var httpClient = new HttpClient
+    {
+        BaseAddress = new Uri(builder.Configuration["MenuService:BaseUrl"])
+    };
+    return new MenuItemHttpClient(httpClient);
 });
 
 builder.Services.AddTransient<IMenuItems>(sp => sp.GetRequiredService<MenuItemHttpClient>());
@@ -71,7 +75,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();  
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

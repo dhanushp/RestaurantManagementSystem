@@ -10,6 +10,8 @@ namespace MenuService.Interfaces
     public interface IMenuItem
     {
         Task<Response<List<MenuItemResponseDTO>>> GetAvailableMenuItems();
+
+        Task<Response<List<CategoryResponseDTO>>> GetCategories();
         Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategory(string category);
         Task<Response<List<MenuItemResponseDTO>>> GetAllMenuItems();
         Task<Response<MenuItemDetailResponseDTO>> GetMenuItemById(Guid menuItemId);

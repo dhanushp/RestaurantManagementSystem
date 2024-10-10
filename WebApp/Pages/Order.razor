@@ -1,8 +1,10 @@
 ﻿@page "/order"
 
 <div class="order-layout">
+    <!-- Sidebar remains constant -->
     <Sidebar OnTabChange="HandleTabChange" />
 
+    <!-- Main content changes based on the active tab -->
     <div class="main-content">
         @if (activeTab == "menu")
         {

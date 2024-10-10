@@ -1,5 +1,5 @@
-﻿/*@import '../abstracts/_variables.scss';
-@import '../components/_button.scss';
+@import '../wwwroot/scss/abstracts/_variables.scss';
+@import '../wwwroot/scss/components/_button.scss';
 
 nav {
     display: flex;
@@ -23,7 +23,7 @@ nav {
     }
 
     .nav_cta {
-        display:flex;
+        display: flex;
         gap: 2rem;
 
         .nav_cta-primary {
@@ -35,4 +35,3 @@ nav {
         }
     }
 }
-*/

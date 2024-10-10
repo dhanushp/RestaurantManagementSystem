@@ -2,5 +2,25 @@
   {
     "outputFile": "wwwroot/css/main.css",
     "inputFile": "wwwroot/scss/main.scss"
+  },
+  {
+    "outputFile": "Components/AIRecommendations/AIRecommendations.razor.css",
+    "inputFile": "Components/AIRecommendations/AIRecommendations.razor.scss"
+  },
+  {
+    "outputFile": "Components/Menu/Menu.razor.css",
+    "inputFile": "Components/Menu/Menu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Payments/Payments.razor.css",
+    "inputFile": "Components/Payments/Payments.razor.scss"
+  },
+  {
+    "outputFile": "Components/Sidebar/Sidebar.razor.css",
+    "inputFile": "Components/Sidebar/Sidebar.razor.scss"
+  },
+  {
+    "outputFile": "Shared/NavMenu.razor.css",
+    "inputFile": "Shared/NavMenu.razor.scss"
   }
 ]

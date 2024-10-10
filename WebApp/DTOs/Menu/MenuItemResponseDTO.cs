@@ -2,7 +2,7 @@
 {
     public class MenuItemResponseDTO
     {
-        public int Id { get; set; }           // Unique identifier for the menu item
+        public Guid Id { get; set; }           // Unique identifier for the menu item
         public string Name { get; set; }       // Name of the menu item
         public string Description { get; set; } // Description of the menu item
         public decimal Price { get; set; }     // Price of the menu item

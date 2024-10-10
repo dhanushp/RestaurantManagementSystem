@@ -1,4 +1,4 @@
-﻿namespace WebApp.DTOs
+﻿namespace WebApp.DTOs.Menu
 {
     public class MenuItemDeleteDTO
     {

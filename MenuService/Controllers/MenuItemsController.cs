@@ -25,7 +25,7 @@ public class MenuItemsController : ControllerBase
     }
 
     // GET: api/menuitems/available
-    [AllowAnonymous]
+    [AllowAnonymous]    
     [HttpGet("available")]
     public async Task<IActionResult> GetAvailableMenuItems()
     {
@@ -33,9 +33,17 @@ public class MenuItemsController : ControllerBase
         return Ok(response); // Return success response
     }
 
+    [AllowAnonymous]
+    [HttpGet("categories")]
+    public async Task<IActionResult> GetCategories()
+    {
+        var response = await _menuItemService.GetCategories();
+        return Ok(response); // Return success response
+    }
+
     // GET:     
     [AllowAnonymous]
-    [HttpGet("category/{category}")]
+    [HttpGet("category/")]
     public async Task<IActionResult> GetMenuItemsByCategory(string category)
     {
         var response = await _menuItemService.GetMenuItemsByCategory(category);

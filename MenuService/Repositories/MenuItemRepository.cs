@@ -69,6 +69,29 @@ namespace MenuService.Repositories
             }
         }
 
+
+        public async Task<Response<List<CategoryResponseDTO>>> GetCategories()
+        {
+            try
+            {
+                var categories = await _context.Categories
+                    .Select(item => new CategoryResponseDTO
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Description = item.Description
+                    })
+                    .ToListAsync();
+
+                return Response<List<CategoryResponseDTO>>.SuccessResponse("All categories fetched successfully", categories);
+            }
+            catch (Exception ex)
+            {
+                return Response<List<CategoryResponseDTO>>.ErrorResponse($"An error occurred while fetching the menu items: {ex.Message}", RestaurantManagement.SharedLibrary.Data.ErrorCode.ServiceUnavailable);
+            }
+        }
+
+
         // Get menu items by category
         public async Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategory(string category)
         {
@@ -369,5 +392,7 @@ namespace MenuService.Repositories
                 return Response<string>.ErrorResponse($"An error occurred while deleting the category: {ex.Message}");
             }
         }
+
+       
     }
 }
