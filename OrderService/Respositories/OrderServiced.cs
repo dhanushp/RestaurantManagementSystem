@@ -10,6 +10,7 @@ using OrderService.Models;
 using OrderService.DTO;
 using OrderService.Repositories;
 using UserService.DTOs;
+using OrderService.Exceptions;
 
 public class OrderServiced : IOrderService
 {
@@ -117,35 +118,7 @@ public class OrderServiced : IOrderService
         };
     }
 
-    public async Task<OrderSummaryDto> GetOrderSummaryByIdAsync(Guid orderSummaryId)
-    {
-        var orderSummary = await _orderSummaryRepository.GetOrderSummaryByIdAsync(orderSummaryId);
-
-        if (orderSummary == null)
-        {
-            throw new Exception("Order Summary not found.");
-        }
-
-        return new OrderSummaryDto
-        {
-            OrderSummaryId = orderSummary.OrderSummaryId,
-            TableNumber = orderSummary.TableNumber,
-            Orders = orderSummary.Orders.Select(o => new OrderResponseDTO // Ensure you're mapping to OrderResponseDTO
-            {
-                Id = o.Id,
-                UserId = o.UserId,
-                OrderItems = o.OrderItems.Select(oi => new OrderItemResponseDTO
-                {
-                    MenuItemId = oi.MenuItemId,
-                    MenuItemName = oi.MenuItemName,
-                    Quantity = oi.Quantity,
-                    MenuItemPrice = oi.MenuItemPrice
-                }).ToList(),
-                Status = o.Status, // Ensure Status is included
-                TotalPrice = o.TotalPrice // Include total price if needed
-            }).ToList() // This should now be List<OrderResponseDTO>
-        };
-    }
+   
 
     public async Task UpdateOrderStatusAsync(Guid orderId, OrderStatusUpdateDTO orderStatusUpdateDTO)
     {
