@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OrderService.Models;
-using RestaurantManagement.SharedLibrary.Models;
 
 namespace OrderService.Models
 {
     public class Order : BaseEntity
     {
+        public Guid UserId { get; set; } // Reference to the user who placed the order
         public List<OrderItem> OrderItems { get; set; } // List of items in the order
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public Guid? OrderSummaryId { get; set; }
