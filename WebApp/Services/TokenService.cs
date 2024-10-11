@@ -46,7 +46,7 @@ namespace WebApp.Services
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "jwtToken");
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "refreshToken");
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "accessTokenExpiresAt");
-            
+            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "userId");
         }
     }
 
