@@ -16,18 +16,12 @@ namespace OrderService.Models
 
         // Table and User information
         public Guid TableId { get; set; }
-        public int TableNumber { get; set; }
+        public string TableNumber { get; set; }
         public Guid UserId { get; set; }
         public string UserFullName { get; set; } = string.Empty;
 
         // Navigation property for related Orders
         public ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // Method to calculate and set tax and total amounts
-        public void CalculateTotals()
-        {
-            TaxAmount = (7.25m / 100) * SubTotalAmount;
-            TotalAmount = SubTotalAmount + TaxAmount;
-        }
     }
 }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
+using OrderService.Interfaces;
+using OrderService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,7 @@ builder.Services.AddDbContext<OrderDbContext>(options =>
 
 // Register OrderService and its dependencies
 //builder.Services.AddScoped<IOrderService, OrderServiced>(); // Register the OrderService
-//builder.Services.AddScoped<IOrderRepository, OrderRepository>(); // Register the OrderRepository
+builder.Services.AddScoped<IOrderRepository, OrderRepository>(); // Register the OrderRepository
 //builder.Services.AddScoped<IOrderSummaryRepository, OrderSummaryRepository>();
 //builder.Services.AddScoped<IOrderSummaryService, OrderSummaryService>();
 // Register UserService dependencies
