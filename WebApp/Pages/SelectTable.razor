@@ -2,7 +2,11 @@
 @layout LoginLayout
 @using System.ComponentModel.DataAnnotations
 @using WebApp.DTOs.Tables
+@using Microsoft.JSInterop;
+
 @inject ITableService TableService
+@inject NavigationManager Navigation
+@inject IJSRuntime jsRuntime
 
 <div class="select-table">
     <div class="select-table__header">
@@ -23,14 +27,15 @@
                     <option value="@table.Id">@table.Number</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => tableSelectionModel.TableNumber)" class="select-table__form-validation-message" />
+            <ValidationMessage For="@(() => tableSelectionModel.TableId)" class="select-table__form-validation-message" />
         </div>
 
         <button type="submit" class="select-table__form-button select-table__form-button--primary">Proceed</button>
         <button type="button" @onclick="NavigateBack" class="select-table__form-button select-table__form-button--secondary">Go back</button>
+
         @if (!string.IsNullOrEmpty(errorMessage))
         {
-            <p class="signin__error">@errorMessage</p>
+            <p class="select-table__error">@errorMessage</p>
         }
     </EditForm>
 </div>
@@ -38,15 +43,29 @@
 @code {
     private TableSelectionModel tableSelectionModel = new TableSelectionModel();
     private List<TableResponseDTO> availableTables = new List<TableResponseDTO>();
-
     string? errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
+        // Check if a table is already stored in local storage
+        var storedTableId = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "tableId");
+        
+        if (!string.IsNullOrEmpty(storedTableId))
+        {
+            // Redirect to /order if a table is already selected
+            Navigation.NavigateTo("/order");
+            return;
+        }
+
+        // Fetch available tables from the service
         var result = await TableService.GetAvailableTables();
         if (result.Success)
         {
             availableTables = result.Data;
+        }
+        else
+        {
+            errorMessage = "Error fetching available tables. Please try again later.";
         }
     }
 
@@ -55,14 +74,17 @@
         var selectedTable = availableTables.FirstOrDefault(t => t.Id == tableSelectionModel.TableId);
         if (selectedTable != null)
         {
-            // Set the TableNumber in the model after selection
             tableSelectionModel.TableNumber = selectedTable.Number;
 
-            // Now you can send TableId and TableNumber as needed
+            // Now send TableId to occupy the table
             var response = await TableService.OccupyTable(tableSelectionModel.TableId);
 
             if (response.Success)
             {
+                // Store the selected table in local storage
+                await jsRuntime.InvokeVoidAsync("localStorage.setItem", "tableId", tableSelectionModel.TableId.ToString());
+
+                // Redirect to the order page
                 Navigation.NavigateTo("/order");
             }
             else
@@ -70,11 +92,15 @@
                 errorMessage = response.Message;
             }
         }
+        else
+        {
+            errorMessage = "Please select a valid table.";
+        }
     }
 
     private void NavigateBack()
     {
-        // Navigate back to the previous page
+        Navigation.NavigateTo("/previous-page"); // Add logic for back navigation as needed
     }
 
     public class TableSelectionModel

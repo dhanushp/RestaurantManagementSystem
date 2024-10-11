@@ -1,0 +1,108 @@
+@import "../../wwwroot/scss/abstracts/_variables.scss";
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 90px; // Default collapsed width
+    background-color: $grey-light;
+    transition: width 0.3s ease;
+    z-index: 1000;
+    padding: 2rem;
+
+    &.expanded {
+        width: 250px; // Expanded width
+    }
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        text-decoration: none;
+
+        img {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    &__nav {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        margin-top: 5rem;
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: center; // Center icons horizontally in collapsed state
+                align-items: center;
+
+                &:hover {
+                    background-color: lighten($grey-light, 10%);
+                }
+
+                .sidebar__item {
+                    display: flex;
+                    align-items: center;
+                    padding: 10px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    text-decoration: none;
+                    width: 100%;
+
+                    &:hover {
+                        background-color: lighten($grey-light, 10%);
+                    }
+
+                    &--active .sidebar__icon {
+                        fill: #e10019; // Active tab color
+                    }
+
+                    .sidebar__icon {
+                        width: 24px;
+                        height: 24px;
+                        transition: fill 0.3s ease;
+
+                        &--active {
+                            fill: #e10019; // Active color for SVG icons
+                        }
+                    }
+
+                    .sidebar__text {
+                        margin-left: 3rem;
+                        font-size: 14px;
+                        color: $black;
+                        white-space: nowrap;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                        display: none; // Hide text in collapsed state
+                    }
+                }
+                // When sidebar is expanded, align icons and text to the left
+                .sidebar.expanded & {
+                    justify-content: flex-start;
+
+                    .sidebar__item {
+                        justify-content: flex-start;
+                    }
+
+                    .sidebar__text {
+                        display: inline-block;
+                        opacity: 1;
+                    }
+                }
+
+                .sidebar__item--active .sidebar__icon {
+                    fill: #e10019;
+                }
+            }
+        }
+    }
+}

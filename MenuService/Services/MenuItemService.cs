@@ -25,6 +25,12 @@ namespace MenuService.Services
             return await _menuItemRepository.GetAvailableMenuItems();
         }
 
+        // Get all categories
+        public async Task<Response<List<CategoryResponseDTO>>> GetCategories()
+        {
+            return await _menuItemRepository.GetCategories();
+        }
+
         // Get menu items by category 
         public async Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategory(string category)
         {

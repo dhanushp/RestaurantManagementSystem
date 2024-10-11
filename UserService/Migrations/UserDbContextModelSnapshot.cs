@@ -148,24 +148,13 @@ namespace UserService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("84b0dc18-d151-4c27-9c3d-cb53843c0904"),
-                            CreatedAt = new DateTime(2024, 10, 10, 5, 51, 35, 803, DateTimeKind.Utc).AddTicks(3482),
+                            Id = new Guid("2ac4d7c4-97a6-44f8-8f78-a0d50a06aa06"),
+                            CreatedAt = new DateTime(2024, 10, 8, 11, 29, 26, 78, DateTimeKind.Utc).AddTicks(6580),
                             Email = "admin@eg.dk",
                             FullName = "Admin User",
-                            PasswordHash = "$2a$11$5rzGIycc0nL3mjCty9ISFeeA.2RqunB8Tm7vhFrPN4cB5fs6P5Qky",
-                            RoleId = new Guid("6731baf9-6911-4902-b406-f8330c4ef492")
+                            PasswordHash = "$2a$11$Y0bk.VcjNVO0qEx6NbORZ.dlunX95X0PRR8t2olbFU59lsyaSFopu",
+                            RoleId = new Guid("38449280-2c5d-4a5c-8ea5-7725af814570")
                         });
-                });
-
-            modelBuilder.Entity("UserService.Models.RefreshToken", b =>
-                {
-                    b.HasOne("UserService.Models.User", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UserService.Models.User", b =>

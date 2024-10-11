@@ -89,7 +89,7 @@ p, h1, h2, h3, h4, h5, h6 {
 html {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
-  background-color: #F9E6BE;
+  background-color: #FFFFFF;
   font-size: 62.5%;
 }
 @media (max-width: 75em) {
@@ -175,58 +175,44 @@ body {
   content: var(--blazor-load-percentage-text, "Loading");
 }
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 3rem 10rem 0 10rem;
-  align-items: center;
-  background: #F9E6BE;
-}
-nav .nav_navigation .nav_navigation_items {
-  display: flex;
-  gap: 5rem;
-  list-style-type: none;
-  font-size: 1.6rem;
-}
-nav .nav_navigation .nav_navigation_items .nav_navigation_items-active {
-  color: red;
-}
-nav .nav_cta {
-  display: flex;
-  gap: 2rem;
-}
-nav .nav_cta .nav_cta-primary {
-  padding: 1rem 3rem;
-  border: none;
-  border-radius: 1rem;
-  color: #FFFFFF;
-  background-color: #E10019;
-  font-size: 1.6rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-nav .nav_cta .nav_cta-primary:hover {
-  background-color: #c80016;
-}
-nav .nav_cta .nav_cta-primary:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-nav .nav_cta .nav_cta-secondary {
-  background: none;
-  padding: 1rem 3rem;
-  border: 2px solid #E10019;
-  border-radius: 1rem;
-  color: #242424;
-  font-size: 1.6rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-nav .nav_cta .nav_cta-secondary:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+/*@import '../abstracts/_variables.scss';
+@import '../components/_button.scss';
 
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 3rem 10rem 0 10rem;
+    align-items: center;
+    background: $background;
+
+    .nav_navigation {
+
+        .nav_navigation_items {
+            display: flex;
+            gap: 5rem;
+            list-style-type: none;
+            font-size: $text-md;
+
+            .nav_navigation_items-active {
+                color: red;
+            }
+        }
+    }
+
+    .nav_cta {
+        display:flex;
+        gap: 2rem;
+
+        .nav_cta-primary {
+            @include button-primary($red, $white);
+        }
+
+        .nav_cta-secondary {
+            @include button-secondary($red, $black);
+        }
+    }
+}
+*/
 .auth-layout {
   display: flex;
   height: 100vh;
@@ -256,34 +242,12 @@ nav .nav_cta .nav_cta-secondary:disabled {
 }
 .auth-layout .auth-layout__right {
   flex: 1;
-  background-color: #F9E6BE;
+  background-color: #FFFFFF;
   padding: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.tab-button {
-  padding: 10px 20px;
-  background-color: #f0f0f0;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.tab-button:hover {
-  background-color: #dcdcdc;
-}
-
-.tab-button.active {
-  background-color: #ddd;
 }
 
 .hero {
@@ -363,7 +327,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   justify-content: center;
   height: 100vh;
   padding: 2rem;
-  background-color: #F9E6BE;
+  background-color: #FFFFFF;
   width: 100%;
 }
 .signin__logo {
@@ -465,7 +429,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   justify-content: center;
   height: 100vh;
   padding: 2rem;
-  background-color: #F9E6BE;
+  background-color: #FFFFFF;
   width: 100%;
 }
 .signup__header {
@@ -572,7 +536,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   justify-content: center;
   height: 100vh;
   padding: 2rem;
-  background-color: #F9E6BE;
+  background-color: #FFFFFF;
   width: 100%;
 }
 .select-table__header {
@@ -592,6 +556,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   margin-bottom: 0.5rem;
   font-weight: bold;
   color: #7A502D;
+  text-align: center;
 }
 .select-table__header-description {
   font-size: 1.6rem;
@@ -673,6 +638,15 @@ nav .nav_cta .nav_cta-secondary:disabled {
   outline: none;
 }
 
+.order-layout {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  margin-left: 90px;
+}
+
 .forgot-password {
   display: flex;
   flex-direction: column;
@@ -680,7 +654,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   justify-content: center;
   height: 100vh;
   padding: 2rem;
-  background-color: #F9E6BE;
+  background-color: #FFFFFF;
   width: 100%;
 }
 .forgot-password__header {
@@ -705,6 +679,7 @@ nav .nav_cta .nav_cta-secondary:disabled {
   font-size: 1.6rem;
   margin-bottom: 2rem;
   color: #7A502D;
+  text-align: center;
 }
 .forgot-password__form {
   display: flex;
