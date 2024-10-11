@@ -38,12 +38,23 @@ public class MenuItemsController : ControllerBase
     public async Task<IActionResult> GetCategories()
     {
         var response = await _menuItemService.GetCategories();
-        return Ok(response); // Return success response
+
+        if (response.Success)
+        {
+            // Return 200 OK status with the data if the request is successful
+            return Ok(response);
+        }
+        else
+        {
+            // Handle the error case, return a specific status code based on the error
+            return StatusCode((int)response.ErrorCode, response); // Example: 503 for service unavailable
+        }
     }
+
 
     // GET:     
     [AllowAnonymous]
-    [HttpGet("category/")]
+    [HttpGet("category/{category}")]
     public async Task<IActionResult> GetMenuItemsByCategory(string category)
     {
         var response = await _menuItemService.GetMenuItemsByCategory(category);
