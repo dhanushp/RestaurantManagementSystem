@@ -1,0 +1,188 @@
+@import "../wwwroot/scss/abstracts/_variables.scss";
+
+.payment-page {
+    display: flex;
+    max-height: 100vh;
+
+
+    .payment-content {
+        flex: 3; // Adjust as needed for space distribution
+        //padding: 2rem;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; // Ensure the cart summary stays at the bottom
+        padding: 4rem;
+        position: relative;
+
+        .greeting {
+            margin-bottom: 1.5rem;
+
+            h1 {
+                color: $black;
+                font-size: $text-2xl;
+                font-weight: bold;
+            }
+
+            p {
+                color: $black;
+                font-size: $text-md;
+            }
+
+            .table-number {
+                font-weight: bold;
+                color: $red; // Set the color to match the design
+            }
+        }
+
+        .order-summary {
+            h3 {
+                color: $black;
+                font-size: $text-xl;
+                margin-bottom: 1rem;
+            }
+
+            .order-items {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+
+                .order-item {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #f9f9f9;
+                    padding: 1rem;
+                    border-radius: 8px;
+
+                    img {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 5px;
+                        object-fit: cover;
+                    }
+
+                    .order-details {
+                        flex-grow: 1;
+                        padding-left: 1rem;
+
+                        h4 {
+                            margin: 0;
+                            font-size: 1.2rem;
+                            font-weight: bold;
+                        }
+
+                        p {
+                            margin: 0.5rem 0;
+                            font-size: 1rem;
+                            color: #666;
+                        }
+
+                        .order-price {
+                            font-weight: bold;
+                            color: $red;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        .payment-summary {
+
+            .payment-summary-content {
+                margin: 2rem 0;
+
+                p {
+                    margin: 0.5rem 0;
+                    font-size: $text-md;
+                }
+
+                
+
+                .payment-mode {
+                    margin-top: 1.5rem;
+
+                    label {
+                        font-size: $text-md;
+                        margin-right: 1rem;
+                    }
+
+                    select {
+                        padding: 0.5rem 1rem;
+                        font-size: $text-md;
+                        border: 1px solid $grey;
+                        border-radius: 5px;
+                        background-color: $white;
+                    }
+                }
+            }
+
+
+
+
+            .total-summary {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                padding: 2rem;
+                background-color: $red-light;
+                border: 2px solid $red;
+                border-radius: 10px;
+
+
+                .total-summary-content {
+                    flex: 4;
+                    color: $red;
+                    p {
+                        margin: 0.5rem 0;
+                        font-size: $text-xs;
+                    }
+
+                    h3 {
+                        font-size: $text-xl;
+                    }
+                }
+
+                .checkout-btn {
+                    flex: 1;
+                    padding: 1.5rem 2rem;
+                    background-color: $red;
+                    color: $white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    width: 100%;
+                    font-size: $text-md;
+
+                    &:hover {
+                        background-color: $red-dark;
+                    }
+                }
+            }
+        }
+
+        .error-message {
+            margin-top: 2rem;
+            color: $red;
+            font-size: 1rem;
+            background-color: $red-light;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+    }
+
+    .payment-image {
+        padding: 4rem;
+        height: 100vh;
+        width: 30%;
+        flex: 1;
+        background-image: url('../../images/payment-wallpaper.png'); // Path to the image
+        background-size: cover; // Ensures image covers the entire area
+        background-position: center; // Keeps the image centered
+        background-repeat: no-repeat; // Prevents repeating of the image
+    }
+}

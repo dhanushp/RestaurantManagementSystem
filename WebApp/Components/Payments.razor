@@ -1,4 +1,157 @@
-﻿<div class="payment-section">
-    <h2>Payments</h2>
-    <!-- Payment content goes here -->
+﻿@inject IOrderService orderService
+@inject ICartService cartService
+@inject ITableService tableService
+
+@using WebApp.DTOs.Menu
+@using WebApp.DTOs.Order
+@using WebApp.DTOs
+
+<div class="payment-page">
+
+    <div class="payment-content">
+        <!-- Greeting -->
+        <div >
+            <div class="greeting">
+                <h1>Hello, @UserName</h1>
+                <p>You're in table <span class="table-number">@TableNumber</span></p> <!-- Dynamically retrieved table number -->
+            </div>
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+
+                <!-- Display the items in the order summary -->
+                <div class="order-items">
+                    @foreach (var order in orders)
+                    {
+                        <div class="order-item">
+                            @* <img src="@order.ImageUrl" alt="@order.Name" /> *@
+                            <div class="order-details">
+                                <h4>@order.Name</h4>
+                                <p>Quantity : @order.Quantity</p>
+                                @* <p class="order-price">$@order.Price</p> *@
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        
+        
+
+        <!-- Display sub-total, tax and payment mode selection -->
+        <div class="payment-summary">
+            <hr />
+            <div class="payment-summary-content">
+                
+                <p><strong>Sub total :</strong> $@SubTotal</p>
+                <p><strong>Tax :</strong> $@Tax</p>
+
+                <div class="payment-mode">
+                    <label><strong>Choose payment mode :</strong></label>
+                    <select @bind="selectedPaymentMode">
+                        <option value="Cash">Cash</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Online Payment">Online Payment</option>
+                    </select>
+                </div>
+            </div>
+            
+
+            <!-- Show total with payment mode details -->
+            <div class="total-summary">
+                <div class="total-summary-content">
+                    <p>Payment Mode : @selectedPaymentMode</p>
+                    <h3>Total Amount: $@Total</h3>
+                </div>
+                <!-- Checkout button -->
+                <button class="checkout-btn" @onclick="Checkout">Checkout</button>
+            </div>
+
+            
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error-message">@errorMessage</div>
+        }
+    </div>
+
+    <div class="payment-image" >
+
+    </div>
+    
+
+    
 </div>
+
+@code {
+    private string UserName = "David";
+    private string TableNumber = "";   // Updated dynamically
+    private List<OrderItemDto> orders = new List<OrderItemDto>();
+    private string selectedPaymentMode = "Cash"; // Default payment mode
+    private decimal SubTotal;
+    private decimal Tax;
+    private decimal Total;
+    private string errorMessage = "";
+
+    protected override async void OnInitialized()
+    {
+        // Fetch current orders from the CartService
+        orders = cartService.GetCurrentOrders();
+
+        // Calculate SubTotal and Tax (Assume 10% tax)
+        SubTotal = cartService.GetTotalPrice();
+        Tax = SubTotal * 0.1m;
+        Total = SubTotal + Tax;
+
+        // Get the tableId from local storage
+        var tableId = await tableService.GetSelectedTableFromLocalStorage();
+        if (tableId.HasValue)
+        {
+            // Fetch the table details from backend using the tableId
+            var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
+
+            if (tableResponse.Success)
+            {
+                TableNumber = tableResponse.Data.Number; // Assign the fetched table number to be displayed
+                StateHasChanged(); // Ensure UI updates
+            }
+            else
+            {
+                errorMessage = "Failed to fetch table details.";
+            }
+        }
+        else
+        {
+            errorMessage = "No table selected.";
+        }
+    }
+
+    private async Task Checkout()
+    {
+        try
+        {
+            // Process the payment based on the selected payment mode
+            // var orderPaymentDto = new OrderPaymentDTO
+            //     {
+            //         TotalAmount = Total,
+            //         PaymentMode = selectedPaymentMode
+            //     };
+
+            // var response = await orderService.ProcessPaymentAsync(orderPaymentDto);
+
+            // if (response.Success)
+            // {
+            //     Navigate to success or order completion page (if needed)
+            // }
+            // else
+            // {
+            //     errorMessage = "Payment failed. Please try again.";
+            // }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred during checkout.";
+        }
+    }
+}
