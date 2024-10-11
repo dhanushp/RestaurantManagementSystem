@@ -87,7 +87,10 @@ namespace MenuService.Repositories
             }
             catch (Exception ex)
             {
-                return Response<List<CategoryResponseDTO>>.ErrorResponse($"An error occurred while fetching the menu items: {ex.Message}", RestaurantManagement.SharedLibrary.Data.ErrorCode.ServiceUnavailable);
+                return Response<List<CategoryResponseDTO>>.ErrorResponse(
+                    $"An error occurred while fetching the categories: {ex.Message}",
+                    RestaurantManagement.SharedLibrary.Data.ErrorCode.ServiceUnavailable
+                );
             }
         }
 
