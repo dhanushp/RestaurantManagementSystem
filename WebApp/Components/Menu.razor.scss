@@ -1,186 +1,309 @@
+@import "../wwwroot/scss/abstracts/_variables.scss";
+
 .menu-page {
     display: flex;
-    width: 100%;
-    padding-left: 100px;
+    max-height: 100vh;
+    flex: 2;
+
 
     .menu-content {
-        flex: 2;
-        padding: 20px;
-        overflow-y: auto;
-    }
-
-    .greeting {
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .table-number {
-            color: red;
-            font-weight: bold;
-        }
-    }
-
-    .search-bar {
-        margin: 20px 0;
-
-        input {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-    }
-
-    .categories {
-        display: flex;
-        overflow-x: auto;
-        margin-bottom: 20px;
-
-        .category-btn {
-            margin-right: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-
-            &.active {
-                background-color: red;
-                color: white;
-            }
-        }
-    }
-
-    .menu-items {
+        flex: 1; // Adjust as needed for space distribution
+        padding: 2rem;
         display: flex;
         flex-direction: column;
-        gap: 20px;
-        overflow-y: auto;
+        //justify-content: space-between; // Ensure the cart summary stays at the bottom
+        padding: 4rem;
+        position: relative;
 
-        .menu-item {
-            display: flex;
-            background-color: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-
-            img {
-                width: 100px;
-                height: 100px;
-                border-radius: 10px;
-                margin-right: 20px;
+        .greeting {
+            h1 {
+                color: $black;
+                font-size: $text-2xl;
+                font-weight: bold;
             }
 
-            .menu-details {
+            p {
+                color: $black;
+                font-size: $text-md;
+            }
+
+            .table-number {
+                font-weight: bold;
+                color: $red; // Set the color to match the design
+            }
+        }
+
+        .search-bar {
+            margin: 2rem 0;
+
+            input {
+                width: 100%;
+                padding: 1.5rem;
+                font-size: $text-md;
+                border: 1px solid transparent;
+                border-radius: 10px;
+                outline: none;
+                background-color: $grey-light;
+                color: $grey;
+
+                &:focus {
+                    border: 1px solid $grey;
+                }
+            }
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: column;
+
+            h3 {
+                color: $black;
+                font-size: $text-xl;
+                margin-bottom: 1rem;
+            }
+
+            .categories-available {
                 display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 2rem;
 
-                h4 {
-                    font-size: 1.2rem;
-                }
-
-                p {
-                    margin: 5px 0;
-                }
-
-                .price {
-                    font-weight: bold;
-                    color: green;
-                }
-
-                .add-to-cart-btn {
-                    background-color: red;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
+                .category-btn {
+                    font-size: $text-md;
+                    padding: 1rem 2rem;
+                    border: 2px solid #ddd;
+                    background-color: #f9f9f9;
                     border-radius: 10px;
                     cursor: pointer;
+                    transition: background-color 0.3s ease;
+
+                    &.active {
+                        background-color: $red-light;
+                        color: $red;
+                        border: 2px solid $red;
+                    }
+
+                    &:hover {
+                        background-color: $red;
+                        color: $white;
+                    }
+                }
+            }
+        }
+
+        .menu-items {
+            flex-grow: 1; // Make menu items take remaining space
+            overflow-y: auto; // Enable scrolling if the list gets long
+
+            .menu-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 0;
+                border-bottom: 1px solid #ddd;
+
+                img {
+                    width: 100px;
+                    height: 100px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                }
+
+                .menu-details {
+                    flex-grow: 1;
+                    padding-left: 1rem;
+
+                    h4 {
+                        margin: 0;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                    }
+
+                    p {
+                        margin: 0.5rem 0;
+                        font-size: 0.9rem;
+                        color: #666;
+                    }
+
+                    .price {
+                        font-weight: bold;
+                        color: #e10019;
+                    }
+
+                    .add-to-cart-btn {
+                        padding: 8px 12px;
+                        background-color: #e10019;
+                        color: #fff;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+
+                        &:hover {
+                            background-color: #c00017;
+                        }
+                    }
+                }
+            }
+        }
+
+        .cart-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 2rem;
+            background-color: $red-light;
+            border: 2px solid $red;
+            border-radius: 10px;
+
+            .cart-summary-details {
+                flex: 4;
+
+                p {
+                    margin: 0.5rem 0;
+                    font-size: $text-xs;
+                }
+
+                h3 {
+                    font-size: $text-xl;
+                }
+            }
+
+            .place-order-btn {
+                flex: 1;
+                padding: 1.5rem 2rem;
+                background-color: $red;
+                color: $white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                width: 100%;
+                font-size: $text-md;
+
+                &:hover {
+                    background-color: $red-dark;
                 }
             }
         }
     }
 
     .order-summary {
-        //flex: 1;
-        background-color: #f8f8f8;
-        padding: 20px;
-        border-left: 1px solid #ccc;
+        width: 30%; // Take up the remaining right side space
+        background-color: $grey-light;
+        height: 100vh;
+        overflow-y: auto; // Enable scrolling for large orders
+        padding: 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-        h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
+        .order-summary-content {
+            h3 {
+                color: $black;
+                font-size: $text-xl;
+            }
 
-        .orders-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            p {
+                color: $black;
+                font-size: $text-md;
+            }
 
-            .order-item {
+            .orders-list {
                 display: flex;
+                flex-direction: column;
+                gap: 10px;
 
-                img {
-                    width: 60px;
-                    height: 60px;
-                    margin-right: 20px;
-                    border-radius: 10px;
-                }
-
-                .order-details {
+                .order-item {
                     display: flex;
-                    flex-direction: column;
                     justify-content: space-between;
+                    align-items: center;
+                    background-color: #fff;
+                    padding: 10px;
+                    border-radius: 5px;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 
-                    h4 {
-                        font-size: 1.2rem;
+                    .order-details {
+                        flex-grow: 1;
+                        padding-left: 1rem;
+
+                        h4 {
+                            margin: 0;
+                        }
+
+                        p {
+                            margin: 0.5rem 0;
+                            color: #666;
+                        }
+
+                        .status {
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                            background-color: #ddd;
+                            font-size: 0.9rem;
+
+                            &.pending {
+                                background-color: #f39c12;
+                                color: #fff;
+                            }
+
+                            &.preparation {
+                                background-color: #3498db;
+                                color: #fff;
+                            }
+
+                            &.pickup {
+                                background-color: #2ecc71;
+                                color: #fff;
+                            }
+
+                            &.served {
+                                background-color: #e10019;
+                                color: #fff;
+                            }
+                        }
                     }
 
-                    .status {
-                        font-size: 0.8rem;
-                        color: #999;
-                    }
-
-                    .price {
+                    .order-price {
                         font-weight: bold;
+                        color: #e10019;
                     }
                 }
             }
         }
 
+
+
         .make-payment-btn {
             margin-top: 20px;
+            padding: 2rem 1rem;
+            background-color: $red;
+            color: $white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             width: 100%;
-            background-color: red;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-    }
+            font-size: $text-md;
+            transition: background-color 0.3s ease;
 
-    .cart-summary {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 20px;
-        background-color: #f8f8f8;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #ccc;
-
-        .place-order-btn {
-            background-color: red;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            &:hover {
+                background-color: $red-dark;
+            }
         }
     }
 }
+
+.error-message {
+    position: absolute;
+    font-size: $text-xs;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem;
+    background: $red-light;
+    border: 1px solid $red;
+    border-radius: 5px;
+}
+
+

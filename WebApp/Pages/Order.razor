@@ -1,10 +1,7 @@
 ﻿@page "/order"
 
 <div class="order-layout">
-    <!-- Sidebar remains constant -->
     <Sidebar OnTabChange="HandleTabChange" />
-
-    <!-- Main content changes based on the active tab -->
     <div class="main-content">
         @if (activeTab == "menu")
         {
@@ -22,10 +19,7 @@
 </div>
 
 @code {
-    private string activeTab = "menu"; // Default to menu tab
+    private string activeTab = "menu"; // Default active tab
 
-    private void HandleTabChange(string tabName)
-    {
-        activeTab = tabName;
-    }
+    private void HandleTabChange(string tabName) => activeTab = tabName;
 }
