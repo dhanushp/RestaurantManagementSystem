@@ -3,9 +3,9 @@ using PaymentService.Models;
 
 namespace PaymentService.Data
 {
-    public class PaymentContext : DbContext
+    public class PaymentDbContext : DbContext
     {
-        public PaymentContext(DbContextOptions<PaymentContext> options) : base(options)
+        public PaymentDbContext(DbContextOptions<PaymentDbContext> options) : base(options)
         {
         }
 

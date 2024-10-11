@@ -9,5 +9,6 @@ namespace RestaurantManagement.SharedDataLibrary.DTOs.Payment
 
         [JsonProperty("status")]
         public string Status { get; set; }
+
     }
 }
