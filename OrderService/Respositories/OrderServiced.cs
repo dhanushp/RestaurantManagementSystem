@@ -11,114 +11,154 @@ using OrderService.DTO;
 using OrderService.Repositories;
 using UserService.DTOs;
 using OrderService.Exceptions;
+using Azure.Core;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 public class OrderServiced : IOrderService
 {
-    private IHttpClientFactory _httpClientFactory;
+    //private IHttpClientFactory _httpClientFactory;
     private readonly IOrderRepository _orderRepository;
     private readonly IOrderSummaryRepository _orderSummaryRepository;
 
-    private readonly string _menuServiceUrl = "http://localhost:5003/api/menuitems"; // Change to actual URL
-    private readonly string _userServiceUrl = "http://localhost:5003/api/users"; // Change to actual URL
+    private readonly HttpClient _httpClient;
 
+
+    private readonly string _menuServiceUrl = "https://localhost:5003/api/menuitems"; // Change to actual URL
+    private readonly string _userServiceUrl = "https://localhost:5003/api/users"; // Change to actual URL
+    private readonly string _authenticationServiceUrl = "https://localhost:5003/api/authentication";
     // Constructor
     public OrderServiced(
-        IHttpClientFactory httpClientFactory,
+        //IHttpClientFactory httpClientFactory,
         IOrderRepository orderRepository,
-        IOrderSummaryRepository orderSummaryRepository)
+        IOrderSummaryRepository orderSummaryRepository,
+        HttpClient httpClient)
     {
-        _httpClientFactory = httpClientFactory;
+        //_httpClientFactory = httpClientFactory;
         _orderRepository = orderRepository;
         _orderSummaryRepository = orderSummaryRepository;
+        _httpClient = httpClient;
     }
 
     public async Task<OrderResponseDTO> CreateOrderAsync(OrderCreateDTO orderCreateDTO)
     {
-        // Fetch user details from UserService
-        var userClient = _httpClientFactory.CreateClient();
-        var userResponse = await userClient.GetAsync($"{_userServiceUrl}/{orderCreateDTO.UserId}");
-
-        if (!userResponse.IsSuccessStatusCode)
+        try
         {
-            throw new Exception("User not found.");
-        }
+            // Fetch user details from UserService
+            var admin_pwd = Environment.GetEnvironmentVariable("ADMIN_PWD");
+            var loginData = new { email = "admin@eg.dk", password = admin_pwd };
+            var json = JsonConvert.SerializeObject(loginData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var loginResponse = await _httpClient.PostAsync(_authenticationServiceUrl + "/login", content);
+            var responseBody = await loginResponse.Content.ReadAsStringAsync();
+            var _loginResponse = JsonConvert.DeserializeObject<Response<LoginResponseDTO>>(responseBody);
 
-        var userDetails = await userResponse.Content.ReadFromJsonAsync<UserDTO>();
+            var accessToken = _loginResponse.Data.AccessToken;
 
-        // Fetch menu item details and create order items
-        var orderItems = new List<OrderItem>();
-        foreach (var item in orderCreateDTO.OrderItems)
-        {
-            var menuResponse = await userClient.GetAsync($"{_menuServiceUrl}/{item.MenuItemId}");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            if (!menuResponse.IsSuccessStatusCode)
+            // Fetch user details
+            var userResponse = await _httpClient.GetAsync($"{_userServiceUrl}/{orderCreateDTO.UserId}");
+            if (!userResponse.IsSuccessStatusCode)
             {
-                throw new Exception($"Menu item {item.MenuItemId} not found.");
+                throw new Exception("User not found.");
             }
 
-            var menuItem = await menuResponse.Content.ReadFromJsonAsync<MenuItemDetailResponseDTO>();
-            orderItems.Add(new OrderItem
-            {
-                MenuItemId = menuItem.Id,
-                MenuItemName = menuItem.Name,
-                Quantity = item.Quantity,
-                MenuItemPrice = menuItem.Price
-            });
-        }
+            var userDetails = await userResponse.Content.ReadFromJsonAsync<UserDTO>();
 
-        // Check if an order summary exists for this user
-        OrderSummary orderSummary;
-        if (orderCreateDTO.OrderSummaryId == null)
-        {
-            // Create a new order summary
-            orderSummary = new OrderSummary
+            // Fetch menu item details and create order items
+            var orderItems = new List<OrderItem>();
+            foreach (var item in orderCreateDTO.OrderItems)
             {
-                TableNumber = orderCreateDTO.TableNumber,
-                Orders = new List<Order>() // Initialize list of orders
+                var menuResponse = await _httpClient.GetAsync($"{_menuServiceUrl}/{item.MenuItemId}");
+                if (!menuResponse.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Menu item {item.MenuItemId} not found.");
+                }
+
+                var menuItem = await menuResponse.Content.ReadFromJsonAsync<MenuItemDetailResponseDTO>();
+                orderItems.Add(new OrderItem
+                {
+                    MenuItemId = menuItem.Id,
+                    MenuItemName = menuItem.Name,
+                    Quantity = item.Quantity,
+                    MenuItemPrice = menuItem.Price
+                });
+            }
+
+            // Check if an order summary exists for this user
+            OrderSummary orderSummary;
+            var _orderSummaryId = Guid.NewGuid();
+            if (orderCreateDTO.OrderSummaryId == null)
+            {
+                // Create a new order summary
+                orderSummary = new OrderSummary
+                {
+                    Id = _orderSummaryId,
+                    TableNumber = orderCreateDTO.TableNumber,
+                    //Orders = new List<Order>() // Initialize list of orders
+                };
+                await _orderSummaryRepository.AddAsync(orderSummary);
+            }
+            else
+            {
+                // Fetch existing order summary
+                orderSummary = await _orderSummaryRepository.GetOrderSummaryByIdAsync(orderCreateDTO.OrderSummaryId.Value);
+                if (orderSummary == null)
+                {
+                    throw new Exception("Order Summary not found.");
+                }
+            }
+
+            // Create the order and assign the summary
+            var order = new Order
+            {
+                UserId = orderCreateDTO.UserId,
+                OrderItems = orderItems,
+                Status = OrderStatus.Pending, // Set initial status
+                OrderSummaryId = orderSummary.Id // Assign the summary ID
             };
-            await _orderSummaryRepository.AddAsync(orderSummary);
-        }
-        else
-        {
-            // Fetch existing order summary
-            orderSummary = await _orderSummaryRepository.GetOrderSummaryByIdAsync(orderCreateDTO.OrderSummaryId.Value);
-            if (orderSummary == null)
+
+            // Attempt to create the order and handle potential errors
+            try
             {
-                throw new Exception("Order Summary not found.");
+                var createdOrder = await _orderRepository.CreateOrderAsync(order);
+                orderSummary.Orders.Add(createdOrder); // Add created order to the summary
+
+                // Optionally, update the order summary in the repository if needed
+                await _orderSummaryRepository.UpdateAsync(orderSummary);
+                return new OrderResponseDTO
+                {
+                    Id = createdOrder.Id,
+                    UserId = createdOrder.UserId,
+                    OrderItems = createdOrder.OrderItems.Select(oi => new OrderItemResponseDTO
+                    {
+                        MenuItemId = oi.MenuItemId,
+                        MenuItemName = oi.MenuItemName,
+                        Quantity = oi.Quantity,
+                        MenuItemPrice = oi.MenuItemPrice
+                    }).ToList(), // Map OrderItem to OrderItemResponseDTO
+                    TableNumber = orderSummary.TableNumber,
+                    OrderSummaryId = orderSummary.Id // Return the summary ID
+                };
+            }
+            catch (DbUpdateException dbEx) // Catch database update exceptions
+            {
+                Console.WriteLine(dbEx.InnerException?.Message); // Log the inner exception
+                throw new Exception("An error occurred while saving the order. See inner exception for details.", dbEx);
             }
         }
-
-        // Create the order and assign the summary
-        var order = new Order
+        catch (Exception ex)
         {
-            UserId = orderCreateDTO.UserId,
-            OrderItems = orderItems,
-            Status = OrderStatus.Pending, // Set initial status
-            OrderSummaryId = orderSummary.OrderSummaryId // Assign the summary ID
-        };
-
-        var createdOrder = await _orderRepository.CreateOrderAsync(order);
-        orderSummary.Orders.Add(createdOrder); // Add created order to the summary
-
-        // Optionally, update the order summary in the repository if needed
-        await _orderSummaryRepository.UpdateAsync(orderSummary);
-        return new OrderResponseDTO
-        {
-            Id = createdOrder.Id,
-            UserId = createdOrder.UserId,
-            OrderItems = createdOrder.OrderItems.Select(oi => new OrderItemResponseDTO
-            {
-                MenuItemId = oi.MenuItemId,
-                MenuItemName = oi.MenuItemName,
-                Quantity = oi.Quantity,
-                MenuItemPrice = oi.MenuItemPrice
-            }).ToList(), // Map OrderItem to OrderItemResponseDTO
-            TableNumber = orderSummary.TableNumber,
-            OrderSummaryId = orderSummary.OrderSummaryId // Return the summary ID
-        };
+            // Log the exception details for further investigation
+            Console.WriteLine($"Error creating order: {ex.Message}");
+            throw; // Re-throw the exception to handle it upstream if necessary
+        }
     }
 
-   
+
 
     public async Task UpdateOrderStatusAsync(Guid orderId, OrderStatusUpdateDTO orderStatusUpdateDTO)
     {

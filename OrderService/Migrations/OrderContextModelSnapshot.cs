@@ -37,9 +37,6 @@ namespace OrderService.Migrations
                     b.Property<Guid?>("OrderSummaryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OrderSummaryId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -51,11 +48,9 @@ namespace OrderService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderSummaryId");
-
-                    b.HasIndex("OrderSummaryId1")
+                    b.HasIndex("OrderSummaryId")
                         .IsUnique()
-                        .HasFilter("[OrderSummaryId1] IS NOT NULL");
+                        .HasFilter("[OrderSummaryId] IS NOT NULL");
 
                     b.ToTable("Orders");
                 });
@@ -70,7 +65,6 @@ namespace OrderService.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MenuItemName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MenuItemPrice")
@@ -101,9 +95,6 @@ namespace OrderService.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrderSummaryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("TableNumber")
                         .HasColumnType("int");
 
@@ -121,13 +112,8 @@ namespace OrderService.Migrations
             modelBuilder.Entity("OrderService.Models.Order", b =>
                 {
                     b.HasOne("OrderService.Models.OrderSummary", "OrderSummary")
-                        .WithMany("Orders")
-                        .HasForeignKey("OrderSummaryId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("OrderService.Models.OrderSummary", null)
                         .WithOne("Order")
-                        .HasForeignKey("OrderService.Models.Order", "OrderSummaryId1");
+                        .HasForeignKey("OrderService.Models.Order", "OrderSummaryId");
 
                     b.Navigation("OrderSummary");
                 });
@@ -152,8 +138,6 @@ namespace OrderService.Migrations
                 {
                     b.Navigation("Order")
                         .IsRequired();
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
