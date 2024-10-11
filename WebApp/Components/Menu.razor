@@ -2,6 +2,7 @@
 @inject ICartService cartService
 @inject IMenuService menuService
 @inject IOrderService orderService
+@inject IJSRuntime JS
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 @using WebApp.DTOs
@@ -35,7 +36,6 @@
                     </button>
                 }
             </div>
-            
         </div>
 
         <!-- Menu Items (Vertically Scrollable) -->
@@ -45,9 +45,10 @@
                 @foreach (var item in FilteredMenuItems())
                 {
                     <div class="menu-item">
-                        <img src="@item.ImageUrl" alt="@item.Name" />
+                        <div class="menu-image"><img src="@item.ImageUrl" alt="@item.Name" /></div>
+                        
                         <div class="menu-details">
-                            <h4>@item.Name</h4>
+                            <h3>@item.Name</h3>
                             <p>@item.Description</p>
                             <p class="price">$@item.Price</p>
                             <button class="add-to-cart-btn" @onclick="() => AddToCart(item)">Add to Cart</button>
@@ -66,7 +67,7 @@
                 <p>@cartService.GetItemCount() Items. <a href="#" @onclick="OpenCart">View Cart</a></p>
                 <h3>Cart Total: $@cartService.GetTotalPrice()</h3>
             </div>
-            
+
             <button class="place-order-btn" @onclick="PlaceOrder">Place Order</button>
         </div>
 
@@ -88,16 +89,12 @@
         </div>
         <div>
 
-        <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
+            <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
         </div>
-        
 
     </div>
 
-    
 </div>
-
-
 
 @code {
     private string UserName = "David";
@@ -110,6 +107,13 @@
     private int OrderNumber = 21552;
     private string errorMessage = "";
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("scrollDrag"); // Initialize drag scroll behavior
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -181,12 +185,12 @@
         try
         {
             var orderCreateDto = new OrderCreateDTO
-            {
-                UserId = Guid.NewGuid(), // Fetch actual user ID
-                TableNumber = TableNumber,
-                OrderItems = cartService.GetCurrentOrders(),
-                TotalPrice = cartService.GetTotalPrice()
-            };
+                {
+                    UserId = Guid.NewGuid(), // Fetch actual user ID
+                    TableNumber = TableNumber,
+                    OrderItems = cartService.GetCurrentOrders(),
+                    TotalPrice = cartService.GetTotalPrice()
+                };
 
             var response = await orderService.PlaceOrderAsync(orderCreateDto);
 
