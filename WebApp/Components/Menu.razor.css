@@ -1,11 +1,9 @@
 ﻿.menu-page {
   display: flex;
   max-height: 100vh;
-  flex: 2;
 }
 .menu-page .menu-content {
-  flex: 1;
-  padding: 2rem;
+  flex: 3;
   display: flex;
   flex-direction: column;
   padding: 4rem;
@@ -129,6 +127,7 @@
   background-color: #FFE1E4;
   border: 2px solid #E10019;
   border-radius: 10px;
+  color: #E10019;
 }
 .menu-page .menu-content .cart-summary .cart-summary-details {
   flex: 4;
@@ -139,6 +138,9 @@
 }
 .menu-page .menu-content .cart-summary .cart-summary-details h3 {
   font-size: 2rem;
+}
+.menu-page .menu-content .cart-summary .cart-summary-details a {
+  color: #E10019;
 }
 .menu-page .menu-content .cart-summary .place-order-btn {
   flex: 1;
@@ -164,6 +166,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex: 1;
 }
 .menu-page .order-summary .order-summary-content h3 {
   color: #242424;
