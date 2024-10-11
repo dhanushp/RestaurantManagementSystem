@@ -28,8 +28,21 @@ namespace MenuService.Services
         // Get all categories
         public async Task<Response<List<CategoryResponseDTO>>> GetCategories()
         {
-            return await _menuItemRepository.GetCategories();
+            try
+            {
+                // Delegate the data fetching to the repository
+                return await _menuItemRepository.GetCategories();
+            }
+            catch (Exception ex)
+            {
+                // Handle any exception that occurs
+                return Response<List<CategoryResponseDTO>>.ErrorResponse(
+                    $"An error occurred while fetching the categories: {ex.Message}",
+                    RestaurantManagement.SharedLibrary.Data.ErrorCode.ServiceUnavailable
+                );
+            }
         }
+
 
         // Get menu items by category 
         public async Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategory(string category)
