@@ -30,7 +30,10 @@ namespace OrderService.Data
            .HasOne(o => o.OrderSummary)
            .WithMany(os => os.Orders)
            .HasForeignKey(o => o.OrderSummaryId) // This assumes OrderSummaryId in Order is the foreign key
-           .OnDelete(DeleteBehavior.Restrict); // Set delete behavior as needed
+           .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderSummary>()
+            .Ignore(os => os.Orders);
         }
     }
 }

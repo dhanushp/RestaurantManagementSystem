@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OrderService.Models;
 
 namespace OrderService.Models
@@ -10,6 +11,7 @@ namespace OrderService.Models
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public Guid? OrderSummaryId { get; set; }
         // Navigation property for the parent OrderSummary
+        [NotMapped]
         public OrderSummary OrderSummary { get; set; }
 
         // Computed property for total order price
