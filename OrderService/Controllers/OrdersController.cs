@@ -8,11 +8,11 @@ namespace OrderService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrderController : ControllerBase
+    public class OrdersController : ControllerBase
     {
         private readonly IOrderRepository _orderRepository;
 
-        public OrderController(IOrderRepository orderRepository)
+        public OrdersController(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }
