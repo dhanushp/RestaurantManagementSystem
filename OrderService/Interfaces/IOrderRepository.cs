@@ -1,6 +1,5 @@
 ﻿using OrderService.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using RestaurantManagement.SharedDataLibrary.Enums;
 
 namespace OrderService.Interfaces
 {

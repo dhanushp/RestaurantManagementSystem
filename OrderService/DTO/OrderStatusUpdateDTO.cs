@@ -1,4 +1,5 @@
-﻿using OrderService.Models; // Use the namespace where the OrderStatus enum is defined
+﻿using OrderService.Models;
+using RestaurantManagement.SharedDataLibrary.Enums; // Use the namespace where the OrderStatus enum is defined
 
 namespace OrderService.DTO
 {

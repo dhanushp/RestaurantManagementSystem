@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MenuService\MenuService.csproj" />
+    <ProjectReference Include="..\RestaurantManagement.SharedDataLibrary\RestaurantManagement.SharedDataLibrary.csproj" />
     <ProjectReference Include="..\RestaurantManagement.SharedLibrary\RestaurantManagement.SharedLibrary.csproj" />
     <ProjectReference Include="..\UserService\UserService.csproj" />
   </ItemGroup>

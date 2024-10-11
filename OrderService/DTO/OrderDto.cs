@@ -1,4 +1,5 @@
 ﻿using OrderService.Models;
+using RestaurantManagement.SharedDataLibrary.Enums;
 namespace OrderService.DTO
 {
     public class OrderDto
