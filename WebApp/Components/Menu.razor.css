@@ -1,0 +1,253 @@
+﻿.menu-page {
+  display: flex;
+  max-height: 100vh;
+  flex: 2;
+}
+.menu-page .menu-content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  padding: 4rem;
+  position: relative;
+}
+.menu-page .menu-content .greeting h1 {
+  color: #242424;
+  font-size: 3rem;
+  font-weight: bold;
+}
+.menu-page .menu-content .greeting p {
+  color: #242424;
+  font-size: 1.6rem;
+}
+.menu-page .menu-content .greeting .table-number {
+  font-weight: bold;
+  color: #E10019;
+}
+.menu-page .menu-content .search-bar {
+  margin: 2rem 0;
+}
+.menu-page .menu-content .search-bar input {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.6rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  outline: none;
+  background-color: #F2F2F2;
+  color: #9F9F9F;
+}
+.menu-page .menu-content .search-bar input:focus {
+  border: 1px solid #9F9F9F;
+}
+.menu-page .menu-content .categories {
+  display: flex;
+  flex-direction: column;
+}
+.menu-page .menu-content .categories h3 {
+  color: #242424;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.menu-page .menu-content .categories .categories-available {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+.menu-page .menu-content .categories .categories-available .category-btn {
+  font-size: 1.6rem;
+  padding: 1rem 2rem;
+  border: 2px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.menu-page .menu-content .categories .categories-available .category-btn.active {
+  background-color: #FFE1E4;
+  color: #E10019;
+  border: 2px solid #E10019;
+}
+.menu-page .menu-content .categories .categories-available .category-btn:hover {
+  background-color: #E10019;
+  color: #FFFFFF;
+}
+.menu-page .menu-content .menu-items {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.menu-page .menu-content .menu-items .menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #ddd;
+}
+.menu-page .menu-content .menu-items .menu-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.menu-page .menu-content .menu-items .menu-item .menu-details {
+  flex-grow: 1;
+  padding-left: 1rem;
+}
+.menu-page .menu-content .menu-items .menu-item .menu-details h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.menu-page .menu-content .menu-items .menu-item .menu-details p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+.menu-page .menu-content .menu-items .menu-item .menu-details .price {
+  font-weight: bold;
+  color: #e10019;
+}
+.menu-page .menu-content .menu-items .menu-item .menu-details .add-to-cart-btn {
+  padding: 8px 12px;
+  background-color: #e10019;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.menu-page .menu-content .menu-items .menu-item .menu-details .add-to-cart-btn:hover {
+  background-color: #c00017;
+}
+.menu-page .menu-content .cart-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 2rem;
+  background-color: #FFE1E4;
+  border: 2px solid #E10019;
+  border-radius: 10px;
+}
+.menu-page .menu-content .cart-summary .cart-summary-details {
+  flex: 4;
+}
+.menu-page .menu-content .cart-summary .cart-summary-details p {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+.menu-page .menu-content .cart-summary .cart-summary-details h3 {
+  font-size: 2rem;
+}
+.menu-page .menu-content .cart-summary .place-order-btn {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  background-color: #E10019;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-size: 1.6rem;
+}
+.menu-page .menu-content .cart-summary .place-order-btn:hover {
+  background-color: #c00017;
+}
+.menu-page .order-summary {
+  width: 30%;
+  background-color: #F2F2F2;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.menu-page .order-summary .order-summary-content h3 {
+  color: #242424;
+  font-size: 2rem;
+}
+.menu-page .order-summary .order-summary-content p {
+  color: #242424;
+  font-size: 1.6rem;
+}
+.menu-page .order-summary .order-summary-content .orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details {
+  flex-grow: 1;
+  padding-left: 1rem;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details h4 {
+  margin: 0;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details .status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #ddd;
+  font-size: 0.9rem;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details .status.pending {
+  background-color: #f39c12;
+  color: #fff;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details .status.preparation {
+  background-color: #3498db;
+  color: #fff;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details .status.pickup {
+  background-color: #2ecc71;
+  color: #fff;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-details .status.served {
+  background-color: #e10019;
+  color: #fff;
+}
+.menu-page .order-summary .order-summary-content .orders-list .order-item .order-price {
+  font-weight: bold;
+  color: #e10019;
+}
+.menu-page .order-summary .make-payment-btn {
+  margin-top: 20px;
+  padding: 2rem 1rem;
+  background-color: #E10019;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.6rem;
+  transition: background-color 0.3s ease;
+}
+.menu-page .order-summary .make-payment-btn:hover {
+  background-color: #c00017;
+}
+
+.error-message {
+  position: absolute;
+  font-size: 1.2rem;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem;
+  background: #FFE1E4;
+  border: 1px solid #E10019;
+  border-radius: 5px;
+}

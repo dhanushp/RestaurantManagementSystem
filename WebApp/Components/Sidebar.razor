@@ -1,0 +1,62 @@
+﻿<div class="sidebar @(isSidebarExpanded ? "expanded" : "")">
+    <a href="javascript:void(0)" class="sidebar__toggle" @onclick="ToggleSidebar">
+        <img src="images/@(isSidebarExpanded ? "close.svg" : "burger.svg")" alt="Toggle" class="sidebar__toggle-icon" />
+    </a>
+
+    <nav class="sidebar__nav">
+        <ul>
+            <!-- Menu Tab -->
+            <li>
+                <a href="javascript:void(0)" class="sidebar__item @(activeTab == "menu" ? "sidebar__item--active" : "")" @onclick="@(() => NavigateToTab("menu"))">
+                    <img src="images/menu.svg" alt="Menu" class="sidebar__icon" />
+                    @if (isSidebarExpanded)
+                    {
+                        <span class="sidebar__text">Menu</span>
+                    }
+                </a>
+            </li>
+
+            <!-- Payments Tab -->
+            <li>
+                <a href="javascript:void(0)" class="sidebar__item @(activeTab == "payments" ? "sidebar__item--active" : "")" @onclick="@(() => NavigateToTab("payments"))">
+                    <img src="images/payment.svg" alt="Payments" class="sidebar__icon" />
+                    @if (isSidebarExpanded)
+                    {
+                        <span class="sidebar__text">Payments</span>
+                    }
+                </a>
+            </li>
+
+            <!-- AI Recommendations Tab -->
+            <li>
+                <a href="javascript:void(0)" class="sidebar__item @(activeTab == "ai" ? "sidebar__item--active" : "")" @onclick="@(() => NavigateToTab("ai"))">
+                    <img src="images/ai.svg" alt="AI" class="sidebar__icon" />
+                    @if (isSidebarExpanded)
+                    {
+                        <span class="sidebar__text">AI</span>
+                    }
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+    private bool isSidebarExpanded = false; // Default collapsed state
+    [Parameter] public EventCallback<string> OnTabChange { get; set; }
+    private string activeTab = "menu"; // Default active tab
+
+    private void ToggleSidebar()
+    {
+        isSidebarExpanded = !isSidebarExpanded;
+    }
+
+    private async Task NavigateToTab(string tab)
+    {
+        activeTab = tab;
+        if (OnTabChange.HasDelegate)
+        {
+            await OnTabChange.InvokeAsync(tab);
+        }
+    }
+}

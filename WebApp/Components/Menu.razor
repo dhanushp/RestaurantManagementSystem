@@ -1,38 +1,218 @@
-﻿@page "/menu"
-@* @inject OrderService orderService *@
+﻿@inject ITableService tableService
+@inject ICartService cartService
+@inject IMenuService menuService
+@inject IOrderService orderService
+@using WebApp.DTOs.Menu
+@using WebApp.DTOs.Order
+@using WebApp.DTOs
 
+<div class="menu-page">
 
-<h3>Menu</h3>
-@if ("menuItems" == null)
-{
-    <p>Loading menu...</p>
-}
-else
-{
-    <div class="menu-list">
-        @* @foreach (var item in menuItems)
-        {
-            <div class="menu-item">
-                <img src="@item.ImageUrl" alt="@item.Name" />
-                <h4>@item.Name (@(item.IsNonVeg ? "Non-Veg" : "Veg"))</h4>
-                <p>@item.Description</p>
-                <p>Price: @item.Price</p>
-                <button @onclick="() => AddToOrder(item)">Add to Order</button>
+    <!-- Middle Content: Menu -->
+    <div class="menu-content">
+        <!-- Greeting -->
+        <div class="greeting">
+            <h1>Hello, @UserName</h1>
+            <p>You're in table <span class="table-number">@TableNumber</span></p> <!-- Dynamically retrieved table number -->
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="What would you like to eat?" @bind="searchQuery" />
+        </div>
+
+        <!-- Categories (Horizontally Scrollable) -->
+        <div class="categories">
+            <h3>Categories</h3>
+            <div class="categories-available">
+                <button class="category-btn @(selectedCategory == "All" ? "active" : "")" @onclick="@(() => SelectCategory("All"))">
+                    All
+                </button>
+                @foreach (var category in categories)
+                {
+                    <button class="category-btn @(selectedCategory == category.Name ? "active" : "")" @onclick="() => SelectCategory(category.Name)">
+                        @category.Name
+                    </button>
+                }
             </div>
-        } *@
-    </div>
-}
+            
+        </div>
 
-@* @code {
-    private List<MenuItem> menuItems;
+        <!-- Menu Items (Vertically Scrollable) -->
+        <div class="menu-items">
+            @if (FilteredMenuItems().Any())
+            {
+                @foreach (var item in FilteredMenuItems())
+                {
+                    <div class="menu-item">
+                        <img src="@item.ImageUrl" alt="@item.Name" />
+                        <div class="menu-details">
+                            <h4>@item.Name</h4>
+                            <p>@item.Description</p>
+                            <p class="price">$@item.Price</p>
+                            <button class="add-to-cart-btn" @onclick="() => AddToCart(item)">Add to Cart</button>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No items found</p>
+            }
+        </div>
+        <!-- Cart Summary (Bottom of Menu) -->
+        <div class="cart-summary">
+            <div class="cart-summary-details">
+                <p>@cartService.GetItemCount() Items. <a href="#" @onclick="OpenCart">View Cart</a></p>
+                <h3>Cart Total: $@cartService.GetTotalPrice()</h3>
+            </div>
+            
+            <button class="place-order-btn" @onclick="PlaceOrder">Place Order</button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error-message">@errorMessage</div>
+        }
+    </div>
+
+    <!-- Right Sidebar: Order Summary -->
+    <div class="order-summary">
+        <div class="order-summary-content">
+            <h3>My Orders</h3>
+            <p>Order #@OrderNumber</p>
+
+            <div class="orders-list">
+                <!-- Update this as needed -->
+            </div>
+        </div>
+        <div>
+
+        </div>
+        
+
+        <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
+    </div>
+
+    
+</div>
+
+
+
+@code {
+    private string UserName = "David";
+    private string TableNumber = "";   // Updated dynamically
+    private string searchQuery = "";
+    private string selectedCategory = "All"; // Default is All
+    private List<CategoryDTO> categories = new List<CategoryDTO>();
+    private List<MenuItemResponseDTO> menuItems = new List<MenuItemResponseDTO>();
+    private List<OrderItemDto> orders = new List<OrderItemDto>(); // List to store all orders
+    private int OrderNumber = 21552;
+    private string errorMessage = "";
+
 
     protected override async Task OnInitializedAsync()
     {
-        menuItems = await menuService.GetMenuItemsAsync();
+        try
+        {
+            // Fetch categories and menu items from MenuService
+            var categoriesResponse = await menuService.GetCategoriesAsync();
+            var menuItemsResponse = await menuService.GetAllMenuItemsAsync();
+            categories = categoriesResponse.Data;
+            menuItems = menuItemsResponse.Data;
+
+            // Get the tableId from local storage
+            var tableId = await tableService.GetSelectedTableFromLocalStorage();
+            if (tableId.HasValue)
+            {
+                // Fetch the table details from backend using the tableId
+                var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
+
+                if (tableResponse.Success)
+                {
+                    TableNumber = tableResponse.Data.Number; // Assign the fetched table number to be displayed
+                    StateHasChanged(); // Ensure UI updates
+                }
+                else
+                {
+                    errorMessage = "Failed to fetch table details.";
+                }
+            }
+            else
+            {
+                errorMessage = "No table selected.";
+            }
+
+            // Fetch the current orders from the CartService
+            orders = cartService.GetCurrentOrders();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "There was a problem loading the menu. Please try again later.";
+        }
     }
 
-    private void AddToOrder(MenuItem item)
+    private List<MenuItemResponseDTO> FilteredMenuItems()
     {
-        // Logic for adding item to order
+        if (selectedCategory == "All")
+        {
+            return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        else
+        {
+            return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) &&
+                                           item.Category == selectedCategory).ToList();
+        }
     }
-} *@
+
+    private void SelectCategory(string category)
+    {
+        selectedCategory = category;
+    }
+
+    private void AddToCart(MenuItemResponseDTO item)
+    {
+        cartService.AddItem(item);
+        orders = cartService.GetCurrentOrders(); // Update orders after adding an item to cart
+    }
+
+    private async Task PlaceOrder()
+    {
+        try
+        {
+            var orderCreateDto = new OrderCreateDTO
+            {
+                UserId = Guid.NewGuid(), // Fetch actual user ID
+                TableNumber = TableNumber,
+                OrderItems = cartService.GetCurrentOrders(),
+                TotalPrice = cartService.GetTotalPrice()
+            };
+
+            var response = await orderService.PlaceOrderAsync(orderCreateDto);
+
+            if (response.Success)
+            {
+                orders.AddRange(cartService.GetCurrentOrders());
+                cartService.ClearCart();
+            }
+            else
+            {
+                errorMessage = "Failed to place the order. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while placing the order.";
+        }
+    }
+
+    private void NavigateToPayments()
+    {
+        // Navigate to payments tab
+    }
+
+    private void OpenCart()
+    {
+        // Open cart modal (future implementation)
+    }
+}
