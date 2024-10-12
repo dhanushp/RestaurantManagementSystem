@@ -1,4 +1,4 @@
-﻿@inject CartService cartService
+﻿@inject ICartService cartService
 
 @if (IsVisible)
 {
@@ -29,7 +29,6 @@
     </div>
 }
 
-
 @code {
     [Parameter] public bool IsVisible { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
@@ -41,4 +40,3 @@
         // Implement checkout functionality
     }
 }
-

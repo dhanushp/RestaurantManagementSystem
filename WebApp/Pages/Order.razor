@@ -1,15 +1,31 @@
 ﻿@page "/order"
 
+@inject ICartService cartService
+@inject IMenuService menuService
+@inject IOrderService orderService
+@inject ITableService tableService
+@inject IUserService userService
+
+@using WebApp.DTOs.Menu
+@using WebApp.DTOs.Order
+
 <div class="order-layout">
-    <Sidebar OnTabChange="HandleTabChange" />
+    <Sidebar OnTabChange="HandleTabChange" ActiveTab="@activeTab" />
     <div class="main-content">
         @if (activeTab == "menu")
         {
-            <Menu />
+            <Menu Categories="categories"
+                  MenuItems="menuItems"
+                  Orders="orders"
+                  TableNumber="@TableNumber"
+                  UserName="@UserName"
+                  OnPlaceOrder="HandlePlaceOrder" />
         }
         else if (activeTab == "payments")
         {
-            <Payments />
+            <Payments Orders="orders"
+                      TableNumber="@TableNumber"
+                      UserName="@UserName" />
         }
         else if (activeTab == "ai")
         {
@@ -20,6 +36,61 @@
 
 @code {
     private string activeTab = "menu"; // Default active tab
+    private List<CategoryDTO> categories = new List<CategoryDTO>();
+    private List<MenuItemResponseDTO> menuItems = new List<MenuItemResponseDTO>();
+    private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>();
+    private string TableNumber = "";  // Store TableNumber once
+    private string UserName = "";  // Store UserName once
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load data once during initialization
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        // Fetch categories and menu items once and pass down to child components
+        categories = (await menuService.GetCategoriesAsync()).Data;
+        menuItems = (await menuService.GetAllMenuItemsAsync()).Data;
+
+        // Fetch current orders
+        orders = cartService.GetCurrentOrders();
+
+        // Fetch table details once and store in the parent component
+        var tableId = await tableService.GetSelectedTableFromLocalStorage();
+        if (tableId.HasValue)
+        {
+            var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
+            if (tableResponse.Success)
+            {
+                TableNumber = tableResponse.Data.Number;
+            }
+        }
+
+        // Fetch user details once and store in the parent component
+        var userResponse = await userService.GetUserInfoAsync();
+        if (userResponse.Success)
+        {
+            UserName = userResponse.Data.FullName;
+        }
+    }
 
     private void HandleTabChange(string tabName) => activeTab = tabName;
+
+    // Handle the place order event from Menu component
+    private async Task HandlePlaceOrder(CreateOrderRequestDTO orderRequest)
+    {
+        var response = await orderService.PlaceOrderAsync(orderRequest);
+
+        if (response.Success)
+        {
+            orders = cartService.GetCurrentOrders();
+            cartService.ClearCart();
+        }
+        else
+        {
+            // Handle failure case
+        }
+    }
 }
