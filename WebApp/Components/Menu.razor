@@ -4,6 +4,7 @@
 @inject IOrderService orderService
 @inject IUserService userService
 @inject IJSRuntime JS
+@using Microsoft.JSInterop;
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 
@@ -89,10 +90,10 @@
             <p>Order #@OrderNumber</p>
 
             <div class="orders-list">
-               @*  @if (currentOrders != null && currentOrders.Count > 0)
+                @if (orders != null && orders.Count > 0)
                 {
                     <ul>
-                        @foreach (var orderItem in currentOrders)
+                        @foreach (var orderItem in orders)
                         {
                             <li>
                                 <span>@orderItem.MenuItemName</span>
@@ -104,7 +105,7 @@
                 else
                 {
                     <p>No items in the order.</p>
-                } *@
+                }
             </div>
         </div>
 
@@ -199,13 +200,13 @@
 
     private List<CreateOrderItemDTO> currentOrders = new List<CreateOrderItemDTO>();
     private Guid orderNumber;
-    private Guid orderSummaryID;
     private async Task PlaceOrder()
 
     {
 
         try
         {
+            var orderSummaryID = await orderService.GetOrderSummaryIdFromLocalStorage();
             var userInfo = await userService.GetUserInfoAsync();
             var tableInfo = await tableService.GetTableInfoAsync();
             var orderCreateDto = new CreateOrderRequestDTO
@@ -215,17 +216,25 @@
                 UserId = userInfo.Data.Id,
                 UserFullName = userInfo.Data.FullName,
                 OrderItems = cartService.GetCurrentOrders(),
+                OrderSummaryId = orderSummaryID
             };
 
             var response = await orderService.PlaceOrderAsync(orderCreateDto);
 
-            currentOrders = cartService.GetCurrentOrders();
             if (response.Success)
             {
-                orders.AddRange(cartService.GetCurrentOrders());
-                orderNumber = response.Data.OrderId; // Capture the order number
                 orderSummaryID = response.Data.OrderSummaryId;
-                await orderService.StoreOrderSummaryIdInLocalStorage(orderSummaryID);
+                var currentCartItems = cartService.GetCurrentOrders();
+                if (currentCartItems != null && currentCartItems.Count > 0)
+                {
+                    orders.AddRange(currentCartItems);
+                }
+
+                if (orderSummaryID == null) // If there wasn't one previously
+                {
+                    orderSummaryID = response.Data.OrderSummaryId;
+                    await orderService.StoreOrderSummaryIdInLocalStorage(orderSummaryID);
+                }
                 cartService.ClearCart(); // Clear the cart after placing the order
                 StateHasChanged();
             }

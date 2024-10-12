@@ -20,7 +20,8 @@ namespace WebApp.Services
         Task<Response<string>> CancelOrderAsync(Guid orderId);
         Task<Response<OrderResponseDTO>> PlaceOrderAsync(CreateOrderRequestDTO orderCreateDTO);
         // Declaration of PlaceOrderAsync
-        Task StoreOrderSummaryIdInLocalStorage(Guid orderSummaryID);
+        Task StoreOrderSummaryIdInLocalStorage(Guid? orderSummaryID);
+        Task<Guid?> GetOrderSummaryIdFromLocalStorage();
     }
 
     // Class implementation
@@ -100,11 +101,10 @@ namespace WebApp.Services
 
             var response = await _httpClient.PostAsJsonAsync("https://localhost:5003/api/orders/create", orderCreateDTO);
             var responseBody = await response.Content.ReadAsStringAsync();
-
             return JsonConvert.DeserializeObject<Response<OrderResponseDTO>>(responseBody);
         }
 
-        public async Task StoreOrderSummaryIdInLocalStorage(Guid orderSummaryID)
+        public async Task StoreOrderSummaryIdInLocalStorage(Guid? orderSummaryID)
         {
             // Store the orderSummaryID in local storage
 
@@ -112,5 +112,22 @@ namespace WebApp.Services
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "orderSummaryID", orderSummaryID.ToString());
         }
+
+        public async Task<Guid?> GetOrderSummaryIdFromLocalStorage()
+        {
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            // Attempt to get the OrderSummaryId from local storage
+            var orderSummaryIDString = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "orderSummaryID");
+
+            // If OrderSummaryId is found, return it as a Guid, otherwise return null
+            if (!string.IsNullOrEmpty(orderSummaryIDString) && Guid.TryParse(orderSummaryIDString, out Guid orderSummaryID))
+            {
+                return orderSummaryID;
+            }
+
+            return null;
+        }
     }
 }
+    
