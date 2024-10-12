@@ -1,22 +1,22 @@
 ﻿@inject NavigationManager Navigation
 
-<nav>
+<div class="nav">
 	<div class="nav_logo">
 	<img src="/images/logo_hero.png" alt="logo" />
 	</div>
-	<div class="nav_navigation">
+	@*<div class="nav_navigation">
 		<ul class="nav_navigation_items">
 			<li class="nav_navigation_items-active">Home</li>
-			<li>Features</li>
+			<li><a></a></li>
 			<li>How it works</li>
 			<li>Pricing</li>
 		</ul>
-	</div>
+	</div>*@
 	<div class="nav_cta">
 		<button class="nav_cta-primary" @onclick="NavigationToSignIn">Sign In</button>
 		<button class="nav_cta-secondary" @onclick="NavigateToSignUp">Sign Up</button>
 	</div>
-</nav>
+</div>
 
 @code {
 	private void NavigationToSignIn()

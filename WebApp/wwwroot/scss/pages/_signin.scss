@@ -19,13 +19,13 @@
         font-size: $text-2xl;
         margin-bottom: 1rem;
         font-weight: bold;
-        color: $brown;
+        color: $black;
     }
 
     &__description {
         font-size: $text-md;
         margin-bottom: 3rem;
-        color: $brown;
+        color: $black;
     }
 
     &__form {
@@ -45,7 +45,7 @@
         .signin__label {
             font-size: $text-md;
             margin-bottom: 0.5rem;
-            color: $brown;
+            color: $black;
             font-weight: 400;
         }
 
@@ -54,12 +54,12 @@
             padding: 1.5rem;
             border-radius: 5px;
             font-size: $text-md;
-            background-color: $brown-light;
+            background-color: $grey-light;
             border: 1px solid transparent;
-            color: $brown;
+            color: $grey-dark;
 
             &:focus {
-                border: 1px solid $brown;
+                border: 1px solid $grey;
                 outline: none;
             }
         }
@@ -101,7 +101,7 @@
 
         &-url {
             font-size: $text-sm;
-            color: $brown;
+            color: $black;
 
             &:last-child {
                 margin-top: 1rem;

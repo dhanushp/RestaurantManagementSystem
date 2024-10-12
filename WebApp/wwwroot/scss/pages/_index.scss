@@ -2,12 +2,13 @@
 @import '../components/_button.scss';
 
 .hero {
-    height: calc(100dvh - 13rem);
+    height: 100dvh;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
 
     .hero_text {
         display: flex;
@@ -26,12 +27,12 @@
         .hero_text-subtitle {
             font-size: $text-3xl;
             font-weight: 600;
-            color: $brown;
+            color: $black;
         }
 
         .hero_text-para {
             font-size: $text-md;
-            color: $brown;
+            color: $black;
         }
 
         .hero_text_button {
@@ -44,7 +45,7 @@
             }
 
             .hero_text_button-secondary {
-                @include button-primary($white, $black);
+                @include button-primary($red-light, $red);
             }
         }
     }
