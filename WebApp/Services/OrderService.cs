@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WebApp.DTOs;
 using WebApp.DTOs.Order;
-
+using Microsoft.JSInterop;
 namespace WebApp.Services
 {
     // Interface declaration
@@ -18,18 +18,22 @@ namespace WebApp.Services
         Task<Response<List<OrderDto>>> GetOrdersByUserIdAsync(Guid userId);
         Task<Response<string>> UpdateOrderStatusAsync(Guid orderId, OrderStatusUpdateDTO statusUpdate);
         Task<Response<string>> CancelOrderAsync(Guid orderId);
-        Task<Response<OrderResponseDTO>> PlaceOrderAsync(CreateOrderRequestDTO orderCreateDTO); // Declaration of PlaceOrderAsync
+        Task<Response<OrderResponseDTO>> PlaceOrderAsync(CreateOrderRequestDTO orderCreateDTO);
+        // Declaration of PlaceOrderAsync
+        Task StoreOrderSummaryIdInLocalStorage(Guid orderSummaryID);
     }
 
     // Class implementation
     public class OrderService : IOrderService
     {
         private readonly HttpClient _httpClient;
+        private readonly IJSRuntime _jsRuntime;
         private readonly ITokenService _tokenService;
 
-        public OrderService(HttpClient httpClient, ITokenService tokenService)
+        public OrderService(HttpClient httpClient, IJSRuntime jsRuntime, ITokenService tokenService)
         {
             _httpClient = httpClient;
+            _jsRuntime = jsRuntime;
             _tokenService = tokenService;
         }
 
@@ -98,6 +102,15 @@ namespace WebApp.Services
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<Response<OrderResponseDTO>>(responseBody);
+        }
+
+        public async Task StoreOrderSummaryIdInLocalStorage(Guid orderSummaryID)
+        {
+            // Store the orderSummaryID in local storage
+
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "orderSummaryID", orderSummaryID.ToString());
         }
     }
 }

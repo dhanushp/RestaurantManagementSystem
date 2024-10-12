@@ -83,7 +83,22 @@
             <p>Order #@OrderNumber</p>
 
             <div class="orders-list">
-                <!-- Update this as needed -->
+               @*  @if (currentOrders != null && currentOrders.Count > 0)
+                {
+                    <ul>
+                        @foreach (var orderItem in currentOrders)
+                        {
+                            <li>
+                                <span>@orderItem.MenuItemName</span>
+                                <span>@orderItem.Quantity x @orderItem.MenuItemPrice</span>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No items in the order.</p>
+                } *@
             </div>
         </div>
         <div>
@@ -176,8 +191,13 @@
         orders = cartService.GetCurrentOrders(); // Update orders after adding an item to cart
     }
 
+    private List<CreateOrderItemDTO> currentOrders = new List<CreateOrderItemDTO>();
+    private Guid orderNumber;
+    private Guid orderSummaryID;
     private async Task PlaceOrder()
+
     {
+
         try
         {
             var userInfo = await userService.GetUserInfoAsync();
@@ -194,10 +214,15 @@
 
             var response = await orderService.PlaceOrderAsync(orderCreateDto);
 
+            currentOrders = cartService.GetCurrentOrders();
             if (response.Success)
             {
                 orders.AddRange(cartService.GetCurrentOrders());
-                cartService.ClearCart();
+                orderNumber = response.Data.OrderId; // Capture the order number
+                orderSummaryID = response.Data.OrderSummaryId;
+                await orderService.StoreOrderSummaryIdInLocalStorage(orderSummaryID);
+                cartService.ClearCart(); // Clear the cart after placing the order
+                StateHasChanged();
             }
             else
             {
