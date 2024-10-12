@@ -5,17 +5,17 @@ using WebApp.DTOs;
 
 namespace WebApp.Services
 {
-    public interface IPayPalService
+    public interface IPaymentService
     {
         Task<PayPalOrderResponseDTO> CreateOrder(PayPalCreateOrderDTO orderDto);
         Task<PayPalCaptureOrderResponseDTO> CaptureOrder(string orderId);
     }
 
-    public class PayPalService : IPayPalService
+    public class PaymentService : IPaymentService
     {
         private readonly HttpClient _httpClient;
 
-        public PayPalService(HttpClient httpClient)
+        public PaymentService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

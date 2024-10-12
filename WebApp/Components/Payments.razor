@@ -1,7 +1,9 @@
 ﻿@inject IOrderService orderService
 @inject ICartService cartService
 @inject ITableService tableService
+@inject IJSRuntime JS
 
+@using Microsoft.JSInterop
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 @using WebApp.DTOs
@@ -63,8 +65,16 @@
                     <p>Payment Mode : @selectedPaymentMode</p>
                     <h3>Total Amount: $@Total</h3>
                 </div>
-                <!-- Checkout button -->
-                <button class="checkout-btn" @onclick="Checkout">Checkout</button>
+
+                <!-- Checkout button for non-PayPal payments -->
+                @if (selectedPaymentMode == "Cash")
+                {
+                    <button class="checkout-btn" @onclick="Checkout">Checkout</button>
+                }
+
+                <!-- Render PayPal button container for PayPal payments -->
+                <div id="paypal-button-container" style="display: @(selectedPaymentMode == "Online Payment" || selectedPaymentMode == "Credit Card" ? "block" : "none")"></div>
+            
             </div>
 
             
@@ -88,7 +98,7 @@
     private string UserName = "David";
     private string TableNumber = "";   // Updated dynamically
     private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>();
-    private string selectedPaymentMode = "Cash"; // Default payment mode
+    private string _selectedPaymentMode = "Cash"; // Default payment mode
     private decimal SubTotal;
     private decimal Tax;
     private decimal Total;
@@ -125,6 +135,30 @@
         {
             errorMessage = "No table selected.";
         }
+
+        // Render PayPal button on initialization
+        await JS.InvokeVoidAsync("renderPayPalButton", Total);
+    }
+
+    // Property with a getter and setter to handle changes to the payment mode
+    private string selectedPaymentMode
+    {
+        get => _selectedPaymentMode;
+        set
+        {
+            _selectedPaymentMode = value;
+            if (_selectedPaymentMode == "Online Payment" || _selectedPaymentMode == "Credit Card")
+            {
+                try
+                {
+                    InvokeAsync(() => JS.InvokeVoidAsync("renderPayPalButton", Total));
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = "An error occurred during checkout.";
+                }
+            }
+        }
     }
 
     private async Task Checkout()
@@ -155,3 +189,36 @@
         }
     }
 }
+
+
+<script src="https://sandbox.paypal.com/sdk/js?client-id=AaiaP8K5TIdwFLtYuX2jnJ_enzAUy54LPSmUlf89fFkUCmIc9bO5MDGB3sKWQktBAwMKUV5QLgrCd6DE&components=buttons"></script>
+
+<script>
+    function renderPayPalButton(totalAmount) {
+        // Clear any previously rendered button if present
+        document.getElementById('paypal-button-container').innerHTML = "";
+
+        // Render PayPal button
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: totalAmount // Dynamic value passed from Blazor
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    console.log('Transaction completed by ' + details.payer.name.given_name);
+                    alert('Payment successful!');
+                    // Optionally: Call your Blazor backend for further actions after successful payment
+                });
+            },
+            onError: function (err) {
+                console.error('PayPal Checkout Error', err);
+            }
+        }).render('#paypal-button-container');
+    }
+</script>

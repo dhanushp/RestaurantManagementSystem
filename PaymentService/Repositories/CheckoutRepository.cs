@@ -80,7 +80,7 @@ namespace PaymentService.Repositories
                     CreatedAt = DateTime.Now,
                     OrderId = payPalOrderResponse.Id,
                     Amount = createOrderDTO.Amount,
-                    CurrencyCode = "INR",
+                    CurrencyCode = createOrderDTO.Currency,
                     PaymentMethod = PaymentMethod.PayPal,
                     Status = PaymentStatus.Pending
                 };
