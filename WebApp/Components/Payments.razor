@@ -149,9 +149,14 @@
             _selectedPaymentMode = value;
             if (_selectedPaymentMode == "Online Payment" || _selectedPaymentMode == "Credit Card")
             {
-                Console.WriteLine("Invoking PayPal button render");
-                // Ensure PayPal button rendering happens after rendering is complete
-                InvokeAsync(() => JS.InvokeVoidAsync("renderPayPalButton", Total));
+                try
+                {
+                    InvokeAsync(() => JS.InvokeVoidAsync("renderPayPalButton", Total));
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = "An error occurred during checkout.";
+                }
             }
         }
     }
