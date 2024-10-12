@@ -2,8 +2,10 @@
 
 @mixin button-primary($bg-color, $text-color) {
     padding: 1rem 3rem;
-    border: none;
+    border: 2px solid $red;
     border-radius: 1rem;
+    display: flex;
+    align-items: center;
     color: $text-color;
     background-color: $bg-color;
     font-size: $text-md;

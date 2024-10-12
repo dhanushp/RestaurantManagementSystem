@@ -175,44 +175,6 @@ body {
   content: var(--blazor-load-percentage-text, "Loading");
 }
 
-/*@import '../abstracts/_variables.scss';
-@import '../components/_button.scss';
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    padding: 3rem 10rem 0 10rem;
-    align-items: center;
-    background: $background;
-
-    .nav_navigation {
-
-        .nav_navigation_items {
-            display: flex;
-            gap: 5rem;
-            list-style-type: none;
-            font-size: $text-md;
-
-            .nav_navigation_items-active {
-                color: red;
-            }
-        }
-    }
-
-    .nav_cta {
-        display:flex;
-        gap: 2rem;
-
-        .nav_cta-primary {
-            @include button-primary($red, $white);
-        }
-
-        .nav_cta-secondary {
-            @include button-secondary($red, $black);
-        }
-    }
-}
-*/
 .auth-layout {
   display: flex;
   height: 100vh;
@@ -251,12 +213,13 @@ nav {
 }
 
 .hero {
-  height: calc(100dvh - 13rem);
+  height: 100dvh;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
 }
 .hero .hero_text {
   display: flex;
@@ -274,11 +237,11 @@ nav {
 .hero .hero_text .hero_text-subtitle {
   font-size: 4rem;
   font-weight: 600;
-  color: #7A502D;
+  color: #242424;
 }
 .hero .hero_text .hero_text-para {
   font-size: 1.6rem;
-  color: #7A502D;
+  color: #242424;
 }
 .hero .hero_text .hero_text_button {
   display: flex;
@@ -287,8 +250,10 @@ nav {
 }
 .hero .hero_text .hero_text_button .hero_text_button-primary {
   padding: 1rem 3rem;
-  border: none;
+  border: 2px solid #E10019;
   border-radius: 1rem;
+  display: flex;
+  align-items: center;
   color: #FFFFFF;
   background-color: #E10019;
   font-size: 1.6rem;
@@ -304,16 +269,18 @@ nav {
 }
 .hero .hero_text .hero_text_button .hero_text_button-secondary {
   padding: 1rem 3rem;
-  border: none;
+  border: 2px solid #E10019;
   border-radius: 1rem;
-  color: #242424;
-  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  color: #E10019;
+  background-color: #FFE1E4;
   font-size: 1.6rem;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 .hero .hero_text .hero_text_button .hero_text_button-secondary:hover {
-  background-color: #f2f2f2;
+  background-color: #ffc8cd;
 }
 .hero .hero_text .hero_text_button .hero_text_button-secondary:disabled {
   background-color: #ccc;
@@ -338,12 +305,12 @@ nav {
   font-size: 3rem;
   margin-bottom: 1rem;
   font-weight: bold;
-  color: #7A502D;
+  color: #242424;
 }
 .signin__description {
   font-size: 1.6rem;
   margin-bottom: 3rem;
-  color: #7A502D;
+  color: #242424;
 }
 .signin__form {
   display: flex;
@@ -361,7 +328,7 @@ nav {
 .signin__input-group .signin__label {
   font-size: 1.6rem;
   margin-bottom: 0.5rem;
-  color: #7A502D;
+  color: #242424;
   font-weight: 400;
 }
 .signin__input-group .signin__input {
@@ -369,12 +336,12 @@ nav {
   padding: 1.5rem;
   border-radius: 5px;
   font-size: 1.6rem;
-  background-color: #F6DBA2;
+  background-color: #F7F7F7;
   border: 1px solid transparent;
-  color: #7A502D;
+  color: #808080;
 }
 .signin__input-group .signin__input:focus {
-  border: 1px solid #7A502D;
+  border: 1px solid #9F9F9F;
   outline: none;
 }
 .signin__input-group .signin__validation-message {
@@ -409,7 +376,7 @@ nav {
 }
 .signin__link-url {
   font-size: 1.4rem;
-  color: #7A502D;
+  color: #242424;
 }
 .signin__link-url:last-child {
   margin-top: 1rem;
@@ -448,12 +415,12 @@ nav {
   font-size: 3rem;
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #7A502D;
+  color: #242424;
 }
 .signup__header-link {
   font-size: 1.6rem;
   margin-bottom: 2rem;
-  color: #7A502D;
+  color: #242424;
 }
 .signup__header-link--text {
   color: #0077B6;
@@ -480,7 +447,7 @@ nav {
 .signup__form-input-group .signup__form-label {
   font-size: 1.6rem;
   margin-bottom: 0.5rem;
-  color: #7A502D;
+  color: #242424;
   font-weight: 400;
 }
 .signup__form-input-group .signup__form-input {
@@ -488,12 +455,12 @@ nav {
   padding: 1.5rem;
   border-radius: 5px;
   font-size: 1.6rem;
-  background-color: #F6DBA2;
+  background-color: #F7F7F7;
   border: 1px solid transparent;
-  color: #7A502D;
+  color: #808080;
 }
 .signup__form-input-group .signup__form-input:focus {
-  border: 1px solid #7A502D;
+  border: 1px solid #9F9F9F;
   outline: none;
 }
 .signup__form-input-group .signup__form-validation-message {
@@ -555,13 +522,13 @@ nav {
   font-size: 3rem;
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #7A502D;
+  color: #242424;
   text-align: center;
 }
 .select-table__header-description {
   font-size: 1.6rem;
   margin-bottom: 2rem;
-  color: #7A502D;
+  color: #242424;
   text-align: center;
 }
 .select-table__form {
@@ -582,7 +549,7 @@ nav {
 .select-table__form-input-group .select-table__form-label {
   font-size: 1.6rem;
   margin-bottom: 0.5rem;
-  color: #7A502D;
+  color: #242424;
   font-weight: 400;
 }
 .select-table__form-input-group .select-table__form-select {
@@ -590,12 +557,12 @@ nav {
   padding: 1.5rem;
   border-radius: 5px;
   font-size: 1.6rem;
-  background-color: #F6DBA2;
+  background-color: #F7F7F7;
   border: 1px solid transparent;
-  color: #7A502D;
+  color: #808080;
 }
 .select-table__form-input-group .select-table__form-select:focus {
-  border: 1px solid #7A502D;
+  border: 1px solid #9F9F9F;
   outline: none;
 }
 .select-table__form-input-group .select-table__form-validation-message {
@@ -624,17 +591,6 @@ nav {
   background-color: #b80020;
 }
 .select-table__form-button--primary:focus {
-  outline: none;
-}
-.select-table__form-button--secondary {
-  background-color: transparent;
-  color: #7A502D;
-  border: 1px solid #7A502D;
-}
-.select-table__form-button--secondary:hover {
-  background-color: #F6DBA2;
-}
-.select-table__form-button--secondary:focus {
   outline: none;
 }
 
@@ -673,12 +629,12 @@ nav {
   font-size: 3rem;
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #7A502D;
+  color: #242424;
 }
 .forgot-password__header-description {
   font-size: 1.6rem;
   margin-bottom: 2rem;
-  color: #7A502D;
+  color: #242424;
   text-align: center;
 }
 .forgot-password__form {
@@ -699,7 +655,7 @@ nav {
 .forgot-password__form-input-group .forgot-password__form-label {
   font-size: 1.6rem;
   margin-bottom: 0.5rem;
-  color: #7A502D;
+  color: #242424;
   font-weight: 400;
 }
 .forgot-password__form-input-group .forgot-password__form-input {
@@ -707,12 +663,12 @@ nav {
   padding: 1.5rem;
   border-radius: 5px;
   font-size: 1.6rem;
-  background-color: #F6DBA2;
+  background-color: #F7F7F7;
   border: 1px solid transparent;
-  color: #7A502D;
+  color: #808080;
 }
 .forgot-password__form-input-group .forgot-password__form-input:focus {
-  border: 1px solid #7A502D;
+  border: 1px solid #9F9F9F;
   outline: none;
 }
 .forgot-password__form-input-group .forgot-password__form-validation-message {
@@ -747,7 +703,7 @@ nav {
   font-size: 1.6rem;
 }
 .forgot-password__link--text {
-  color: #7A502D;
+  color: #242424;
   text-decoration: none;
 }
 .forgot-password__link--text:hover {

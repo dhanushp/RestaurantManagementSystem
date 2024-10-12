@@ -88,7 +88,10 @@
         <div class="order-summary-content">
             <h3>My Orders</h3>
             <p>Order #1552</p>
+        </div>
 
+        <!-- Scrollable Orders List -->
+        <div class="orders-list-container">
             <div class="orders-list">
                 @foreach (var order in Orders)
                 {
@@ -103,6 +106,7 @@
             </div>
         </div>
 
+        <!-- Make Payment Button Fixed at the Bottom -->
         <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
     </div>
 

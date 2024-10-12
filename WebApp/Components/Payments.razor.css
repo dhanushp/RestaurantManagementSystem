@@ -12,6 +12,7 @@
   position: relative;
 }
 .payment-page .payment-content .greeting {
+  flex: 0 0 auto;
   margin-bottom: 1.5rem;
 }
 .payment-page .payment-content .greeting h1 {
@@ -27,15 +28,36 @@
   font-weight: bold;
   color: #E10019;
 }
+.payment-page .payment-content .order-summary {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 .payment-page .payment-content .order-summary h3 {
   color: #242424;
   font-size: 2rem;
   margin-bottom: 1rem;
+  flex: 0 0 auto;
 }
 .payment-page .payment-content .order-summary .order-items {
+  flex-grow: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+.payment-page .payment-content .order-summary .order-items::-webkit-scrollbar {
+  width: 10px;
+}
+.payment-page .payment-content .order-summary .order-items::-webkit-scrollbar-track {
+  background: #F7F7F7;
+}
+.payment-page .payment-content .order-summary .order-items::-webkit-scrollbar-thumb {
+  background: #9F9F9F;
+}
+.payment-page .payment-content .order-summary .order-items::-webkit-scrollbar-thumb:hover {
+  background: #808080;
 }
 .payment-page .payment-content .order-summary .order-items .order-item {
   display: flex;
@@ -62,6 +84,9 @@
 .payment-page .payment-content .order-summary .order-items .order-item .order-details .order-price {
   font-weight: bold;
   color: #E10019;
+}
+.payment-page .payment-content .payment-summary {
+  flex: 0 0 auto;
 }
 .payment-page .payment-content .payment-summary .payment-summary-content {
   margin: 2rem 0;
