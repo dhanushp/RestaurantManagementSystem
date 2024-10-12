@@ -45,12 +45,6 @@
   padding: 1rem;
   border-radius: 8px;
 }
-.payment-page .payment-content .order-summary .order-items .order-item img {
-  width: 80px;
-  height: 80px;
-  border-radius: 5px;
-  object-fit: cover;
-}
 .payment-page .payment-content .order-summary .order-items .order-item .order-details {
   flex-grow: 1;
   padding-left: 1rem;
@@ -99,9 +93,10 @@
   background-color: #FFE1E4;
   border: 2px solid #E10019;
   border-radius: 10px;
+  transition: all 0.3s ease-in-out;
 }
 .payment-page .payment-content .payment-summary .total-summary .total-summary-content {
-  flex: 4;
+  flex: 3;
   color: #E10019;
 }
 .payment-page .payment-content .payment-summary .total-summary .total-summary-content p {
@@ -122,9 +117,23 @@
   transition: background-color 0.3s ease;
   width: 100%;
   font-size: 1.6rem;
+  display: block;
 }
 .payment-page .payment-content .payment-summary .total-summary .checkout-btn:hover {
   background-color: #c00017;
+}
+.payment-page .payment-content .payment-summary .total-summary .checkout-btn.hidden {
+  display: none;
+}
+.payment-page .payment-content .payment-summary .total-summary #paypal-button-container {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
+}
+.payment-page .payment-content .payment-summary .total-summary #paypal-button-container.visible {
+  max-height: 200px;
+  opacity: 1;
 }
 .payment-page .payment-content .error-message {
   margin-top: 2rem;

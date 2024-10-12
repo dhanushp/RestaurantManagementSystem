@@ -2,13 +2,12 @@
 @inject ICartService cartService
 @inject IMenuService menuService
 @inject IOrderService orderService
-@inject IUserService userService
 @inject IJSRuntime JS
+
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 
 <div class="menu-page">
-
     <!-- Middle Content: Menu -->
     <div class="menu-content">
         <!-- Greeting -->
@@ -22,14 +21,14 @@
             <input type="text" placeholder="What would you like to eat?" @bind="searchQuery" />
         </div>
 
-        <!-- Categories (Horizontally Scrollable) with Drag-to-Scroll Feature -->
+        <!-- Categories (Horizontally Scrollable) -->
         <div class="categories">
             <h3>Categories</h3>
             <div class="categories-available">
                 <button class="category-btn @(selectedCategory == "All" ? "active" : "")" @onclick="@(() => SelectCategory("All"))">
                     All
                 </button>
-                @foreach (var category in categories)
+                @foreach (var category in Categories)
                 {
                     <button class="category-btn @(selectedCategory == category.Name ? "active" : "")" @onclick="() => SelectCategory(category.Name)">
                         @category.Name
@@ -45,7 +44,9 @@
                 @foreach (var item in FilteredMenuItems())
                 {
                     <div class="menu-item">
-                        <div class="menu-image"><img src="@item.ImageUrl" alt="@item.Name" /></div>
+                        <div class="menu-image">
+                            <img src="@item.ImageUrl" alt="@item.Name" />
+                        </div>
                         
                         <div class="menu-details">
                             <h3>@item.Name</h3>
@@ -72,7 +73,6 @@
                 <h3>Cart Total: $@cartService.GetTotalPrice()</h3>
             </div>
 
-
             <button class="place-order-btn" @onclick="PlaceOrder">Place Order</button>
         </div>
 
@@ -86,10 +86,19 @@
     <div class="order-summary">
         <div class="order-summary-content">
             <h3>My Orders</h3>
-            <p>Order #@OrderNumber</p>
+            <p>Order #1552</p>
 
             <div class="orders-list">
-                <!-- Update this as needed -->
+                @foreach (var order in Orders)
+                {
+                    <div class="order-item">
+                        <div class="order-details">
+                            <h4>@order.MenuItemName</h4>
+                            <p>Quantity: @order.Quantity</p>
+                            <p>Total: $@order.TotalPrice</p>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
 
@@ -98,18 +107,18 @@
 
     <!-- Cart Modal -->
     <CartModal IsVisible="isCartVisible" OnClose="CloseCart" />
-
 </div>
 
 @code {
-    private string UserName = "David";
-    private string TableNumber = "";   // Updated dynamically
+    [Parameter] public List<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>(); // Passed from parent
+    [Parameter] public List<MenuItemResponseDTO> MenuItems { get; set; } = new List<MenuItemResponseDTO>(); // Passed from parent
+    [Parameter] public List<CreateOrderItemDTO> Orders { get; set; } = new List<CreateOrderItemDTO>(); // Passed from parent
+    [Parameter] public string TableNumber { get; set; } // Passed from parent
+    [Parameter] public string UserName { get; set; } // Passed from parent
+    [Parameter] public EventCallback<CreateOrderRequestDTO> OnPlaceOrder { get; set; } // New callback for order placement
+
     private string searchQuery = "";
     private string selectedCategory = "All"; // Default is All
-    private List<CategoryDTO> categories = new List<CategoryDTO>();
-    private List<MenuItemResponseDTO> menuItems = new List<MenuItemResponseDTO>();
-    private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>(); // List to store all orders
-    private int OrderNumber = 21552;
     private string errorMessage = "";
     private bool isCartVisible = false;
 
@@ -121,52 +130,15 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var categoriesResponse = await menuService.GetCategoriesAsync();
-            var menuItemsResponse = await menuService.GetAllMenuItemsAsync();
-            categories = categoriesResponse.Data;
-            menuItems = menuItemsResponse.Data;
-
-            var tableId = await tableService.GetSelectedTableFromLocalStorage();
-            if (tableId.HasValue)
-            {
-                var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
-
-                if (tableResponse.Success)
-                {
-                    TableNumber = tableResponse.Data.Number;
-                    StateHasChanged();
-                }
-                else
-                {
-                    errorMessage = "Failed to fetch table details.";
-                }
-            }
-            else
-            {
-                errorMessage = "No table selected.";
-            }
-
-            orders = cartService.GetCurrentOrders();
-        }
-        catch (Exception ex)
-        {
-            errorMessage = "There was a problem loading the menu. Please try again later.";
-        }
-    }
-
     private List<MenuItemResponseDTO> FilteredMenuItems()
     {
         if (selectedCategory == "All")
         {
-            return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            return MenuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
         }
         else
         {
-            return menuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) &&
+            return MenuItems.Where(item => item.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) &&
                                            item.Category == selectedCategory).ToList();
         }
     }
@@ -179,34 +151,24 @@
     private void AddToCart(MenuItemResponseDTO item)
     {
         cartService.AddItem(item);
-        orders = cartService.GetCurrentOrders(); // Update orders after adding an item to the cart
+        Orders = cartService.GetCurrentOrders(); // Update orders after adding an item to the cart
     }
 
     private async Task PlaceOrder()
     {
         try
         {
-            var userInfo = await userService.GetUserInfoAsync();
             var tableInfo = await tableService.GetTableInfoAsync();
             var orderCreateDto = new CreateOrderRequestDTO
             {
                 TableId = tableInfo.Data.Id,
                 TableNumber = TableNumber,
-                UserId = userInfo.Data.Id,
-                UserFullName = userInfo.Data.FullName,
                 OrderItems = cartService.GetCurrentOrders(),
             };
 
-            var response = await orderService.PlaceOrderAsync(orderCreateDto);
-
-            if (response.Success)
+            if (OnPlaceOrder.HasDelegate)
             {
-                orders.AddRange(cartService.GetCurrentOrders());
-                cartService.ClearCart();
-            }
-            else
-            {
-                errorMessage = "Failed to place the order. Please try again.";
+                await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
             }
         }
         catch (Exception ex)
@@ -227,6 +189,6 @@
 
     private void NavigateToPayments()
     {
-        // Navigate to payments tab
+        // Navigate to the payments tab
     }
 }

@@ -3,48 +3,38 @@
 @inject ITableService tableService
 @inject IJSRuntime JS
 
-@using Microsoft.JSInterop
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 @using WebApp.DTOs
 
 <div class="payment-page">
-
     <div class="payment-content">
-        <!-- Greeting -->
-        <div >
+        <div class="left-section">
             <div class="greeting">
                 <h1>Hello, @UserName</h1>
-                <p>You're in table <span class="table-number">@TableNumber</span></p> <!-- Dynamically retrieved table number -->
+                <p>You're in table <span class="table-number">@TableNumber</span></p>
             </div>
+
             <div class="order-summary">
                 <h3>Order Summary</h3>
-
-                <!-- Display the items in the order summary -->
                 <div class="order-items">
-                    @foreach (var order in orders)
+                    @foreach (var order in Orders)
                     {
                         <div class="order-item">
-                            @* <img src="@order.ImageUrl" alt="@order.Name" /> *@
                             <div class="order-details">
                                 <h4>@order.MenuItemName</h4>
                                 <p>Quantity : @order.Quantity</p>
-                                @* <p class="order-price">$@order.Price</p> *@
+                                <p>Total: $@order.TotalPrice</p>
                             </div>
                         </div>
                     }
                 </div>
             </div>
         </div>
-        
-        
-        
 
-        <!-- Display sub-total, tax and payment mode selection -->
         <div class="payment-summary">
             <hr />
             <div class="payment-summary-content">
-                
                 <p><strong>Sub total :</strong> $@SubTotal</p>
                 <p><strong>Tax :</strong> $@Tax</p>
 
@@ -57,90 +47,42 @@
                     </select>
                 </div>
             </div>
-            
 
-            <!-- Show total with payment mode details -->
+            <!-- Total Summary -->
             <div class="total-summary">
                 <div class="total-summary-content">
-                    <p>Payment Mode : @selectedPaymentMode</p>
+                    <p>Payment Mode: @selectedPaymentMode</p>
                     <h3>Total Amount: $@Total</h3>
                 </div>
-
-                <!-- Checkout button for non-PayPal payments -->
-                @if (selectedPaymentMode == "Cash")
-                {
-                    <button class="checkout-btn" @onclick="Checkout">Checkout</button>
-                }
-
                 <!-- Render PayPal button container for PayPal payments -->
-                <div id="paypal-button-container" style="display: @(selectedPaymentMode == "Online Payment" || selectedPaymentMode == "Credit Card" ? "block" : "none")"></div>
-            
+                <div id="paypal-button-container" class="@((selectedPaymentMode == "Online Payment" || selectedPaymentMode == "Credit Card") ? "visible" : "")"></div>
+                <!-- Checkout button for non-PayPal payments -->
+                <button class="checkout-btn @((selectedPaymentMode == "Cash") ? "" : "hidden")" @onclick="Checkout">Checkout</button>
+
+                
             </div>
-
-            
         </div>
-
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="error-message">@errorMessage</div>
-        }
     </div>
 
-    <div class="payment-image" >
+    <div class="payment-image"></div>
 
-    </div>
-    
-
-    
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-message">@errorMessage</div>
+    }
 </div>
 
 @code {
-    private string UserName = "David";
-    private string TableNumber = "";   // Updated dynamically
-    private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>();
-    private string _selectedPaymentMode = "Cash"; // Default payment mode
+    [Parameter] public List<CreateOrderItemDTO> Orders { get; set; } = new List<CreateOrderItemDTO>();
+    [Parameter] public string UserName { get; set; }
+    [Parameter] public string TableNumber { get; set; }
+
+    private string _selectedPaymentMode = "Cash";
     private decimal SubTotal;
     private decimal Tax;
     private decimal Total;
     private string errorMessage = "";
 
-    protected override async void OnInitialized()
-    {
-        // Fetch current orders from the CartService
-        orders = cartService.GetCurrentOrders();
-
-        // Calculate SubTotal and Tax (Assume 10% tax)
-        SubTotal = cartService.GetTotalPrice();
-        Tax = SubTotal * 0.1m;
-        Total = SubTotal + Tax;
-
-        // Get the tableId from local storage
-        var tableId = await tableService.GetSelectedTableFromLocalStorage();
-        if (tableId.HasValue)
-        {
-            // Fetch the table details from backend using the tableId
-            var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
-
-            if (tableResponse.Success)
-            {
-                TableNumber = tableResponse.Data.Number; // Assign the fetched table number to be displayed
-                StateHasChanged(); // Ensure UI updates
-            }
-            else
-            {
-                errorMessage = "Failed to fetch table details.";
-            }
-        }
-        else
-        {
-            errorMessage = "No table selected.";
-        }
-
-        // Render PayPal button on initialization
-        await JS.InvokeVoidAsync("renderPayPalButton", Total);
-    }
-
-    // Property with a getter and setter to handle changes to the payment mode
     private string selectedPaymentMode
     {
         get => _selectedPaymentMode;
@@ -161,27 +103,40 @@
         }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Orders = cartService.GetCurrentOrders();
+        SubTotal = cartService.GetTotalPrice();
+        Tax = SubTotal * 0.1m;
+        Total = SubTotal + Tax;
+
+        var tableId = await tableService.GetSelectedTableFromLocalStorage();
+        if (tableId.HasValue)
+        {
+            var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
+            if (tableResponse.Success)
+            {
+                TableNumber = tableResponse.Data.Number;
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = "Failed to fetch table details.";
+            }
+        }
+        else
+        {
+            errorMessage = "No table selected.";
+        }
+
+        await JS.InvokeVoidAsync("renderPayPalButton", Total);
+    }
+
     private async Task Checkout()
     {
         try
         {
             // Process the payment based on the selected payment mode
-            // var orderPaymentDto = new OrderPaymentDTO
-            //     {
-            //         TotalAmount = Total,
-            //         PaymentMode = selectedPaymentMode
-            //     };
-
-            // var response = await orderService.ProcessPaymentAsync(orderPaymentDto);
-
-            // if (response.Success)
-            // {
-            //     Navigate to success or order completion page (if needed)
-            // }
-            // else
-            // {
-            //     errorMessage = "Payment failed. Please try again.";
-            // }
         }
         catch (Exception ex)
         {
@@ -189,36 +144,3 @@
         }
     }
 }
-
-
-<script src="https://sandbox.paypal.com/sdk/js?client-id=AaiaP8K5TIdwFLtYuX2jnJ_enzAUy54LPSmUlf89fFkUCmIc9bO5MDGB3sKWQktBAwMKUV5QLgrCd6DE&components=buttons"></script>
-
-<script>
-    function renderPayPalButton(totalAmount) {
-        // Clear any previously rendered button if present
-        document.getElementById('paypal-button-container').innerHTML = "";
-
-        // Render PayPal button
-        paypal.Buttons({
-            createOrder: function (data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: totalAmount // Dynamic value passed from Blazor
-                        }
-                    }]
-                });
-            },
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(function (details) {
-                    console.log('Transaction completed by ' + details.payer.name.given_name);
-                    alert('Payment successful!');
-                    // Optionally: Call your Blazor backend for further actions after successful payment
-                });
-            },
-            onError: function (err) {
-                console.error('PayPal Checkout Error', err);
-            }
-        }).render('#paypal-button-container');
-    }
-</script>
