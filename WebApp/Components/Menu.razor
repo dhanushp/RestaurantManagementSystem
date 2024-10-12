@@ -2,7 +2,8 @@
 @inject ICartService cartService
 @inject IMenuService menuService
 @inject IOrderService orderService
-@inject IUserService userService;
+@inject IUserService userService
+@inject IJSRuntime JS
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 
@@ -13,7 +14,7 @@
         <!-- Greeting -->
         <div class="greeting">
             <h1>Hello, @UserName</h1>
-            <p>You're in table <span class="table-number">@TableNumber</span></p> <!-- Dynamically retrieved table number -->
+            <p>You're in table <span class="table-number">@TableNumber</span></p>
         </div>
 
         <!-- Search Bar -->
@@ -21,7 +22,7 @@
             <input type="text" placeholder="What would you like to eat?" @bind="searchQuery" />
         </div>
 
-        <!-- Categories (Horizontally Scrollable) -->
+        <!-- Categories (Horizontally Scrollable) with Drag-to-Scroll Feature -->
         <div class="categories">
             <h3>Categories</h3>
             <div class="categories-available">
@@ -35,7 +36,6 @@
                     </button>
                 }
             </div>
-            
         </div>
 
         <!-- Menu Items (Vertically Scrollable) -->
@@ -45,9 +45,10 @@
                 @foreach (var item in FilteredMenuItems())
                 {
                     <div class="menu-item">
-                        <img src="@item.ImageUrl" alt="@item.Name" />
+                        <div class="menu-image"><img src="@item.ImageUrl" alt="@item.Name" /></div>
+                        
                         <div class="menu-details">
-                            <h4>@item.Name</h4>
+                            <h3>@item.Name</h3>
                             <p>@item.Description</p>
                             <p class="price">$@item.Price</p>
                             <button class="add-to-cart-btn" @onclick="() => AddToCart(item)">Add to Cart</button>
@@ -60,13 +61,18 @@
                 <p>No items found</p>
             }
         </div>
+
         <!-- Cart Summary (Bottom of Menu) -->
         <div class="cart-summary">
             <div class="cart-summary-details">
-                <p>@cartService.GetItemCount() Items. <a href="#" @onclick="OpenCart">View Cart</a></p>
+                <p>
+                    @cartService.GetItemCount() Items.
+                    <button @onclick="OpenCart" class="cart-summary__view-cart-btn">View Cart</button>
+                </p>
                 <h3>Cart Total: $@cartService.GetTotalPrice()</h3>
             </div>
-            
+
+
             <button class="place-order-btn" @onclick="PlaceOrder">Place Order</button>
         </div>
 
@@ -101,18 +107,14 @@
                 } *@
             </div>
         </div>
-        <div>
 
         <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
-        </div>
-        
-
     </div>
 
-    
+    <!-- Cart Modal -->
+    <CartModal IsVisible="isCartVisible" OnClose="CloseCart" />
+
 </div>
-
-
 
 @code {
     private string UserName = "David";
@@ -124,29 +126,34 @@
     private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>(); // List to store all orders
     private int OrderNumber = 21552;
     private string errorMessage = "";
+    private bool isCartVisible = false;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("scrollDrag"); // Initialize drag scroll behavior for the category tab
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Fetch categories and menu items from MenuService
             var categoriesResponse = await menuService.GetCategoriesAsync();
             var menuItemsResponse = await menuService.GetAllMenuItemsAsync();
             categories = categoriesResponse.Data;
             menuItems = menuItemsResponse.Data;
 
-            // Get the tableId from local storage
             var tableId = await tableService.GetSelectedTableFromLocalStorage();
             if (tableId.HasValue)
             {
-                // Fetch the table details from backend using the tableId
                 var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
 
                 if (tableResponse.Success)
                 {
-                    TableNumber = tableResponse.Data.Number; // Assign the fetched table number to be displayed
-                    StateHasChanged(); // Ensure UI updates
+                    TableNumber = tableResponse.Data.Number;
+                    StateHasChanged();
                 }
                 else
                 {
@@ -158,7 +165,6 @@
                 errorMessage = "No table selected.";
             }
 
-            // Fetch the current orders from the CartService
             orders = cartService.GetCurrentOrders();
         }
         catch (Exception ex)
@@ -188,7 +194,7 @@
     private void AddToCart(MenuItemResponseDTO item)
     {
         cartService.AddItem(item);
-        orders = cartService.GetCurrentOrders(); // Update orders after adding an item to cart
+        orders = cartService.GetCurrentOrders(); // Update orders after adding an item to the cart
     }
 
     private List<CreateOrderItemDTO> currentOrders = new List<CreateOrderItemDTO>();
@@ -204,7 +210,6 @@
             var tableInfo = await tableService.GetTableInfoAsync();
             var orderCreateDto = new CreateOrderRequestDTO
             {
-                OrderSummaryId = null,
                 TableId = tableInfo.Data.Id,
                 TableNumber = TableNumber,
                 UserId = userInfo.Data.Id,
@@ -235,13 +240,18 @@
         }
     }
 
+    private void OpenCart()
+    {
+        isCartVisible = true;
+    }
+
+    private void CloseCart()
+    {
+        isCartVisible = false;
+    }
+
     private void NavigateToPayments()
     {
         // Navigate to payments tab
-    }
-
-    private void OpenCart()
-    {
-        // Open cart modal (future implementation)
     }
 }

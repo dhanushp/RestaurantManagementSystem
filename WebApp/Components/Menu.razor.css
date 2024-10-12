@@ -1,13 +1,15 @@
 ﻿.menu-page {
   display: flex;
   max-height: 100vh;
+  overflow: hidden;
 }
 .menu-page .menu-content {
   flex: 3;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
-  padding: 4rem;
   position: relative;
+  overflow-y: auto;
 }
 .menu-page .menu-content .greeting h1 {
   color: #242424;
@@ -32,7 +34,7 @@
   border: 1px solid transparent;
   border-radius: 10px;
   outline: none;
-  background-color: #F2F2F2;
+  background-color: #F7F7F7;
   color: #9F9F9F;
 }
 .menu-page .menu-content .search-bar input:focus {
@@ -49,17 +51,24 @@
 }
 .menu-page .menu-content .categories .categories-available {
   display: flex;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 1.5rem;
   gap: 10px;
-  margin-bottom: 2rem;
+  max-width: 100%;
+}
+.menu-page .menu-content .categories .categories-available::-webkit-scrollbar {
+  display: none;
 }
 .menu-page .menu-content .categories .categories-available .category-btn {
-  font-size: 1.6rem;
-  padding: 1rem 2rem;
-  border: 2px solid #ddd;
-  background-color: #f9f9f9;
+  flex-shrink: 0;
+  font-size: 1.4rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #9F9F9F;
+  background-color: #F7F7F7;
   border-radius: 10px;
   cursor: pointer;
+  color: #242424;
   transition: background-color 0.3s ease;
 }
 .menu-page .menu-content .categories .categories-available .category-btn.active {
@@ -70,46 +79,67 @@
 .menu-page .menu-content .categories .categories-available .category-btn:hover {
   background-color: #E10019;
   color: #FFFFFF;
+  border-color: transparent;
 }
 .menu-page .menu-content .menu-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-gap: 1.5rem;
   flex-grow: 1;
   overflow-y: auto;
+  min-height: 100px;
+}
+.menu-page .menu-content .menu-items::-webkit-scrollbar {
+  width: 15px;
+}
+.menu-page .menu-content .menu-items::-webkit-scrollbar-track {
+  background: #F7F7F7;
+}
+.menu-page .menu-content .menu-items::-webkit-scrollbar-thumb {
+  background: #9F9F9F;
+}
+.menu-page .menu-content .menu-items::-webkit-scrollbar-thumb:hover {
+  background: #808080;
 }
 .menu-page .menu-content .menu-items .menu-item {
+  background-color: #FFFFFF;
+  padding: 1.5rem;
+  border-radius: 10px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid #ddd;
+  align-items: start;
 }
 .menu-page .menu-content .menu-items .menu-item img {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
   border-radius: 10px;
+  border: 1px solid #E10019;
 }
 .menu-page .menu-content .menu-items .menu-item .menu-details {
   flex-grow: 1;
   padding-left: 1rem;
 }
-.menu-page .menu-content .menu-items .menu-item .menu-details h4 {
+.menu-page .menu-content .menu-items .menu-item .menu-details h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: bold;
+  color: #242424;
 }
 .menu-page .menu-content .menu-items .menu-item .menu-details p {
   margin: 0.5rem 0;
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 1.2rem;
+  color: #808080;
 }
 .menu-page .menu-content .menu-items .menu-item .menu-details .price {
   font-weight: bold;
-  color: #e10019;
+  color: #E10019;
+  font-size: 1.6rem;
 }
 .menu-page .menu-content .menu-items .menu-item .menu-details .add-to-cart-btn {
-  padding: 8px 12px;
-  background-color: #e10019;
-  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  background-color: #E10019;
+  color: #FFFFFF;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -122,19 +152,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   padding: 2rem;
   background-color: #FFE1E4;
   border: 2px solid #E10019;
   border-radius: 10px;
   color: #E10019;
+  margin-top: 1.5rem;
 }
 .menu-page .menu-content .cart-summary .cart-summary-details {
   flex: 4;
 }
 .menu-page .menu-content .cart-summary .cart-summary-details p {
   margin: 0.5rem 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 .menu-page .menu-content .cart-summary .cart-summary-details h3 {
   font-size: 2rem;
@@ -158,15 +188,15 @@
   background-color: #c00017;
 }
 .menu-page .order-summary {
+  flex: 1;
   width: 30%;
-  background-color: #F2F2F2;
+  background-color: #F7F7F7;
   height: 100vh;
   overflow-y: auto;
   padding: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex: 1;
 }
 .menu-page .order-summary .order-summary-content h3 {
   color: #242424;
