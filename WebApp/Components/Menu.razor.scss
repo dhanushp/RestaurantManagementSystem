@@ -105,7 +105,6 @@
             grid-gap: 1.5rem; // Add space between cards
             flex-grow: 1;
             overflow-y: auto; // Enable scrolling if necessary
-            margin-bottom: 1rem;
             min-height: 100px; // Maintain space even with fewer items
 
             &::-webkit-scrollbar {
@@ -165,7 +164,7 @@
                     }
 
                     .add-to-cart-btn {
-                        padding: 1rem;
+                        padding: .5rem 1rem;
                         font-size: $text-xs;
                         background-color: $red;
                         color: $white;
@@ -191,7 +190,7 @@
             border: 2px solid $red;
             border-radius: 10px;
             color: $red;
-            margin-top: auto; // Ensure it sticks to the bottom of the container
+            margin-top: 1.5rem;
 
             .cart-summary-details {
                 flex: 4;
