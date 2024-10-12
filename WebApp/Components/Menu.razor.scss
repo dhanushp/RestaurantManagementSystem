@@ -3,15 +3,16 @@
 .menu-page {
     display: flex;
     max-height: 100vh;
+    overflow: hidden;
 
     .menu-content {
-        flex: 3; // Adjust as needed for space distribution
-        //padding: 2rem;
+        flex: 3;
+        padding: 4rem;
         display: flex;
         flex-direction: column;
-        //justify-content: space-between; // Ensure the cart summary stays at the bottom
-        padding: 4rem;
         position: relative;
+        // Add vertical scroll for longer content
+        overflow-y: auto;
 
         .greeting {
             h1 {
@@ -27,7 +28,7 @@
 
             .table-number {
                 font-weight: bold;
-                color: $red; // Set the color to match the design
+                color: $red;
             }
         }
 
@@ -49,7 +50,7 @@
                 }
             }
         }
-
+        // Categories (Horizontally Scrollable)
         .categories {
             display: flex;
             flex-direction: column;
@@ -62,17 +63,25 @@
 
             .categories-available {
                 display: flex;
-                flex-wrap: wrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                margin-bottom: 1.5rem;
                 gap: 10px;
-                margin-bottom: 2rem;
+                max-width: 100%;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
 
                 .category-btn {
-                    font-size: $text-md;
-                    padding: 1rem 2rem;
-                    border: 2px solid #ddd;
-                    background-color: #f9f9f9;
+                    flex-shrink: 0;
+                    font-size: $text-sm;
+                    padding: .5rem 1rem;
+                    border: 2px solid $grey;
+                    background-color: $grey-light;
                     border-radius: 10px;
                     cursor: pointer;
+                    color: $black;
                     transition: background-color 0.3s ease;
 
                     &.active {
@@ -84,84 +93,111 @@
                     &:hover {
                         background-color: $red;
                         color: $white;
+                        border-color: transparent;
                     }
                 }
             }
         }
-
+        // Menu Items - Using CSS Grid for card layout
         .menu-items {
-            flex-grow: 1; // Make menu items take remaining space
-            overflow-y: auto; // Enable scrolling if the list gets long
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); // Adjusts to fit more cards on larger screens
+            grid-gap: 1.5rem; // Add space between cards
+            flex-grow: 1;
+            overflow-y: auto; // Enable scrolling if necessary
+            min-height: 100px; // Maintain space even with fewer items
+
+            &::-webkit-scrollbar {
+                width: 15px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: $grey-light;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: $grey;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: $grey-dark;
+            }
 
             .menu-item {
+                background-color: $white;
+                padding: 1.5rem;
+                border-radius: 10px;
+                //border: 1px solid $grey-light;
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 15px 0;
-                border-bottom: 1px solid #ddd;
+                align-items: start;
+                //height: 320px; // Fix height for consistency across rows
 
                 img {
-                    width: 100px;
-                    height: 100px;
+                    width: 140px;
+                    height: 140px;
                     object-fit: cover;
                     border-radius: 10px;
+                    border: 1px solid $red;
                 }
 
                 .menu-details {
                     flex-grow: 1;
                     padding-left: 1rem;
 
-                    h4 {
+                    h3 {
                         margin: 0;
-                        font-size: 1.2rem;
+                        font-size: $text-md;
                         font-weight: bold;
+                        color: $black;
                     }
 
                     p {
                         margin: 0.5rem 0;
-                        font-size: 0.9rem;
-                        color: #666;
+                        font-size: $text-xs;
+                        color: $grey-dark;
                     }
 
                     .price {
                         font-weight: bold;
-                        color: #e10019;
+                        color: $red;
+                        font-size: $text-md;
                     }
 
                     .add-to-cart-btn {
-                        padding: 8px 12px;
-                        background-color: #e10019;
-                        color: #fff;
+                        padding: .5rem 1rem;
+                        font-size: $text-xs;
+                        background-color: $red;
+                        color: $white;
                         border: none;
                         border-radius: 5px;
                         cursor: pointer;
                         transition: background-color 0.3s ease;
 
                         &:hover {
-                            background-color: #c00017;
+                            background-color: $red-dark;
                         }
                     }
                 }
             }
         }
-
+        // Cart Summary - Stick to the bottom
         .cart-summary {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
             padding: 2rem;
             background-color: $red-light;
             border: 2px solid $red;
             border-radius: 10px;
             color: $red;
+            margin-top: 1.5rem;
 
             .cart-summary-details {
                 flex: 4;
 
                 p {
                     margin: 0.5rem 0;
-                    font-size: $text-xs;
+                    font-size: $text-sm;
                 }
 
                 h3 {
@@ -193,15 +229,15 @@
     }
 
     .order-summary {
-        width: 30%; // Take up the remaining right side space
+        flex: 1;
+        width: 30%;
         background-color: $grey-light;
         height: 100vh;
-        overflow-y: auto; // Enable scrolling for large orders
+        overflow-y: auto;
         padding: 4rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        flex: 1;
 
         .order-summary-content {
             h3 {
@@ -277,8 +313,6 @@
             }
         }
 
-
-
         .make-payment-btn {
             margin-top: 20px;
             padding: 2rem 1rem;
@@ -309,5 +343,3 @@
     border: 1px solid $red;
     border-radius: 5px;
 }
-
-
