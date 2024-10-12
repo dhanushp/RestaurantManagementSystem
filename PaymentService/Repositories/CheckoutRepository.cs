@@ -96,7 +96,7 @@ namespace PaymentService.Repositories
             var accessToken = await GetPayPalAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response = await _httpClient.PostAsync($"https://api-m.sandbox.paypal.com/v2/checkout/orders/{orderId}/capture", null);
+            var response = await _httpClient.PostAsync(PayPalUrl + $"/v2/checkout/orders/{orderId}/capture", null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var captureResponse = JsonConvert.DeserializeObject<PayPalCaptureOrderResponseDTO>(responseBody);

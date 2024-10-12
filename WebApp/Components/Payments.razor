@@ -3,6 +3,7 @@
 @inject ITableService tableService
 @inject IJSRuntime JS
 
+@using Microsoft.JSInterop
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 @using WebApp.DTOs
@@ -57,7 +58,7 @@
                 <!-- Render PayPal button container for PayPal payments -->
                 <div id="paypal-button-container" class="@((selectedPaymentMode == "Online Payment" || selectedPaymentMode == "Credit Card") ? "visible" : "")"></div>
                 <!-- Checkout button for non-PayPal payments -->
-                <button class="checkout-btn @((selectedPaymentMode == "Cash") ? "" : "hidden")" @onclick="Checkout">Checkout</button>
+                <button class="checkout-btn @((selectedPaymentMode == "Cash") ? "" : "hidden")" @onclick="CheckoutCash">Checkout</button>
 
                 
             </div>
@@ -132,11 +133,11 @@
         await JS.InvokeVoidAsync("renderPayPalButton", Total);
     }
 
-    private async Task Checkout()
+    private async Task CheckoutCash()
     {
         try
         {
-            // Process the payment based on the selected payment mode
+            
         }
         catch (Exception ex)
         {
@@ -144,3 +145,4 @@
         }
     }
 }
+
