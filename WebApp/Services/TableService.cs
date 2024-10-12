@@ -12,6 +12,8 @@ namespace WebApp.Services
         Task<Response<List<TableResponseDTO>>> GetAvailableTables();
         Task<Response<string>> OccupyTable(Guid tableId);
         Task<Response<TableResponseDTO>> GetTableByIdAsync(Guid tableId); // Fetch Table by ID
+        Task<Response<TableResponseDTO>> GetTableInfoAsync(); // Fetch Table 
+
         Task<Guid?> GetSelectedTableFromLocalStorage();
         Task RemoveSelectedTableFromLocalStorage(); // Method to clear localStorage if needed
     }
@@ -80,6 +82,19 @@ namespace WebApp.Services
         {
             var token = await _tokenService.GetAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"https://localhost:5003/api/tables/{tableId}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Response<TableResponseDTO>>(responseBody);
+        }
+
+        // Fetch table details 
+        public async Task<Response<TableResponseDTO>> GetTableInfoAsync()
+        {
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var tableId = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "tableId");
 
             var response = await _httpClient.GetAsync($"https://localhost:5003/api/tables/{tableId}");
             var responseBody = await response.Content.ReadAsStringAsync();

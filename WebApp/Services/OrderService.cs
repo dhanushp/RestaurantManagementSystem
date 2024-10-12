@@ -18,7 +18,7 @@ namespace WebApp.Services
         Task<Response<List<OrderDto>>> GetOrdersByUserIdAsync(Guid userId);
         Task<Response<string>> UpdateOrderStatusAsync(Guid orderId, OrderStatusUpdateDTO statusUpdate);
         Task<Response<string>> CancelOrderAsync(Guid orderId);
-        Task<Response<OrderResponseDTO>> PlaceOrderAsync(OrderCreateDTO orderCreateDTO); // Declaration of PlaceOrderAsync
+        Task<Response<OrderResponseDTO>> PlaceOrderAsync(CreateOrderRequestDTO orderCreateDTO); // Declaration of PlaceOrderAsync
     }
 
     // Class implementation
@@ -89,12 +89,12 @@ namespace WebApp.Services
         }
 
         // Implementation of PlaceOrderAsync
-        public async Task<Response<OrderResponseDTO>> PlaceOrderAsync(OrderCreateDTO orderCreateDTO)
+        public async Task<Response<OrderResponseDTO>> PlaceOrderAsync(CreateOrderRequestDTO orderCreateDTO)
         {
             var token = await _tokenService.GetAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5181/api/orders", orderCreateDTO);
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:5003/api/orders/create", orderCreateDTO);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<Response<OrderResponseDTO>>(responseBody);

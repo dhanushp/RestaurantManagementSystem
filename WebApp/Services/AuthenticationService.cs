@@ -48,6 +48,7 @@ namespace WebApp.Services
                 await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "jwtToken", token);
                 await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "refreshToken", refreshToken); // Store refresh token
                 await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "accessTokenExpiresAt", loginResponse.Data.AccessTokenExpiresAt.ToString());
+                await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "userId", loginResponse.Data.UserInfo.Id);
 
             }
 

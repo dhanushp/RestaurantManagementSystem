@@ -6,7 +6,7 @@ namespace WebApp.Services
     public interface ICartService
     {
         void AddItem(MenuItemResponseDTO item);
-        List<OrderItemDto> GetCurrentOrders();
+        List<CreateOrderItemDTO> GetCurrentOrders();
         void ClearCart();
         int GetItemCount();
         decimal GetTotalPrice();
@@ -14,7 +14,7 @@ namespace WebApp.Services
 
     public class CartService : ICartService
     {
-        private List<OrderItemDto> _currentOrders = new List<OrderItemDto>();
+        private List<CreateOrderItemDTO> _currentOrders = new List<CreateOrderItemDTO>();
 
         public void AddItem(MenuItemResponseDTO item)
         {
@@ -26,17 +26,20 @@ namespace WebApp.Services
             }
             else
             {
-                _currentOrders.Add(new OrderItemDto
+                _currentOrders.Add(new CreateOrderItemDTO
                 {
+
                     MenuItemId = item.Id,
-                    Name = item.Name,
+                    MenuItemName = item.Name,
+                    MenuItemPrice = item.Price,
                     Quantity = 1,
-                    TotalPrice = item.Price
+                    TotalPrice = item.Price,
+                    ImageUrl = item.ImageUrl
                 });
             }
         }
 
-        public List<OrderItemDto> GetCurrentOrders()
+        public List<CreateOrderItemDTO> GetCurrentOrders()
         {
             return _currentOrders;
         }
@@ -53,7 +56,7 @@ namespace WebApp.Services
 
         public decimal GetTotalPrice()
         {
-            return _currentOrders.Sum(o => o.TotalPrice);
+            return (decimal)_currentOrders.Sum(o => o.TotalPrice);
         }
     }
 }
