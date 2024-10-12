@@ -2,6 +2,7 @@
 @inject ICartService cartService
 @inject IMenuService menuService
 @inject IOrderService orderService
+@inject IUserService userService
 @inject IJSRuntime JS
 
 @using WebApp.DTOs.Menu
@@ -122,6 +123,13 @@
     private string errorMessage = "";
     private bool isCartVisible = false;
 
+    // protected override async Task OnInitializedAsync()
+   // {
+        // Fetch existing orders from local storage
+      //  Orders = await orderService.GetOrdersFromLocalStorage();
+  //  }
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -158,18 +166,47 @@
     {
         try
         {
+            var orderSummaryID = await orderService.GetOrderSummaryIdFromLocalStorage();
+            var userInfo = await userService.GetUserInfoAsync();
             var tableInfo = await tableService.GetTableInfoAsync();
             var orderCreateDto = new CreateOrderRequestDTO
             {
-                TableId = tableInfo.Data.Id,
-                TableNumber = TableNumber,
-                OrderItems = cartService.GetCurrentOrders(),
+                    TableId = tableInfo.Data.Id,
+                    TableNumber = TableNumber,
+                    UserId = userInfo.Data.Id,
+                    UserFullName = userInfo.Data.FullName,
+                    OrderItems = cartService.GetCurrentOrders(),
+                    OrderSummaryId = orderSummaryID
             };
 
-            if (OnPlaceOrder.HasDelegate)
+            var response = await orderService.PlaceOrderAsync(orderCreateDto);
+
+            if(response.Success)
             {
-                await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
+                // Update the OrderSummaryId if needed
+                if (orderSummaryID == null)
+                {
+                    orderSummaryID = response.Data.OrderSummaryId;
+                    await orderService.StoreOrderSummaryIdInLocalStorage(orderSummaryID);
+                }
+
+                var currentCartItems = cartService.GetCurrentOrders();
+                if (currentCartItems != null && currentCartItems.Count > 0)
+                {
+                    Orders.AddRange(currentCartItems);
+                    // Store updated orders in local storage
+                    //await orderService.StoreOrdersInLocalStorage(Orders);
+                }
+                cartService.ClearCart();
+
+                if(OnPlaceOrder.HasDelegate)
+                 {
+                    await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
+                }
+                StateHasChanged();
             }
+
+            
         }
         catch (Exception ex)
         {

@@ -15,6 +15,8 @@ namespace WebApp.DTOs.Order
     public class CreateOrderItemDTO
     {
         public Guid MenuItemId { get; set; }
+        
+        public Guid? OrderID { get; set; }
         public string MenuItemName { get; set; }
         public decimal MenuItemPrice { get; set; }
         public int Quantity { get; set; }
