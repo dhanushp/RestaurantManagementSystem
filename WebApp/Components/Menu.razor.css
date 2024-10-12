@@ -83,12 +83,12 @@
 }
 .menu-page .menu-content .menu-items {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-gap: 1.5rem;
   flex-grow: 1;
   overflow-y: auto;
   margin-bottom: 1rem;
-  min-height: 300px;
+  min-height: 100px;
 }
 .menu-page .menu-content .menu-items::-webkit-scrollbar {
   width: 15px;
@@ -104,15 +104,14 @@
 }
 .menu-page .menu-content .menu-items .menu-item {
   background-color: #FFFFFF;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 10px;
-  border: 1px solid #F7F7F7;
   display: flex;
   align-items: start;
 }
 .menu-page .menu-content .menu-items .menu-item img {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
   border-radius: 10px;
   border: 1px solid #E10019;
@@ -138,7 +137,7 @@
   font-size: 1.6rem;
 }
 .menu-page .menu-content .menu-items .menu-item .menu-details .add-to-cart-btn {
-  padding: 1rem 1rem;
+  padding: 1rem;
   font-size: 1.2rem;
   background-color: #E10019;
   color: #FFFFFF;

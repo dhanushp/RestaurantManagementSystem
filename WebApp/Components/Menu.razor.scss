@@ -11,7 +11,6 @@
         display: flex;
         flex-direction: column;
         position: relative;
-
         // Add vertical scroll for longer content
         overflow-y: auto;
 
@@ -51,7 +50,6 @@
                 }
             }
         }
-
         // Categories (Horizontally Scrollable)
         .categories {
             display: flex;
@@ -100,42 +98,44 @@
                 }
             }
         }
-
         // Menu Items - Using CSS Grid for card layout
         .menu-items {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); // Ensure two items per row
-            grid-gap: 1rem; // Add space between cards
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); // Adjusts to fit more cards on larger screens
+            grid-gap: 1.5rem; // Add space between cards
             flex-grow: 1;
             overflow-y: auto; // Enable scrolling if necessary
             margin-bottom: 1rem;
-            min-height: 300px; // Maintain space even with fewer items
+            min-height: 100px; // Maintain space even with fewer items
 
             &::-webkit-scrollbar {
                 width: 15px;
             }
+
             &::-webkit-scrollbar-track {
                 background: $grey-light;
             }
+
             &::-webkit-scrollbar-thumb {
                 background: $grey;
             }
+
             &::-webkit-scrollbar-thumb:hover {
                 background: $grey-dark;
             }
 
             .menu-item {
                 background-color: $white;
-                padding: 2rem;
+                padding: 1.5rem;
                 border-radius: 10px;
-                border: 1px solid $grey-light;
+                //border: 1px solid $grey-light;
                 display: flex;
                 align-items: start;
-
+                //height: 320px; // Fix height for consistency across rows
 
                 img {
-                    width: 100px;
-                    height: 100px;
+                    width: 140px;
+                    height: 140px;
                     object-fit: cover;
                     border-radius: 10px;
                     border: 1px solid $red;
@@ -156,7 +156,6 @@
                         margin: 0.5rem 0;
                         font-size: $text-xs;
                         color: $grey-dark;
-
                     }
 
                     .price {
@@ -166,7 +165,7 @@
                     }
 
                     .add-to-cart-btn {
-                        padding: 1rem 1rem;
+                        padding: 1rem;
                         font-size: $text-xs;
                         background-color: $red;
                         color: $white;
@@ -182,7 +181,6 @@
                 }
             }
         }
-
         // Cart Summary - Stick to the bottom
         .cart-summary {
             display: flex;
