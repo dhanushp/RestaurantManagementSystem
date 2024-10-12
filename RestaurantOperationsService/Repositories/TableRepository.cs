@@ -36,21 +36,21 @@ namespace RestaurantOperationsService.Repositories
 
         public async Task<Response<List<TableResponseDTO>>> GetAllAvailableTables()
         {
-            var roles = await _context.Tables
-                .Where(r => r.DeletedAt == null) // Exclude soft-deleted roles
-                .Where(r => r.Status == TableStatus.Available)
+            var tables = await _context.Tables
+                .Where(t => t.DeletedAt == null)        // Exclude soft-deleted tables
+                .Where(t => t.Status == TableStatus.Available) // Filter only available tables
+                .Select(t => new TableResponseDTO
+                {
+                    Id = t.Id,
+                    Number = t.Number,
+                    Capacity = t.Capacity,
+                    Status = t.Status,
+                })
                 .ToListAsync();
-
-            var tables = await _context.Tables.Select(t => new TableResponseDTO
-            {
-                Id = t.Id,
-                Number = t.Number,
-                Capacity = t.Capacity,
-                Status = t.Status,
-            }).ToListAsync();
 
             return Response<List<TableResponseDTO>>.SuccessResponse("Fetched Available Tables Successfully", tables);
         }
+
 
         public async Task<Response<TableResponseDTO>> GetTableById(Guid tableId)
         {

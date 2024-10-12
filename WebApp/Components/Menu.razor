@@ -2,9 +2,9 @@
 @inject ICartService cartService
 @inject IMenuService menuService
 @inject IOrderService orderService
+@inject IUserService userService;
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
-@using WebApp.DTOs
 
 <div class="menu-page">
 
@@ -106,7 +106,7 @@
     private string selectedCategory = "All"; // Default is All
     private List<CategoryDTO> categories = new List<CategoryDTO>();
     private List<MenuItemResponseDTO> menuItems = new List<MenuItemResponseDTO>();
-    private List<OrderItemDto> orders = new List<OrderItemDto>(); // List to store all orders
+    private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>(); // List to store all orders
     private int OrderNumber = 21552;
     private string errorMessage = "";
 
@@ -180,12 +180,16 @@
     {
         try
         {
-            var orderCreateDto = new OrderCreateDTO
+            var userInfo = await userService.GetUserInfoAsync();
+            var tableInfo = await tableService.GetTableInfoAsync();
+            var orderCreateDto = new CreateOrderRequestDTO
             {
-                UserId = Guid.NewGuid(), // Fetch actual user ID
+                OrderSummaryId = null,
+                TableId = tableInfo.Data.Id,
                 TableNumber = TableNumber,
+                UserId = userInfo.Data.Id,
+                UserFullName = userInfo.Data.FullName,
                 OrderItems = cartService.GetCurrentOrders(),
-                TotalPrice = cartService.GetTotalPrice()
             };
 
             var response = await orderService.PlaceOrderAsync(orderCreateDto);
