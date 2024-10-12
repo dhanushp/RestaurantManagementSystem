@@ -185,6 +185,43 @@
             }
         },
 
+
+        // Checkout - GET
+        {
+            "DownstreamPathTemplate": "/api/checkout/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5004
+                }
+            ],
+            "UpstreamPathTemplate": "/api/checkout/{everything}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "FileCacheOptions": {
+                "TtlSeconds": 60,
+                "Region": "default",
+                "Header": "RestaurantManagement-Caching-Control"
+            }
+
+        },
+
+        // Checkout - POST, PUT, PATCH, DELETE
+        {
+            "DownstreamPathTemplate": "/api/checkout/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5004
+                }
+            ],
+            "UpstreamPathTemplate": "/api/checkout/{everything}",
+            "UpstreamHttpMethod": [ "PUT", "PATCH", "POST", "DELETE" ]
+
+        },
+
+
         // Orders - GET
         {
             "DownstreamPathTemplate": "/api/orders/{everything}",
@@ -225,6 +262,11 @@
                 "AllowedScopes": []
             }
         }
+
+
+
+
+
 
     ],
     "GlobalConfiguration": {
