@@ -25,7 +25,7 @@
                         <div class="order-item">
                             @* <img src="@order.ImageUrl" alt="@order.Name" /> *@
                             <div class="order-details">
-                                <h4>@order.Name</h4>
+                                <h4>@order.MenuItemName</h4>
                                 <p>Quantity : @order.Quantity</p>
                                 @* <p class="order-price">$@order.Price</p> *@
                             </div>
@@ -87,7 +87,7 @@
 @code {
     private string UserName = "David";
     private string TableNumber = "";   // Updated dynamically
-    private List<OrderItemDto> orders = new List<OrderItemDto>();
+    private List<CreateOrderItemDTO> orders = new List<CreateOrderItemDTO>();
     private string selectedPaymentMode = "Cash"; // Default payment mode
     private decimal SubTotal;
     private decimal Tax;
