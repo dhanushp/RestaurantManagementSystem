@@ -55,6 +55,7 @@
             border: none;
             font-size: $text-md;
             cursor: pointer;
+            font-weight: bold;
         }
     }
 
@@ -62,6 +63,29 @@
         flex-grow: 1;
         padding: 0 2rem;
         overflow-y: auto;
+        color: $black;
+
+        &-empty {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            height: 100%;
+
+
+            h2 {
+                font-size: $text-xl;
+            }
+
+            img {
+                width: 200px;
+            }
+
+            p {
+                font-size: $text-md;
+            }
+        }
 
         &::-webkit-scrollbar {
             width: 10px;
@@ -101,50 +125,63 @@
     .cart-item {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: start;
         margin-bottom: 15px;
 
         &__image {
             width: 80px;
             height: 80px;
             border-radius: 10px;
+            border: 1px solid $red;
         }
 
         &__details {
             flex-grow: 1;
             margin-left: 15px;
 
-            h4 {
-                margin: 0;
-                font-size: 1.2rem;
+            &-header {
+                display: flex;
+                justify-content: space-between;
+
+                h4 {
+                    margin: 0;
+                    font-size: $text-md;
+                }
             }
 
-            .quantity {
+            p {
                 display: flex;
                 align-items: center;
+                font-size: $text-xs;
+                color: $black;
+            }
+
+            &-button {
+                display: flex;
+                gap: 1rem;
+
 
                 button {
                     background: none;
                     border: 1px solid #ddd;
                     font-size: 1.2rem;
-                    width: 30px;
-                    height: 30px;
+                    width: 20px;
+                    height: 20px;
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    cursor: pointer;
+                    color: $grey-dark;
                 }
 
-                span {
-                    margin: 0 10px;
+                .remove-btn {
+                    margin-left: 2rem;
+                    background: none;
+                    color: red;
+                    border: none;
+                    cursor: pointer;
+                    font-size: $text-xs;
                 }
-            }
-
-            .remove-btn {
-                background: none;
-                color: red;
-                border: none;
-                cursor: pointer;
-                font-size: 0.9rem;
             }
         }
 

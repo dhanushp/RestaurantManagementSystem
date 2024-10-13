@@ -49,11 +49,30 @@
   border: none;
   font-size: 1.6rem;
   cursor: pointer;
+  font-weight: bold;
 }
 .cart-modal .cart-items {
   flex-grow: 1;
   padding: 0 2rem;
   overflow-y: auto;
+  color: #242424;
+}
+.cart-modal .cart-items-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 100%;
+}
+.cart-modal .cart-items-empty h2 {
+  font-size: 2rem;
+}
+.cart-modal .cart-items-empty img {
+  width: 200px;
+}
+.cart-modal .cart-items-empty p {
+  font-size: 1.6rem;
 }
 .cart-modal .cart-items::-webkit-scrollbar {
   width: 10px;
@@ -86,45 +105,56 @@
 .cart-modal .cart-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   margin-bottom: 15px;
 }
 .cart-modal .cart-item__image {
   width: 80px;
   height: 80px;
   border-radius: 10px;
+  border: 1px solid #E10019;
 }
 .cart-modal .cart-item__details {
   flex-grow: 1;
   margin-left: 15px;
 }
-.cart-modal .cart-item__details h4 {
-  margin: 0;
-  font-size: 1.2rem;
+.cart-modal .cart-item__details-header {
+  display: flex;
+  justify-content: space-between;
 }
-.cart-modal .cart-item__details .quantity {
+.cart-modal .cart-item__details-header h4 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+.cart-modal .cart-item__details p {
   display: flex;
   align-items: center;
+  font-size: 1.2rem;
+  color: #242424;
 }
-.cart-modal .cart-item__details .quantity button {
+.cart-modal .cart-item__details-button {
+  display: flex;
+  gap: 1rem;
+}
+.cart-modal .cart-item__details-button button {
   background: none;
   border: 1px solid #ddd;
   font-size: 1.2rem;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  color: #808080;
 }
-.cart-modal .cart-item__details .quantity span {
-  margin: 0 10px;
-}
-.cart-modal .cart-item__details .remove-btn {
+.cart-modal .cart-item__details-button .remove-btn {
+  margin-left: 2rem;
   background: none;
   color: red;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 .cart-modal .cart-item .cart-item__price {
   font-size: 1.2rem;
