@@ -7,6 +7,8 @@ using RestaurantManagement.SharedLibrary.Responses;
 using RestaurantManagement.SharedDataLibrary.DTOs.Payment;
 using RestaurantManagement.SharedDataLibrary.Enums;
 using Microsoft.AspNetCore.Authorization;
+using PaymentService.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace PaymentService.Controllers
 {
@@ -15,10 +17,13 @@ namespace PaymentService.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IHubContext<PaymentHub> _hubContext;
 
-        public PaymentController(IPaymentRepository paymentRepository)
+
+        public PaymentController(IPaymentRepository paymentRepository, IHubContext<PaymentHub> hubContext)
         {
             _paymentRepository = paymentRepository;
+            _hubContext = hubContext;
         }
 
         // POST: api/payment/process
@@ -43,6 +48,10 @@ namespace PaymentService.Controllers
                 };
 
                 var processedPayment = await _paymentRepository.AddPaymentAsync(payment);
+                // Notify the group about the payment status update
+                string groupName = $"{payment.UserId}-{payment.FoodOrderId}";
+                await _hubContext.Clients.Group(groupName)
+                    .SendAsync("ReceivePaymentStatus", payment.FoodOrderId, payment.Status);
                 return Ok(Response<Payment>.SuccessResponse("Payment processed successfully", processedPayment));
             }
             catch (Exception ex)

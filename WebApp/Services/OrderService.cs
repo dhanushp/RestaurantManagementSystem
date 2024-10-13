@@ -27,11 +27,8 @@ namespace WebApp.Services
 
         Task<Response<OrderSummaryResponseDTO>> GetOrderSummaryByIdAsync(Guid? orderSummaryId);
 
+        Task ReleaseAfterOrderCompletion();
 
-
-        // Task<List<CreateOrderItemDTO>> GetOrdersFromLocalStorage();
-
-        //Task StoreOrdersInLocalStorage(List<CreateOrderItemDTO> orders);
     }
 
     // Class implementation
@@ -40,12 +37,14 @@ namespace WebApp.Services
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
         private readonly ITokenService _tokenService;
+        private readonly ITableService _tableService;
 
-        public OrderService(HttpClient httpClient, IJSRuntime jsRuntime, ITokenService tokenService)
+        public OrderService(HttpClient httpClient, IJSRuntime jsRuntime, ITokenService tokenService, ITableService tableService)
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
             _tokenService = tokenService;
+            _tableService = tableService;
         }
 
         public async Task<Response<List<OrderDto>>> GetAllOrdersAsync()
@@ -153,6 +152,13 @@ namespace WebApp.Services
             var jsonResponse = await response.Content.ReadAsStringAsync();
             Console.WriteLine(jsonResponse);
             return JsonConvert.DeserializeObject<Response<OrderSummaryResponseDTO>>(jsonResponse);
+        }
+
+
+        public async Task ReleaseAfterOrderCompletion()
+        {
+            await _tableService.ReleaseTable();
+            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "orderSummaryID");
         }
 
     }

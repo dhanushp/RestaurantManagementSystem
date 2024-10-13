@@ -3,7 +3,11 @@
 @inject ITableService tableService
 @inject IJSRuntime JS
 @inject IOrderService orderService
+@inject IUserService userService
+@inject NavigationManager Navigation
+@inject ITokenService tokenService
 
+@using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.JSInterop
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
@@ -80,9 +84,12 @@
     private decimal SubTotal;
     private decimal Tax;
     private decimal Total;
+    private string successMessage = "";
     private string errorMessage = "";
 
     private Guid? OrderSummaryId { get; set; }
+    private Guid UserId { get; set; }
+    private HubConnection? hubConnection;
 
     private string selectedPaymentMode
     {
@@ -104,14 +111,6 @@
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("renderPayPalButton", Total);
-        }
-    }
-
     protected override async Task OnInitializedAsync()
     {
         // Orders = cartService.GetCurrentOrders();
@@ -124,9 +123,72 @@
         if (OrderSummaryId != null) // Ensure it's a valid ID
         {
             await FetchOrderSummary();
+
+
+            try
+            {
+                // Initialize SignalR connection for payment status updates
+                hubConnection = new HubConnectionBuilder()
+                    .WithUrl(Navigation.ToAbsoluteUri("http://localhost:5004/paymentHub"), options =>
+                    {
+                        options.AccessTokenProvider = async () =>
+                        {
+                            // Retrieve the JWT token from local storage or a service
+                            var token = await tokenService.GetAccessToken();
+                            return token;
+                        };
+                    })
+                    .Build();
+
+                await hubConnection.StartAsync();
+
+                UserId = await userService.GetUserIdFromLocalStorage();
+
+                // Invoke the RegisterUser method to register the user for payment updates
+                await hubConnection.InvokeAsync("RegisterUser", UserId, OrderSummaryId);
+
+                // Listen for the ReceivePaymentStatus event from the SignalR hub
+                hubConnection.On<Guid, int>("ReceivePaymentStatus", (orderSummaryId, status) =>
+                {
+                    if (OrderSummaryId == orderSummaryId)
+                    {
+                        if (status == 1) // success
+                        {
+                            successMessage = "Payment was successful!";
+                            orderService.ReleaseAfterOrderCompletion();
+                            Navigation.NavigateTo("/select-table");
+                        }
+                        else
+                        {
+                            errorMessage = "Payment failed. Please try again.";
+                        }
+
+                        StateHasChanged();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and provide feedback to the user
+                errorMessage = $"An error occurred while setting up the web socket connection";
+                
+                StateHasChanged();
+            }
+
+
         }
 
         // await JS.InvokeVoidAsync("renderPayPalButton", Total);
+
+        
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("renderPayPalButton", Total);
+        }
     }
 
     private async Task FetchOrderSummary()
@@ -160,6 +222,11 @@
         {
             errorMessage = "An error occurred during checkout.";
         }
+    }
+
+    public void Dispose()
+    {
+        _ = hubConnection?.DisposeAsync();
     }
 }
 
