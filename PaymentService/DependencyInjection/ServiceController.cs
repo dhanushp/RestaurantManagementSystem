@@ -25,7 +25,7 @@ namespace PaymentService.DependencyInjection
             // Register Middleware such as:
             // Global Exception
             // API Gateway
-            SharedServiceContainer.UseSharedPolicies(app);
+            //SharedServiceContainer.UseSharedPolicies(app);
             return app;
         }
     }
