@@ -1,4 +1,4 @@
-﻿function renderPayPalButton(totalAmount) {
+﻿function renderPayPalButton(totalAmount, userId, orderSummaryId) {
     // Clear any previously rendered button if present
     document.getElementById('paypal-button-container').innerHTML = "";
 
@@ -15,7 +15,9 @@
                 },
                 body: JSON.stringify({
                     amount: amountString, // Pass the amount dynamically here
-                    currency: 'USD' // Adjust currency if needed
+                    currency: 'USD', // Adjust currency if needed
+                    userId: userId, // Pass userId
+                    orderSummaryId: orderSummaryId // Pass orderSummaryId
                 })
             });
 

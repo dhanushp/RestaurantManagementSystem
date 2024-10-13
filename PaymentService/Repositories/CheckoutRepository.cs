@@ -87,7 +87,9 @@ namespace PaymentService.Repositories
                     Amount = createOrderDTO.Amount,
                     CurrencyCode = createOrderDTO.Currency,
                     PaymentMethod = PaymentMethod.PayPal,
-                    Status = PaymentStatus.Pending
+                    Status = PaymentStatus.Pending,
+                    UserId = createOrderDTO.UserId,
+                    FoodOrderId = createOrderDTO.FoodOrderId
                 };
 
                 await _paymentRepository.AddPaymentAsync(payment);
@@ -130,9 +132,9 @@ namespace PaymentService.Repositories
                     await _paymentRepository.UpdatePaymentAsync(payment);
 
                     // Notify the group about the payment status update
-                    string groupName = $"{payment.UserId}-{payment.FoodOrderId}";
+                    string groupName = $"{payment.UserId}";
                     await _hubContext.Clients.Group(groupName)
-                        .SendAsync("ReceivePaymentStatus", payment.FoodOrderId, payment.Status);
+                        .SendAsync("ReceivePaymentStatus", payment.UserId, payment.Status);
                 }
             }
 
