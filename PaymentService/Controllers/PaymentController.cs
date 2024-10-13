@@ -6,6 +6,7 @@ using PaymentService.Models;
 using RestaurantManagement.SharedLibrary.Responses;
 using RestaurantManagement.SharedDataLibrary.DTOs.Payment;
 using RestaurantManagement.SharedDataLibrary.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PaymentService.Controllers
 {
@@ -21,22 +22,24 @@ namespace PaymentService.Controllers
         }
 
         // POST: api/payment/process
-        [HttpPost("process")]
-        public async Task<IActionResult> ProcessPayment([FromBody] PaymentDTO paymentDto)
+        [HttpPost("process-cash")]
+        public async Task<IActionResult> ProcessCashPayment([FromBody] PaymentCashDTO paymentDTO)
         {
             try
             {
                 // Validate input
                 if (!ModelState.IsValid)
-                    return BadRequest(Response<PaymentDTO>.ErrorResponse("Invalid payment details"));
+                    return BadRequest(Response<PaymentCashDTO>.ErrorResponse("Invalid payment details"));
 
                 // Call repository to add payment
                 var payment = new Payment
                 {
-                    FoodOrderId = paymentDto.OrderId,
-                    Amount = paymentDto.Amount,
-                    PaymentMethod = paymentDto.PaymentMethod,
-                    Status = PaymentStatus.Pending
+                    UserId = paymentDTO.UserId,
+                    FoodOrderId = paymentDTO.FoodOrderId,
+                    Amount = paymentDTO.Amount,
+                    CurrencyCode = paymentDTO.CurrencyCode,
+                    PaymentMethod = PaymentMethod.Cash,
+                    Status = PaymentStatus.Success
                 };
 
                 var processedPayment = await _paymentRepository.AddPaymentAsync(payment);
@@ -44,7 +47,7 @@ namespace PaymentService.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(Response<PaymentDTO>.ErrorResponse(ex));
+                return BadRequest(Response<PaymentCashDTO>.ErrorResponse(ex));
             }
         }
 

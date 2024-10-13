@@ -53,7 +53,7 @@ namespace PaymentService.Repositories
             payment.UpdatedAt = DateTime.Now;
 
             // Save the changes to the database
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

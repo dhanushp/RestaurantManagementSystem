@@ -27,7 +27,7 @@
             }
 
             // Return the order ID from your server
-            return orderData.data.id; // Adjust if your response structure differs
+            return orderData.data.id; 
         },
         onApprove: async function (data, actions) {
             // Call the capture order endpoint
