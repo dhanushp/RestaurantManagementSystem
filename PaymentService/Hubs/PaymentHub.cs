@@ -5,10 +5,10 @@ namespace PaymentService.Hubs
     public class PaymentHub : Hub
     {
         // This method allows clients to register with a group based on their UserId and OrderSummaryId
-        public async Task RegisterUser(Guid userId, Guid? orderSummaryId)
+        public async Task RegisterUser(Guid userId)
         {
             // Create a group name using the UserId and OrderSummaryId
-            string groupName = $"{userId}-{orderSummaryId}";
+            string groupName = $"{userId}";
 
             // Add the connection to the group
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
