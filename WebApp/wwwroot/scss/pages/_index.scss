@@ -20,7 +20,7 @@
         .hero_text-title {
             color: $red;
             font-size: $text-2xl;
-            text-transform:uppercase;
+            text-transform: uppercase;
             letter-spacing: 10px;
         }
 
@@ -48,7 +48,77 @@
                 @include button-primary($red-light, $red);
             }
         }
-    }
 
-    
+        .floating-emojis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; // Ensure it doesn't interfere with clicks
+
+            .floating-emoji {
+                position: absolute;
+                opacity: 0.8;
+
+                @keyframes float {
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                    }
+
+                    50% {
+                        transform: translateY(-20px) rotate(15deg);
+                    }
+
+                    100% {
+                        transform: translateY(0) rotate(0deg);
+                    }
+                }
+
+                animation: float 6s ease-in-out infinite;
+            }
+
+            .floating-emoji-1 {
+                top: 30%;
+                left: 5%;
+                animation-duration: 5s;
+            }
+
+            .floating-emoji-2 {
+                top: 30%;
+                right: 10%;
+                animation-duration: 6s;
+            }
+
+            .floating-emoji-3 {
+                top: 50%;
+                left: 20%;
+                animation-duration: 4.5s;
+            }
+
+            .floating-emoji-4 {
+                top: 20%;
+                right: 20%;
+                animation-duration: 7s;
+            }
+
+            .floating-emoji-5 {
+                top: 30%;
+                left: 20%;
+                animation-duration: 3s;
+            }
+
+            .floating-emoji-6 {
+                top: 40%;
+                right: 20%;
+                animation-duration: 3.5s;
+            }
+
+            .floating-emoji-7 {
+                top: 5%;
+                left: 30%;
+                animation-duration: 5.5s;
+            }
+        }
+    }
 }
