@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Microsoft.JSInterop;
 using WebApp.DTOs;
 using WebApp.DTOs.Order;
+using System.Dynamic;
 
 namespace WebApp.Services
 {
@@ -143,39 +144,17 @@ namespace WebApp.Services
         {
             var token = await _tokenService.GetAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            // Call your API or database to fetch the orders with order items by OrderSummaryId
-            try
-            {
-                // API endpoint to get the order summary by summary ID
-                var response = await _httpClient.GetAsync($"https://localhost:5003/api/orders/summary/{orderSummaryId}");
-               
 
+            // API endpoint to get the order summary by summary ID
+            var response = await _httpClient.GetAsync($"https://localhost:5003/api/orders/summary/{orderSummaryId}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    // Successfully retrieved the data
-                    var result = await response.Content.ReadFromJsonAsync<Response<OrderSummaryResponseDTO>>();
+            var result = await response.Content.ReadFromJsonAsync<Response<OrderSummaryResponseDTO>>();
 
-                    if (result != null && result.Success)
-                    {
-                        var jsonResponse = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine(jsonResponse);
-                        return JsonConvert.DeserializeObject<Response<OrderSummaryResponseDTO>>(jsonResponse);
-                    }
-
-                    throw new Exception(result?.Message ?? "Failed to retrieve order summary.");
-                }
-                else
-                {
-                    throw new Exception($"Error fetching order summary: {response.ReasonPhrase}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the error or return a null response with a relevant message
-                throw new Exception($"An error occurred while fetching order summary: {ex.Message}");
-            }
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(jsonResponse);
+            return JsonConvert.DeserializeObject<Response<OrderSummaryResponseDTO>>(jsonResponse);
         }
+
     }
 
         /*public async Task<List<CreateOrderItemDTO>> GetOrdersFromLocalStorage()

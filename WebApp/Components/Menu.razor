@@ -139,7 +139,7 @@
     protected override async Task OnInitializedAsync()
     {
         OrderSummaryId = await orderService.GetOrderSummaryIdFromLocalStorage();
-        if (OrderSummaryId != Guid.Empty) // Ensure it's a valid ID
+        if (OrderSummaryId != null) // Ensure it's a valid ID
         {
             await FetchOrderSummary();
         }
@@ -151,7 +151,7 @@
         {
 
             var orderSummary = await orderService.GetOrderSummaryByIdAsync(OrderSummaryId);
-            if (orderSummary.Data != null || orderSummary.Data.OrderItems.Count != 0)
+            if (orderSummary.Success && orderSummary.Data != null && orderSummary.Data.OrderItems.Count != 0)
             {
                 OrdersBySummaryId = orderSummary.Data.OrderItems;
             }
@@ -161,7 +161,7 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Failed to load order summary: {ex.Message}";
+            errorMessage = $"Failed to load order summary";
         }
     }
 

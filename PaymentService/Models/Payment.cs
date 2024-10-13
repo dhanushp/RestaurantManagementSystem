@@ -6,7 +6,7 @@ namespace PaymentService.Models
 {
     public class Payment : BaseEntity
     {
-        public string OrderId { get; set; }
+        public string? OrderId { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; } // Total payment amount
@@ -19,8 +19,8 @@ namespace PaymentService.Models
 
         public PaymentStatus Status { get; set; } // Payment status (enum)
 
-        public string? UserId { get; set; }  
-        public int? FoodOrderId { get; set; } 
+        public Guid? UserId { get; set; }  
+        public Guid? FoodOrderId { get; set; } 
 
     }
 
