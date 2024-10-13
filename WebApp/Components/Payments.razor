@@ -2,6 +2,7 @@
 @inject ICartService cartService
 @inject ITableService tableService
 @inject IJSRuntime JS
+@inject IOrderService orderService
 
 @using Microsoft.JSInterop
 @using WebApp.DTOs.Menu
@@ -71,7 +72,7 @@
 </div>
 
 @code {
-    [Parameter] public List<CreateOrderItemDTO> Orders { get; set; } = new List<CreateOrderItemDTO>();
+    [Parameter] public List<OrderItemResponseDTO> Orders { get; set; } = new List<OrderItemResponseDTO>();
     [Parameter] public string UserName { get; set; }
     [Parameter] public string TableNumber { get; set; }
 
@@ -80,6 +81,8 @@
     private decimal Tax;
     private decimal Total;
     private string errorMessage = "";
+
+    private Guid? OrderSummaryId { get; set; }
 
     private string selectedPaymentMode
     {
@@ -103,31 +106,40 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Orders = cartService.GetCurrentOrders();
+        // Orders = cartService.GetCurrentOrders();
         SubTotal = cartService.GetTotalPrice();
         Tax = SubTotal * 0.1m;
         Total = SubTotal + Tax;
 
-        var tableId = await tableService.GetSelectedTableFromLocalStorage();
-        if (tableId.HasValue)
+        OrderSummaryId = await orderService.GetOrderSummaryIdFromLocalStorage();
+
+        if (OrderSummaryId != null) // Ensure it's a valid ID
         {
-            var tableResponse = await tableService.GetTableByIdAsync(tableId.Value);
-            if (tableResponse.Success)
-            {
-                TableNumber = tableResponse.Data.Number;
-                StateHasChanged();
-            }
-            else
-            {
-                errorMessage = "Failed to fetch table details.";
-            }
-        }
-        else
-        {
-            errorMessage = "No table selected.";
+            await FetchOrderSummary();
         }
 
         await JS.InvokeVoidAsync("renderPayPalButton", Total);
+    }
+
+    private async Task FetchOrderSummary()
+    {
+        try
+        {
+
+            var orderSummary = await orderService.GetOrderSummaryByIdAsync(OrderSummaryId);
+
+            if (orderSummary.Success && orderSummary.Data!=null && orderSummary.Data.OrderItems.Count!=0)
+            {
+                Orders = orderSummary.Data.OrderItems;
+            }
+            SubTotal = orderSummary.Data.SubTotalAmount;
+            Tax = orderSummary.Data.TaxAmount;
+            Total = orderSummary.Data.TotalAmount;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Your order is Empty";
+        }
     }
 
     private async Task CheckoutCash()
