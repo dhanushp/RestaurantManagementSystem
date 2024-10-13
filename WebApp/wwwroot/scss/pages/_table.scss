@@ -27,14 +27,14 @@
             font-size: $text-2xl;
             margin-bottom: 0.5rem;
             font-weight: bold;
-            color: $brown;
+            color: $black;
             text-align:center;
         }
 
         &-description {
             font-size: $text-md;
             margin-bottom: 2rem;
-            color: $brown;
+            color: $black;
             text-align: center;
         }
     }
@@ -57,7 +57,7 @@
             .select-table__form-label {
                 font-size: $text-md;
                 margin-bottom: 0.5rem;
-                color: $brown;
+                color: $black;
                 font-weight: 400;
             }
 
@@ -66,12 +66,12 @@
                 padding: 1.5rem;
                 border-radius: 5px;
                 font-size: $text-md;
-                background-color: $brown-light;
+                background-color: $grey-light;
                 border: 1px solid transparent;
-                color: $brown;
+                color: $grey-dark;
 
                 &:focus {
-                    border: 1px solid $brown;
+                    border: 1px solid $grey;
                     outline: none;
                 }
             }
@@ -102,20 +102,6 @@
 
                 &:hover {
                     background-color: #b80020;
-                }
-
-                &:focus {
-                    outline: none;
-                }
-            }
-
-            &--secondary {
-                background-color: transparent;
-                color: $brown;
-                border: 1px solid $brown;
-
-                &:hover {
-                    background-color: $brown-light;
                 }
 
                 &:focus {

@@ -1,7 +1,13 @@
 ﻿@page "/"
-@layout MainLayout
+
+@using Microsoft.JSInterop
+@inherits LayoutComponentBase
+@inject IJSRuntime _jsRuntime
+@inject NavigationManager NavigationManager
+@inject ITokenService TokenService
 
 <section class="hero">
+    <Navbar />
     <div class="hero_text">
         <h2 class="hero_text-title">Dinemaster</h2>
         <h1 class="hero_text-subtitle">The Ultimate Solution for<br />
@@ -12,7 +18,7 @@
         </p>
         <div class="hero_text_button">
             <button class="hero_text_button-primary">Get Started</button>
-            <button class="hero_text_button-secondary">Watch Video</button>
+            <button class="hero_text_button-secondary"><img src="/images/play-circle.png" alt="play icon" style="margin-right: 1rem" />Watch Video</button>
         </div>
     </div>
     <div class="hero_image">
@@ -21,6 +27,23 @@
 </section>
 
 @code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await TokenService.GetAccessToken();
+        if (token == null)
+        {
+            // No valid token;
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            // Token is valid; proceed to main content
+            Navigation.NavigateTo("/select-table");
+        }
+    }
+
+
     private void NavigateToSignIn()
     {
         Navigation.NavigateTo("/signin");
@@ -30,4 +53,6 @@
     {
         Navigation.NavigateTo("/signup");
     }
+
+
 }

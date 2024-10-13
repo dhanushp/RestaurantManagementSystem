@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" class="select-table__form-button select-table__form-button--primary">Proceed</button>
-        <button type="button" @onclick="NavigateBack" class="select-table__form-button select-table__form-button--secondary">Go back</button>
+        
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
@@ -96,11 +96,6 @@
         {
             errorMessage = "Please select a valid table.";
         }
-    }
-
-    private void NavigateBack()
-    {
-        Navigation.NavigateTo("/previous-page"); // Add logic for back navigation as needed
     }
 
     public class TableSelectionModel

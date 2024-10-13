@@ -2,6 +2,7 @@
 @inject ICartService cartService
 @inject IMenuService menuService
 @inject IOrderService orderService
+@inject IUserService userService
 @inject IJSRuntime JS
 
 @using WebApp.DTOs.Menu
@@ -82,26 +83,31 @@
         }
     </div>
 
-    <!-- Right Sidebar: Order Summary -->
+    <!-- Right Sidebar: Order Summary -->   
     <div class="order-summary">
         <div class="order-summary-content">
             <h3>My Orders</h3>
             <p>Order #1552</p>
+        </div>
 
+        <!-- Scrollable Orders List -->
+        <div class="orders-list-container">
             <div class="orders-list">
-                @foreach (var order in Orders)
+                @foreach (var order in OrdersBySummaryId)
                 {
                     <div class="order-item">
                         <div class="order-details">
                             <h4>@order.MenuItemName</h4>
                             <p>Quantity: @order.Quantity</p>
                             <p>Total: $@order.TotalPrice</p>
+                            <p>Order Status :@order.OrderStatus</p>
                         </div>
                     </div>
                 }
             </div>
         </div>
 
+        <!-- Make Payment Button Fixed at the Bottom -->
         <button class="make-payment-btn" @onclick="NavigateToPayments">Make Payment</button>
     </div>
 
@@ -112,15 +118,53 @@
 @code {
     [Parameter] public List<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>(); // Passed from parent
     [Parameter] public List<MenuItemResponseDTO> MenuItems { get; set; } = new List<MenuItemResponseDTO>(); // Passed from parent
-    [Parameter] public List<CreateOrderItemDTO> Orders { get; set; } = new List<CreateOrderItemDTO>(); // Passed from parent
+    [Parameter] public List<CreateOrderItemDTO> Orders { get; set; } = new List<CreateOrderItemDTO>(); 
+    [Parameter] public List<OrderItemResponseDTO> OrdersBySummaryId { get; set; } = new List<OrderItemResponseDTO>();
+    // Passed from parent
     [Parameter] public string TableNumber { get; set; } // Passed from parent
     [Parameter] public string UserName { get; set; } // Passed from parent
     [Parameter] public EventCallback<CreateOrderRequestDTO> OnPlaceOrder { get; set; } // New callback for order placement
-
+    [Parameter] public Guid? OrderSummaryId { get; set; }
     private string searchQuery = "";
     private string selectedCategory = "All"; // Default is All
     private string errorMessage = "";
     private bool isCartVisible = false;
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    // Fetch existing orders from local storage
+    //  Orders = await orderService.GetOrdersFromLocalStorage();
+    //  }
+
+    protected override async Task OnInitializedAsync()
+    {
+        OrderSummaryId = await orderService.GetOrderSummaryIdFromLocalStorage();
+        if (OrderSummaryId != Guid.Empty) // Ensure it's a valid ID
+        {
+            await FetchOrderSummary();
+        }
+    }
+
+    private async Task FetchOrderSummary()
+    {
+        try
+        {
+
+            var orderSummary = await orderService.GetOrderSummaryByIdAsync(OrderSummaryId);
+            if (orderSummary.Data != null || orderSummary.Data.OrderItems.Count != 0)
+            {
+                OrdersBySummaryId = orderSummary.Data.OrderItems;
+            }
+           // SubTotalAmount = orderSummary.SubTotalAmount;
+               // TaxAmount = orderSummary.TaxAmount;
+               // TotalAmount = orderSummary.TotalAmount;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load order summary: {ex.Message}";
+        }
+    }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -158,18 +202,49 @@
     {
         try
         {
+            var orderSummaryID = await orderService.GetOrderSummaryIdFromLocalStorage();
+            var userInfo = await userService.GetUserInfoAsync();
             var tableInfo = await tableService.GetTableInfoAsync();
             var orderCreateDto = new CreateOrderRequestDTO
             {
-                TableId = tableInfo.Data.Id,
-                TableNumber = TableNumber,
-                OrderItems = cartService.GetCurrentOrders(),
+                    TableId = tableInfo.Data.Id,
+                    TableNumber = TableNumber,
+                    UserId = userInfo.Data.Id,
+                    UserFullName = userInfo.Data.FullName,
+                    OrderItems = cartService.GetCurrentOrders(),
+                    OrderSummaryId = orderSummaryID
             };
 
-            if (OnPlaceOrder.HasDelegate)
+            var response = await orderService.PlaceOrderAsync(orderCreateDto);
+
+            if(response.Success)
             {
-                await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
+                // Update the OrderSummaryId if needed
+                if (orderSummaryID == null)
+                {
+                    orderSummaryID = response.Data.OrderSummaryId;
+                    await orderService.StoreOrderSummaryIdInLocalStorage(orderSummaryID);
+                }
+
+                var currentCartItems = cartService.GetCurrentOrders();
+                if (currentCartItems != null && currentCartItems.Count > 0)
+                {
+                    Orders.AddRange(currentCartItems);
+                    // Store updated orders in local storage
+                    //await orderService.StoreOrdersInLocalStorage(Orders);
+                }
+                cartService.ClearCart();
+
+                await FetchOrderSummary();
+
+                if(OnPlaceOrder.HasDelegate)
+                 {
+                    await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
+                }
+                StateHasChanged();
             }
+
+            
         }
         catch (Exception ex)
         {

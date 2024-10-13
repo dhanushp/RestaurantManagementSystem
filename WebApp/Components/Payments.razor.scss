@@ -15,6 +15,7 @@
         position: relative;
 
         .greeting {
+            flex: 0 0 auto;
             margin-bottom: 1.5rem;
 
             h1 {
@@ -35,16 +36,40 @@
         }
 
         .order-summary {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; // Ensures only the order items scroll
+
             h3 {
                 color: $black;
                 font-size: $text-xl;
                 margin-bottom: 1rem;
+                flex: 0 0 auto; // Keeps the "Order Summary" heading fixed
             }
 
             .order-items {
+                flex-grow: 1;
+                overflow-y: auto; // Only the items scroll
                 display: flex;
                 flex-direction: column;
                 gap: 1.5rem;
+
+                &::-webkit-scrollbar {
+                    width: 10px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: $grey-light;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: $grey;
+                }
+
+                &::-webkit-scrollbar-thumb:hover {
+                    background: $grey-dark;
+                }
 
                 .order-item {
                     display: flex;
@@ -80,6 +105,8 @@
         }
 
         .payment-summary {
+            flex: 0 0 auto;
+
             .payment-summary-content {
                 margin: 2rem 0;
 
@@ -188,3 +215,4 @@
         background-repeat: no-repeat;
     }
 }
+
