@@ -23,7 +23,7 @@ namespace MenuService.Models
         public bool IsAvailable { get; set; }
 
         [Url]
-        public string? ImageUrl { get; set; } = "default_image_url.jpg";
+        public string ImageUrl { get; set; }
 
         // Foreign key to Category
         public Guid CategoryId { get; set; }
