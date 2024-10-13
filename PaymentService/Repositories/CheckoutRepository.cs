@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using PaymentService.Hubs;
 using PaymentService.Interfaces;
 using PaymentService.Models;
 using RestaurantManagement.SharedDataLibrary.DTOs.Payment;
@@ -14,17 +16,19 @@ namespace PaymentService.Repositories
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly IPaymentRepository _paymentRepository;
-
+        private readonly IHubContext<PaymentHub> _hubContext;
 
         private string PayPalClientId { get; set; } = string.Empty;
         private string PayPalClientSecret { get; set; } = string.Empty;
         private string PayPalUrl { get; set; } = string.Empty;
 
-        public CheckoutRepository(IConfiguration configuration, IPaymentRepository paymentRepository)
+        public CheckoutRepository(IConfiguration configuration, IPaymentRepository paymentRepository, IHubContext<PaymentHub> hubContext)
         {
             _configuration = configuration;
             _httpClient = new HttpClient();
             _paymentRepository = paymentRepository;
+            _hubContext = hubContext;
+
         }
 
         public async Task<string> GetPayPalAccessToken()
@@ -124,6 +128,11 @@ namespace PaymentService.Repositories
                     payment.UpdatedAt = DateTime.Now;
                     payment.TransactionId = captureResponse.Id;
                     await _paymentRepository.UpdatePaymentAsync(payment);
+
+                    // Notify the group about the payment status update
+                    string groupName = $"{payment.UserId}-{payment.FoodOrderId}";
+                    await _hubContext.Clients.Group(groupName)
+                        .SendAsync("ReceivePaymentStatus", payment.FoodOrderId, payment.Status);
                 }
             }
 

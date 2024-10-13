@@ -8,7 +8,8 @@ namespace WebApp.Services
 {
     public interface IUserService
     {
-        Task<Response<UserResponseDTO>> GetUserInfoAsync(); 
+        Task<Response<UserResponseDTO>> GetUserInfoAsync();
+        Task<Guid> GetUserIdFromLocalStorage();
     }
 
     public class UserService : IUserService
@@ -41,6 +42,11 @@ namespace WebApp.Services
 
             return JsonConvert.DeserializeObject<Response<UserResponseDTO>>(responseBody);
 
+        }
+
+        public async Task<Guid> GetUserIdFromLocalStorage()
+        {
+            return await _jsRuntime.InvokeAsync<Guid>("localStorage.getItem", "userId");
         }
     }
 

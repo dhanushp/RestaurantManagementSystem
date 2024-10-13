@@ -65,7 +65,7 @@ namespace RestaurantOperationsService.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPut("{id:guid}/make-available")]
+        [HttpGet("{id:guid}/make-available")]
         public async Task<IActionResult> MakeTableAvailable(Guid id)
         {
             var response = await _tableRepository.MakeTableAvailable(id);

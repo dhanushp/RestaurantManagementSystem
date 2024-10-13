@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PaymentService.Data;
 using PaymentService.DependencyInjection;
+using PaymentService.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
 builder.Services.AddInfrastructureService(builder.Configuration);
+builder.Services.AddSignalR();
+
 
 builder.Services.AddCors(options =>
 {
@@ -37,6 +40,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHub<PaymentHub>("/paymentHub");
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
