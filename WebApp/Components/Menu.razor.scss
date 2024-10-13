@@ -209,6 +209,15 @@
                 }
             }
 
+            .cart-summary__view-cart-btn{
+                background:none;
+                border: none;
+                color: $red;
+                text-decoration: underline;
+                cursor: pointer;
+
+            } 
+            
             .place-order-btn {
                 flex: 1;
                 padding: 1.5rem 2rem;
