@@ -16,6 +16,8 @@ namespace WebApp.Services
 
         Task<Guid?> GetSelectedTableFromLocalStorage();
         Task RemoveSelectedTableFromLocalStorage(); // Method to clear localStorage if needed
+
+        Task ReleaseTable();
     }
 
     public class TableService : ITableService
@@ -120,5 +122,17 @@ namespace WebApp.Services
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "tableId");
         }
+
+        public async Task ReleaseTable()
+        {
+            Guid tableId = await _jsRuntime.InvokeAsync<Guid>("localStorage.getItem", "tableId");
+
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.GetAsync($"https://localhost:5003/api/tables/{tableId}/make-available");
+
+            await RemoveSelectedTableFromLocalStorage();
+        }
+
     }
 }
