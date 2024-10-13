@@ -87,7 +87,9 @@ namespace PaymentService.Repositories
                     Amount = createOrderDTO.Amount,
                     CurrencyCode = createOrderDTO.Currency,
                     PaymentMethod = PaymentMethod.PayPal,
-                    Status = PaymentStatus.Pending
+                    Status = PaymentStatus.Pending,
+                    UserId = createOrderDTO.UserId,
+                    FoodOrderId = createOrderDTO.FoodOrderId
                 };
 
                 await _paymentRepository.AddPaymentAsync(payment);
