@@ -1,31 +1,54 @@
 ﻿@inject ICartService cartService
+@inject IMenuService menuService
 
 @if (IsVisible)
 {
-    <div class="cart-modal">
-        <div class="cart-modal__content">
-            <button class="cart-modal__close-btn" @onclick="Close">X</button>
-            <h2>Your Cart</h2>
-            @if (cartService.GetItemCount() > 0)
-            {
-                @foreach (var order in cartService.GetCurrentOrders())
-                {
-                    <div class="cart-item">
-                        <img src="@order.ImageUrl" alt="@order.MenuItemName" class="cart-item__image" />
-                        <div class="cart-item__details">
-                            <h4>@order.MenuItemName</h4>
-                            <p>Quantity: @order.Quantity</p>
-                            <p>Total: $@order.TotalPrice</p>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <p>Your cart is empty.</p>
-            }
-            <button class="cart-modal__checkout-btn" @onclick="Checkout">Checkout</button>
-        </div>
+    <div class="cart-overlay" @onclick="CloseOnOverlayClick">
+        <!-- Use the dialog tag for the modal -->
+        <dialog class="cart-modal" open>
+            <!-- Modal content area -->
+            <div class="cart-modal__content" @onclick:stopPropagation="true">
+                <!-- Prevent modal content from closing -->
+                
+
+                <!-- Header: fixed at the top -->
+                <div class="cart-modal__header">
+                    <h2>What's on your Cart</h2>
+                    <button class="cart-modal__close-btn" @onclick="Close">X</button>
+                </div>
+                
+
+                <!-- Scrollable cart items area -->
+                <div class="cart-items">
+                    @if (cartService.GetItemCount() > 0)
+                    {
+                        @foreach (var order in cartService.GetCurrentOrders())
+                        {
+                            <div class="cart-item">
+                                <img src="@order.ImageUrl" alt="@order.MenuItemName" class="cart-item__image" />
+                                <div class="cart-item__details">
+                                    <h4>@order.MenuItemName</h4>
+                                    <p>Quantity: @order.Quantity</p>
+                                    <p>Total: $@order.TotalPrice</p>
+                                    <button @onclick="() => DecreaseQuantity(order.MenuItemId)">-</button>
+                                    <button @onclick="() => IncreaseQuantity(order.MenuItemId)">+</button>
+                                    <button class="remove-btn" @onclick="() => RemoveItem(order.MenuItemId)">Remove</button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Your cart is empty.</p>
+                    }
+                </div>
+
+                <!-- Footer: fixed at the bottom -->
+                <div class="cart-modal__footer">
+                    <button class="cart-modal__placeorder-btn" @onclick="Checkout">Place Order</button>
+                </div>
+            </div>
+        </dialog>
     </div>
 }
 
@@ -38,5 +61,32 @@
     private void Checkout()
     {
         // Implement checkout functionality
+    }
+
+    private void DecreaseQuantity(Guid menuItemId)
+    {
+        cartService.DecreaseQuantity(menuItemId);
+    }
+
+    private async Task IncreaseQuantity(Guid menuItemId)
+    {
+        // Get the corresponding MenuItemResponseDTO
+        var menuItem = (await menuService.GetAllMenuItemsAsync()).Data
+                        .FirstOrDefault(m => m.Id == menuItemId);
+
+        if (menuItem != null)
+        {
+            cartService.AddItem(menuItem);
+        }
+    }
+
+    private void RemoveItem(Guid menuItemId)
+    {
+        cartService.RemoveItem(menuItemId);
+    }
+
+    private void CloseOnOverlayClick()
+    {
+        Close(); // Close modal when clicking outside the modal content
     }
 }
