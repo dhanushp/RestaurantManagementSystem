@@ -39,7 +39,6 @@ namespace WebApp.Services
 
             var response = await _httpClient.GetAsync("https://localhost:5003/api/menuitems/categories");
             var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("Response Body: " + responseBody);
             return JsonConvert.DeserializeObject<Response<List<CategoryDTO>>>(responseBody);
         }
 

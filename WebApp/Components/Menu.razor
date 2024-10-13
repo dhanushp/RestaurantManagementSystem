@@ -170,9 +170,11 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("scrollDrag"); // Initialize drag scroll behavior for the category tab
+            await JS.InvokeVoidAsync("scrollDrag"); //Initialize drag scroll behavior for the category tab
+            await JS.InvokeVoidAsync("initModalBehavior"); // Initialize modal behavior
         }
     }
+
 
     private List<MenuItemResponseDTO> FilteredMenuItems()
     {
