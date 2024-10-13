@@ -24,9 +24,11 @@ namespace WebApp.Services
         Task StoreOrderSummaryIdInLocalStorage(Guid? orderSummaryID);
         Task<Guid?> GetOrderSummaryIdFromLocalStorage();
 
-        
+        Task<Response<OrderSummaryResponseDTO>> GetOrderSummaryByIdAsync(Guid? orderSummaryId);
 
-       // Task<List<CreateOrderItemDTO>> GetOrdersFromLocalStorage();
+
+
+        // Task<List<CreateOrderItemDTO>> GetOrdersFromLocalStorage();
 
         //Task StoreOrdersInLocalStorage(List<CreateOrderItemDTO> orders);
     }
@@ -137,7 +139,44 @@ namespace WebApp.Services
             return null;
         }
 
+        public async Task<Response<OrderSummaryResponseDTO>> GetOrderSummaryByIdAsync(Guid? orderSummaryId)
+        {
+            var token = await _tokenService.GetAccessToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            // Call your API or database to fetch the orders with order items by OrderSummaryId
+            try
+            {
+                // API endpoint to get the order summary by summary ID
+                var response = await _httpClient.GetAsync($"https://localhost:5003/api/orders/summary/{orderSummaryId}");
+               
 
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Successfully retrieved the data
+                    var result = await response.Content.ReadFromJsonAsync<Response<OrderSummaryResponseDTO>>();
+
+                    if (result != null && result.Success)
+                    {
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine(jsonResponse);
+                        return JsonConvert.DeserializeObject<Response<OrderSummaryResponseDTO>>(jsonResponse);
+                    }
+
+                    throw new Exception(result?.Message ?? "Failed to retrieve order summary.");
+                }
+                else
+                {
+                    throw new Exception($"Error fetching order summary: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error or return a null response with a relevant message
+                throw new Exception($"An error occurred while fetching order summary: {ex.Message}");
+            }
+        }
+    }
 
         /*public async Task<List<CreateOrderItemDTO>> GetOrdersFromLocalStorage()
         {
@@ -153,14 +192,14 @@ namespace WebApp.Services
                 : JsonConvert.DeserializeObject<List<CreateOrderItemDTO>>(ordersJson);
         }
 */
-       /* public async Task StoreOrdersInLocalStorage(List<CreateOrderItemDTO> orders)
-        {
+        /* public async Task StoreOrdersInLocalStorage(List<CreateOrderItemDTO> orders)
+         {
 
-            var token = await _tokenService.GetAccessToken();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            // Serialize the orders and store them in local storage
-            var ordersJson = JsonConvert.SerializeObject(orders);
-            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "Orders", ordersJson);
-        }*/
+             var token = await _tokenService.GetAccessToken();
+             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+             // Serialize the orders and store them in local storage
+             var ordersJson = JsonConvert.SerializeObject(orders);
+             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "Orders", ordersJson);
+         }*/
     }
-}
+
