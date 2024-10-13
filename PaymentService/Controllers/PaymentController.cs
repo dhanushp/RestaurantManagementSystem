@@ -49,9 +49,9 @@ namespace PaymentService.Controllers
 
                 var processedPayment = await _paymentRepository.AddPaymentAsync(payment);
                 // Notify the group about the payment status update
-                string groupName = $"{payment.UserId}-{payment.FoodOrderId}";
+                string groupName = $"{payment.UserId}";
                 await _hubContext.Clients.Group(groupName)
-                    .SendAsync("ReceivePaymentStatus", payment.FoodOrderId, payment.Status);
+                    .SendAsync("ReceivePaymentStatus", payment.UserId, payment.Status);
                 return Ok(Response<Payment>.SuccessResponse("Payment processed successfully", processedPayment));
             }
             catch (Exception ex)

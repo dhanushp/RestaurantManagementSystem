@@ -87,7 +87,7 @@
     private string successMessage = "";
     private string errorMessage = "";
 
-    private Guid? OrderSummaryId { get; set; }
+    private Guid? OrderSummaryId { get; set; } 
     private Guid UserId { get; set; }
     private HubConnection? hubConnection;
 
@@ -97,11 +97,12 @@
         set
         {
             _selectedPaymentMode = value;
-            if (_selectedPaymentMode == "Online Payment" || _selectedPaymentMode == "Credit Card")
+            if (_selectedPaymentMode == "Online Payment" || _selectedPaymentMode == "Credit Card" && OrderSummaryId.HasValue)
             {
                 try
                 {
-                    InvokeAsync(() => JS.InvokeVoidAsync("renderPayPalButton", Total));
+                    InvokeAsync(() => JS.InvokeVoidAsync("renderPayPalButton", Total, UserId, OrderSummaryId));
+
                 }
                 catch (Exception ex)
                 {
@@ -118,6 +119,7 @@
         Tax = SubTotal * 0.1m;
         Total = SubTotal + Tax;
 
+        UserId = await userService.GetUserIdFromLocalStorage();
         OrderSummaryId = await orderService.GetOrderSummaryIdFromLocalStorage();
 
         if (OrderSummaryId != null) // Ensure it's a valid ID
@@ -142,15 +144,13 @@
 
                 await hubConnection.StartAsync();
 
-                UserId = await userService.GetUserIdFromLocalStorage();
-
                 // Invoke the RegisterUser method to register the user for payment updates
-                await hubConnection.InvokeAsync("RegisterUser", UserId, OrderSummaryId);
+                await hubConnection.InvokeAsync("RegisterUser", UserId);
 
                 // Listen for the ReceivePaymentStatus event from the SignalR hub
-                hubConnection.On<Guid, int>("ReceivePaymentStatus", (orderSummaryId, status) =>
+                hubConnection.On<Guid, int>("ReceivePaymentStatus", (userId, status) =>
                 {
-                    if (OrderSummaryId == orderSummaryId)
+                    if (UserId == userId)
                     {
                         if (status == 1) // success
                         {
@@ -187,7 +187,7 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("renderPayPalButton", Total);
+            await JS.InvokeVoidAsync("renderPayPalButton", Total, UserId, OrderSummaryId);
         }
     }
 

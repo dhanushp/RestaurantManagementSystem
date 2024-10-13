@@ -153,8 +153,11 @@
             var orderSummary = await orderService.GetOrderSummaryByIdAsync(OrderSummaryId);
             if (orderSummary.Success && orderSummary.Data != null && orderSummary.Data.OrderItems.Count != 0)
             {
-                OrdersBySummaryId = orderSummary.Data.OrderItems;
+                OrdersBySummaryId = new List<OrderItemResponseDTO>(orderSummary.Data.OrderItems);
+                StateHasChanged();
+
             }
+
            // SubTotalAmount = orderSummary.SubTotalAmount;
                // TaxAmount = orderSummary.TaxAmount;
                // TotalAmount = orderSummary.TotalAmount;
@@ -162,6 +165,7 @@
         catch (Exception ex)
         {
             errorMessage = $"Failed to load order summary";
+
         }
     }
 
@@ -204,7 +208,7 @@
     {
         try
         {
-            var orderSummaryID = await orderService.GetOrderSummaryIdFromLocalStorage();
+            OrderSummaryId = await orderService.GetOrderSummaryIdFromLocalStorage();
             var userInfo = await userService.GetUserInfoAsync();
             var tableInfo = await tableService.GetTableInfoAsync();
             var orderCreateDto = new CreateOrderRequestDTO
@@ -214,7 +218,7 @@
                     UserId = userInfo.Data.Id,
                     UserFullName = userInfo.Data.FullName,
                     OrderItems = cartService.GetCurrentOrders(),
-                    OrderSummaryId = orderSummaryID
+                    OrderSummaryId = OrderSummaryId
             };
 
             var response = await orderService.PlaceOrderAsync(orderCreateDto);
@@ -222,10 +226,10 @@
             if(response.Success)
             {
                 // Update the OrderSummaryId if needed
-                if (orderSummaryID == null)
+                if (OrderSummaryId == null)
                 {
-                    orderSummaryID = response.Data.OrderSummaryId;
-                    await orderService.StoreOrderSummaryIdInLocalStorage(orderSummaryID);
+                    OrderSummaryId = response.Data.OrderSummaryId;
+                    await orderService.StoreOrderSummaryIdInLocalStorage(OrderSummaryId);
                 }
 
                 var currentCartItems = cartService.GetCurrentOrders();
@@ -235,14 +239,14 @@
                     // Store updated orders in local storage
                     //await orderService.StoreOrdersInLocalStorage(Orders);
                 }
-                cartService.ClearCart();
 
                 await FetchOrderSummary();
+                cartService.ClearCart();
 
-                if(OnPlaceOrder.HasDelegate)
-                 {
-                    await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
-                }
+                // if(OnPlaceOrder.HasDelegate)
+                //  {
+                //     await OnPlaceOrder.InvokeAsync(orderCreateDto); // Invoke the callback with the order details
+                // }
                 StateHasChanged();
             }
 
