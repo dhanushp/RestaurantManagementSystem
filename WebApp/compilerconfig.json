@@ -38,5 +38,9 @@
   {
     "outputFile": "Components/Cart.razor.css",
     "inputFile": "Components/Cart.razor.scss"
+  },
+  {
+    "outputFile": "Components/Navbar.razor.css",
+    "inputFile": "Components/Navbar.razor.scss"
   }
 ]

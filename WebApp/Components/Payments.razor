@@ -3,13 +3,13 @@
 @inject ITableService tableService
 @inject IJSRuntime JS
 
+@using Microsoft.JSInterop
 @using WebApp.DTOs.Menu
 @using WebApp.DTOs.Order
 @using WebApp.DTOs
 
 <div class="payment-page">
     <div class="payment-content">
-        <div class="left-section">
             <div class="greeting">
                 <h1>Hello, @UserName</h1>
                 <p>You're in table <span class="table-number">@TableNumber</span></p>
@@ -30,10 +30,8 @@
                     }
                 </div>
             </div>
-        </div>
 
         <div class="payment-summary">
-            <hr />
             <div class="payment-summary-content">
                 <p><strong>Sub total :</strong> $@SubTotal</p>
                 <p><strong>Tax :</strong> $@Tax</p>
@@ -57,7 +55,7 @@
                 <!-- Render PayPal button container for PayPal payments -->
                 <div id="paypal-button-container" class="@((selectedPaymentMode == "Online Payment" || selectedPaymentMode == "Credit Card") ? "visible" : "")"></div>
                 <!-- Checkout button for non-PayPal payments -->
-                <button class="checkout-btn @((selectedPaymentMode == "Cash") ? "" : "hidden")" @onclick="Checkout">Checkout</button>
+                <button class="checkout-btn @((selectedPaymentMode == "Cash") ? "" : "hidden")" @onclick="CheckoutCash">Checkout</button>
 
                 
             </div>
@@ -132,11 +130,11 @@
         await JS.InvokeVoidAsync("renderPayPalButton", Total);
     }
 
-    private async Task Checkout()
+    private async Task CheckoutCash()
     {
         try
         {
-            // Process the payment based on the selected payment mode
+            
         }
         catch (Exception ex)
         {
@@ -144,3 +142,4 @@
         }
     }
 }
+
