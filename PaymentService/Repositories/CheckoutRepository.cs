@@ -5,6 +5,7 @@ using PaymentService.Interfaces;
 using PaymentService.Models;
 using RestaurantManagement.SharedDataLibrary.DTOs.Payment;
 using RestaurantManagement.SharedDataLibrary.Enums;
+using Serilog;
 
 namespace PaymentService.Repositories
 {
@@ -96,10 +97,18 @@ namespace PaymentService.Repositories
             var accessToken = await GetPayPalAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response = await _httpClient.PostAsync(PayPalUrl + $"/v2/checkout/orders/{orderId}/capture", null);
+            var emptyContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(PayPalUrl + $"/v2/checkout/orders/{orderId}/capture", emptyContent);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var captureResponse = JsonConvert.DeserializeObject<PayPalCaptureOrderResponseDTO>(responseBody);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = $"Capture order failed: {response.StatusCode}, {responseBody}";
+                Log.Error(errorMessage); // Use Serilog for logging the error
+                throw new Exception(errorMessage);
+            }
 
             // Check if the capture was successful
             if (captureResponse.Status == "COMPLETED")
