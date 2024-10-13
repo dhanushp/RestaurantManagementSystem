@@ -12,7 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddDbContext<MenuContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        });
+});
 
 // Add controllers
 builder.Services.AddControllers();
@@ -46,6 +53,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+app.UseCors("AllowAllOrigins");
 app.UseInfrastructurePolicy();
 app.UseHttpsRedirection();
 app.UseAuthorization();
