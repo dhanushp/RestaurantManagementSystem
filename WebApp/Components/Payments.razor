@@ -145,12 +145,12 @@
                 await hubConnection.StartAsync();
 
                 // Invoke the RegisterUser method to register the user for payment updates
-                await hubConnection.InvokeAsync("RegisterUser", UserId, OrderSummaryId);
+                await hubConnection.InvokeAsync("RegisterUser", UserId);
 
                 // Listen for the ReceivePaymentStatus event from the SignalR hub
-                hubConnection.On<Guid, int>("ReceivePaymentStatus", (orderSummaryId, status) =>
+                hubConnection.On<Guid, int>("ReceivePaymentStatus", (userId, status) =>
                 {
-                    if (OrderSummaryId == orderSummaryId)
+                    if (UserId == userId)
                     {
                         if (status == 1) // success
                         {
@@ -185,7 +185,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && OrderSummaryId.HasValue)
+        if (firstRender)
         {
             await JS.InvokeVoidAsync("renderPayPalButton", Total, UserId, OrderSummaryId);
         }
