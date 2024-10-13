@@ -7,6 +7,9 @@
         public string? Description { get; set; }   // Short description of the menu item
         public decimal Price { get; set; }        // Price of the menu item
         public string? Category { get; set; }   // Category the menu item belongs to
-        public bool IsAvailable { get; set; }     // Indicates if the item is available for ordering
+        public bool IsAvailable { get; set; }  
+        
+        public string ImageURL { get; set; }
+            // Indicates if the item is available for ordering
     }
 }

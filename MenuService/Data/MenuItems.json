@@ -6,7 +6,7 @@
         "Price": 5.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/vegspringroll.jpg",
         "Category": "Appetizers"
     },
     {
@@ -15,7 +15,7 @@
         "Price": 6.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/StuffedMushroom.jpg",
         "Category": "Appetizers"
     },
     {
@@ -24,7 +24,7 @@
         "Price": 9.49,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/Buffalo_Wings.jpg",
         "Category": "Appetizers"
     },
     {
@@ -33,7 +33,7 @@
         "Price": 7.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/ClassicBruschetta.jpg",
         "Category": "Appetizers"
     },
 
@@ -44,7 +44,7 @@
         "Price": 6.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/TomYumSoup.jpg",
         "Category": "Soups"
     },
     {
@@ -53,7 +53,7 @@
         "Price": 7.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/CreamofMushroom.jpg",
         "Category": "Soups"
     },
     {
@@ -62,7 +62,7 @@
         "Price": 8.49,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/ChickenNoodleSoup.jpg",
         "Category": "Soups"
     },
     {
@@ -71,7 +71,7 @@
         "Price": 5.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/MinestroneSoup.jpg",
         "Category": "Soups"
     },
 
@@ -82,7 +82,7 @@
         "Price": 5.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/FreshGardenSalad.jpg",
         "Category": "Salads"
     },
     {
@@ -91,7 +91,7 @@
         "Price": 8.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/GreekSalad.jpg",
         "Category": "Salads"
     },
     {
@@ -100,7 +100,7 @@
         "Price": 10.49,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/ChickenAvocadoSalad.jpg",
         "Category": "Salads"
     },
     {
@@ -109,7 +109,7 @@
         "Price": 9.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/QuinoaSalad.jpg",
         "Category": "Salads"
     },
 
@@ -120,7 +120,7 @@
         "Price": 18.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/GrilledChickenBreast.jpg",
         "Category": "Main Course"
     },
     {
@@ -129,7 +129,7 @@
         "Price": 14.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/VegetableStirFry.jpg",
         "Category": "Main Course"
     },
     {
@@ -138,7 +138,7 @@
         "Price": 22.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/BeefStroganoff.jpg",
         "Category": "Main Course"
     },
     {
@@ -147,7 +147,7 @@
         "Price": 15.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/VegetableCurry.jpg",
         "Category": "Main Course"
     },
 
@@ -158,7 +158,7 @@
         "Price": 13.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/FettuccineAlfredo.jpeg",
         "Category": "Pasta"
     },
     {
@@ -167,7 +167,7 @@
         "Price": 12.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/SpaghettiCarbonara.jpg",
         "Category": "Pasta"
     },
     {
@@ -176,7 +176,7 @@
         "Price": 11.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/PenneArrabbiata.jpg",
         "Category": "Pasta"
     },
     {
@@ -185,7 +185,7 @@
         "Price": 14.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/Pestpasta.jpg",
         "Category": "Pasta"
     },
 
@@ -196,7 +196,7 @@
         "Price": 12.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/MargheritaPizza.jpg",
         "Category": "Pizza"
     },
     {
@@ -205,7 +205,7 @@
         "Price": 13.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/PepperoniPizza.jpg",
         "Category": "Pizza"
     },
     {
@@ -214,7 +214,7 @@
         "Price": 14.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/BBQ_Chicken_Pizza.jpeg",
         "Category": "Pizza"
     },
     {
@@ -223,7 +223,7 @@
         "Price": 12.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/VeggieLoversPizza.jpg",
         "Category": "Pizza"
     },
 
@@ -234,7 +234,7 @@
         "Price": 4.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/GarlicBread.jpg",
         "Category": "Breads"
     },
     {
@@ -243,7 +243,7 @@
         "Price": 5.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/HerbFocaccia.jpg",
         "Category": "Breads"
     },
     {
@@ -252,7 +252,7 @@
         "Price": 6.49,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/CheesyGarlicBread.jpg",
         "Category": "Breads"
     },
     {
@@ -261,7 +261,7 @@
         "Price": 3.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/PitaBread.jpg",
         "Category": "Breads"
     },
     //Rice and Noodles
@@ -272,7 +272,7 @@
         "Price": 9.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/FriedRice.jpg",
         "Category": "Rice and Noodles"
     },
     {
@@ -281,7 +281,7 @@
         "Price": 11.49,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/PadThai.jpg",
         "Category": "Rice and Noodles"
     },
     {
@@ -290,7 +290,7 @@
         "Price": 10.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/ChowMein.jpg",
         "Category": "Rice and Noodles"
     },
     {
@@ -299,7 +299,7 @@
         "Price": 12.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/VegetableBiryani.jpg",
         "Category": "Rice and Noodles"
     },
 
@@ -310,7 +310,7 @@
         "Price": 6.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/ChocolateLavaCake.jpg",
         "Category": "Desserts"
     },
     {
@@ -319,7 +319,7 @@
         "Price": 5.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/Tiramisu.jpg",
         "Category": "Desserts"
     },
     {
@@ -328,7 +328,7 @@
         "Price": 7.49,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/Cheesecake.jpg",
         "Category": "Desserts"
     },
     {
@@ -337,7 +337,7 @@
         "Price": 4.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/FruitSalad.jpg",
         "Category": "Desserts"
     },
 
@@ -349,7 +349,7 @@
         "Price": 2.50,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/MintTea.jpg",
         "Category": "Beverages"
     },
     {
@@ -358,7 +358,7 @@
         "Price": 10.99,
         "IsNonVeg": true,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/MargaritaCocktail.jpg",
         "Category": "Beverages"
     },
     {
@@ -367,7 +367,7 @@
         "Price": 5.99,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/FruitPunchMocktail.jpg",
         "Category": "Beverages"
     },
     {
@@ -376,7 +376,7 @@
         "Price": 3.00,
         "IsNonVeg": false,
         "IsAvailable": true,
-        "ImageUrl": "url_to_image",
+        "ImageUrl": "http://localhost:5001/images/Coffee.jpg",
         "Category": "Beverages"
     }
 ]

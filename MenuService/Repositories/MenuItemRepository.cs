@@ -56,6 +56,7 @@ namespace MenuService.Repositories
                         Name = item.Name,
                         Description = item.Description,
                         Price = item.Price,
+                        ImageURL = item.ImageUrl,
                         Category = item.Category != null ? item.Category.Name : "Unknown",
                         IsAvailable = item.IsAvailable
                     })
