@@ -104,6 +104,14 @@
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("renderPayPalButton", Total);
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         // Orders = cartService.GetCurrentOrders();
@@ -118,7 +126,7 @@
             await FetchOrderSummary();
         }
 
-        await JS.InvokeVoidAsync("renderPayPalButton", Total);
+        // await JS.InvokeVoidAsync("renderPayPalButton", Total);
     }
 
     private async Task FetchOrderSummary()
