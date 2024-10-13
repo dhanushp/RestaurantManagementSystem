@@ -2,7 +2,7 @@
 
 @mixin button-primary($bg-color, $text-color) {
     padding: 1rem 3rem;
-    border: 2px solid $red;
+    border: none;
     border-radius: 1rem;
     display: flex;
     align-items: center;
