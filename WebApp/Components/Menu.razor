@@ -125,6 +125,7 @@
     [Parameter] public string UserName { get; set; } // Passed from parent
     [Parameter] public EventCallback<CreateOrderRequestDTO> OnPlaceOrder { get; set; } // New callback for order placement
     [Parameter] public Guid? OrderSummaryId { get; set; }
+    [Parameter] public EventCallback<string> OnNavigateToTab { get; set; }
     private string searchQuery = "";
     private string selectedCategory = "All"; // Default is All
     private string errorMessage = "";
@@ -268,8 +269,9 @@
         isCartVisible = false;
     }
 
-    private void NavigateToPayments()
+    private async Task NavigateToPayments()
     {
-        // Navigate to the payments tab
+        // Notify the parent to change the active tab to "payments"
+        await OnNavigateToTab.InvokeAsync("payments");
     }
 }
