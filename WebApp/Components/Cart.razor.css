@@ -112,7 +112,7 @@
   width: 80px;
   height: 80px;
   border-radius: 10px;
-  border: 1px solid #E10019;
+  object-fit: cover;
 }
 .cart-modal .cart-item__details {
   flex-grow: 1;
