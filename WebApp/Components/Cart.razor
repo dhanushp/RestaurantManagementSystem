@@ -56,10 +56,8 @@
                 </div>
 
                 <!-- Footer: fixed at the bottom -->
-                @if (cartService.GetItemCount() > 0)
-                {
-                    <div class="cart-modal__footer">
-                        <button class="cart-modal__placeorder-btn" @onclick="Checkout">Place Order</button>
+                <div class="cart-modal__footer">
+                    <button class="cart-modal__placeorder-btn" @onclick="Checkout">Place Order</button>
                 </div>
                 }
             </div>
