@@ -1,4 +1,105 @@
-﻿<div class="ai-section">
-    <h2>AI Recommendations</h2>
-    <!-- AI recommendations content goes here -->
+﻿@inject IOpenAIService openAIService
+@inject IJSRuntime JSRuntime
+@inject ChatStateService ChatStateService
+
+<div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+        @foreach (var message in ChatStateService.Messages)
+        {
+            <div class="message-wrapper @(message.IsUser ? "user" : "bot")" @key="message">
+                @if (message.IsUser)
+                {
+                    <div class="message user-message">
+                        @((MarkupString)message.Content)
+                    </div>
+                    <img class="user-image" src="images/user-avatar.png" alt="User Avatar" />
+                }
+                else
+                {
+                    <img class="bot-image" src="images/bot-avatar.png" alt="Bot Avatar" />
+                    <div class="message bot-message">
+                        @((MarkupString)message.Content)
+                    </div>
+                }
+            </div>
+        }
+
+        @if (ChatStateService.IsBotTyping)
+        {
+            <div class="message-wrapper bot">
+                <img class="bot-image" src="images/bot-avatar.png" alt="Bot Avatar" />
+                <div class="message typing-indicator">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="chat-input-container">
+        <textarea placeholder="Ask the Dine Bot (e.g., 'Recommend a vegetarian dish.')"
+                  @bind="UserInput"
+                  @onkeydown="HandleKeyDown"></textarea>
+        <button @onclick="SendMessage"></button>
+    </div>
 </div>
+
+@code {
+    private string UserInput = string.Empty;
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(UserInput))
+        {
+            ChatStateService.AddMessage(new WebApp.DTOs.Message { IsUser = true, Content = UserInput });
+            StateHasChanged();
+
+            await ScrollToBottom();
+
+            try
+            {
+                ChatStateService.IsBotTyping = true;
+                StateHasChanged();
+
+                var response = await openAIService.GetRecommendationsWithHistoryAndMenuAsync(ChatStateService.Messages, UserInput);
+                if (!string.IsNullOrWhiteSpace(response))
+                {
+                    ChatStateService.AddMessage(new WebApp.DTOs.Message { IsUser = false, Content = FormatResponse(response) });
+                }
+            }
+            catch (Exception)
+            {
+                ChatStateService.AddMessage(new WebApp.DTOs.Message { IsUser = false, Content = "Sorry, I'm having trouble understanding that. Could you please rephrase?" });
+            }
+            finally
+            {
+                ChatStateService.IsBotTyping = false;
+            }
+
+            UserInput = string.Empty;
+            StateHasChanged();
+            await ScrollToBottom();
+        }
+    }
+
+    private string FormatResponse(string response)
+    {
+        return System.Text.RegularExpressions.Regex.Replace(response, @"\*\*(.+?)\*\*", "<strong>$1</strong>");
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await JSRuntime.InvokeVoidAsync("preventDefaultBehavior", e); // Prevent the default behavior for Enter key
+            await SendMessage();
+        }
+    }
+
+
+    private async Task ScrollToBottom()
+    {
+        await JSRuntime.InvokeVoidAsync("scrollToBottom", "chat-messages");
+    }
+}

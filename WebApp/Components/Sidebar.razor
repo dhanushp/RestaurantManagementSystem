@@ -28,7 +28,7 @@
             </li>
 
             <!-- AI Recommendations Tab -->
-            @* <li>
+            <li>
                 <a href="javascript:void(0)" class="sidebar__item @(ActiveTab == "ai" ? "sidebar__item--active" : "")" @onclick="@(() => NavigateToTab("ai"))">
                     <img src="images/ai.svg" alt="AI" class="sidebar__icon" />
                     @if (isSidebarExpanded)
@@ -36,7 +36,7 @@
                         <span class="sidebar__text">AI</span>
                     }
                 </a>
-            </li> *@
+            </li>
         </ul>
     </nav>
 </div>

@@ -42,5 +42,9 @@
   {
     "outputFile": "Components/Navbar.razor.css",
     "inputFile": "Components/Navbar.razor.scss"
+  },
+  {
+    "outputFile": "Components/AIRecommendations.razor.css",
+    "inputFile": "Components/AIRecommendations.razor.scss"
   }
 ]
