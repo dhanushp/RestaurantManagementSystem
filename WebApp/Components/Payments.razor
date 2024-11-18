@@ -148,7 +148,7 @@
                 await hubConnection.InvokeAsync("RegisterUser", UserId);
 
                 // Listen for the ReceivePaymentStatus event from the SignalR hub
-                hubConnection.On<Guid, int>("ReceivePaymentStatus", (userId, status) =>
+                hubConnection.On<Guid, int>("ReceivePaymentStatus", async (userId, status) =>
                 {
                     if (UserId == userId)
                     {
@@ -156,7 +156,16 @@
                         {
                             successMessage = "Payment was successful!";
                             orderService.ReleaseAfterOrderCompletion();
-                            Navigation.NavigateTo("/select-table");
+                            // Navigation.NavigateTo("/select-table");
+
+                            await InvokeAsync(async () =>
+                            {
+                                // Add a slight delay before navigation to ensure any UI updates are processed
+                                await Task.Delay(500);
+
+                                // Navigate to select-table page after a successful payment
+                                Navigation.NavigateTo("/select-table");
+                            });
                         }
                         else
                         {
