@@ -1,11 +1,12 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using WebApp.DTOs.Menu;
-using WebApp.DTOs;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using WebApp.DTOs;
+using WebApp.DTOs.Menu;
 
 namespace WebApp.Services
 {
@@ -14,7 +15,7 @@ namespace WebApp.Services
     {
         Task<Response<List<CategoryDTO>>> GetCategoriesAsync();
         Task<Response<List<MenuItemResponseDTO>>> GetAllMenuItemsAsync();
-        Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategoryAsync(string category);
+        Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategoryAsync(Guid category);
         Task<Response<MenuItemDetailResponseDTO>> GetMenuItemByIdAsync(Guid id);
     }
 
@@ -31,12 +32,17 @@ namespace WebApp.Services
             _tokenService = tokenService;
         }
 
-        // Method to fetch categories for display
-        public async Task<Response<List<CategoryDTO>>> GetCategoriesAsync()
+        // Helper method to set Authorization header
+        private async Task SetAuthorizationHeaderAsync()
         {
             var token = await _tokenService.GetAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
 
+        // Method to fetch categories for display
+        public async Task<Response<List<CategoryDTO>>> GetCategoriesAsync()
+        {
+            await SetAuthorizationHeaderAsync();
             var response = await _httpClient.GetAsync("https://localhost:5003/api/menuitems/categories");
             var responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Response<List<CategoryDTO>>>(responseBody);
@@ -45,44 +51,30 @@ namespace WebApp.Services
         // Method to fetch all menu items
         public async Task<Response<List<MenuItemResponseDTO>>> GetAllMenuItemsAsync()
         {
-            var token = await _tokenService.GetAccessToken();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
+            await SetAuthorizationHeaderAsync();
             var response = await _httpClient.GetAsync("https://localhost:5003/api/menuitems/available");
             var responseBody = await response.Content.ReadAsStringAsync();
-
             return JsonConvert.DeserializeObject<Response<List<MenuItemResponseDTO>>>(responseBody);
         }
 
         // Method to fetch menu items by category
         public async Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategoryAsync(Guid category)
         {
-            var token = await _tokenService.GetAccessToken();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
+            await SetAuthorizationHeaderAsync();
             var categoryIdJson = JsonConvert.SerializeObject(category);
             var content = new StringContent(categoryIdJson, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"https://localhost:5003/api/menuitems/category/",content);
+            var response = await _httpClient.PostAsync("https://localhost:5003/api/menuitems/category/", content);
             var responseBody = await response.Content.ReadAsStringAsync();
-
             return JsonConvert.DeserializeObject<Response<List<MenuItemResponseDTO>>>(responseBody);
         }
 
         // Method to fetch a specific menu item by ID
         public async Task<Response<MenuItemDetailResponseDTO>> GetMenuItemByIdAsync(Guid id)
         {
-            var token = await _tokenService.GetAccessToken();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
+            await SetAuthorizationHeaderAsync();
             var response = await _httpClient.GetAsync($"https://localhost:5003/api/menuitems/{id}");
             var responseBody = await response.Content.ReadAsStringAsync();
-
             return JsonConvert.DeserializeObject<Response<MenuItemDetailResponseDTO>>(responseBody);
-        }
-
-        public Task<Response<List<MenuItemResponseDTO>>> GetMenuItemsByCategoryAsync(string category)
-        {
-            throw new NotImplementedException();
         }
     }
 }
