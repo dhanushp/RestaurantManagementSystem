@@ -30,7 +30,7 @@
                 max-width: 60%;
                 padding: 0.75rem 1rem;
                 border-radius: 15px;
-                font-size: $text-sm;
+                font-size: $text-md;
                 line-height: 1.5;
                 display: inline-block;
                 position: relative;
@@ -101,7 +101,7 @@
         background-color: $grey-light;
         position: relative; // Allows the button to be positioned inside the container
 
-        textarea {
+        input {
             flex-grow: 1;
             resize: none;
             padding: .75rem 1rem; // Add space for the button

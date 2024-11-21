@@ -27,7 +27,7 @@
   max-width: 60%;
   padding: 0.75rem 1rem;
   border-radius: 15px;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1.5;
   display: inline-block;
   position: relative;
@@ -86,7 +86,7 @@
   background-color: #F7F7F7;
   position: relative;
 }
-.chat-container .chat-input-container textarea {
+.chat-container .chat-input-container input {
   flex-grow: 1;
   resize: none;
   padding: 0.75rem 1rem;
@@ -96,7 +96,7 @@
   height: 50px;
   outline: #808080;
 }
-.chat-container .chat-input-container textarea::-webkit-scrollbar {
+.chat-container .chat-input-container input::-webkit-scrollbar {
   display: none;
 }
 .chat-container .chat-input-container button {
