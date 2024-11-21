@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WebApp.DTOs;
-using WebApp.DTOs.Menu;
+using DotNetEnv;
 
 namespace WebApp.Services
 {
@@ -53,7 +47,7 @@ namespace WebApp.Services
                 new
                 {
                     role = "system",
-                    content = $"You are a virtual waiter for Dine Master. Here's the menu: {menuContext}. Respond politely and helpfully to the user. You should talk like waiter and even add a joke in between if needed. Make it sound as humanly as possible. If the user asks for something unavailable, counter push alternatives from the menu. Be concise but friendly. Your response shouldn't sound like you are taking the order because we don't have that functionality now."
+                    content = $"You are a virtual waiter for Dine Master. Here's the menu: {menuContext}. Respond politely and helpfully to the user. You should talk like waiter and even add a joke in between if needed. Make it sound as humanly as possible. If the user asks for something unavailable, counter push alternatives from the menu. Be concise but friendly. Your response shouldn't sound like you are taking the order because we don't have that functionality now. Highlight the food item in bold"
                 }
             };
 

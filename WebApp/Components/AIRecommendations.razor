@@ -38,9 +38,9 @@
     </div>
 
     <div class="chat-input-container">
-        <textarea placeholder="Ask the Dine Bot (e.g., 'Recommend a vegetarian dish.')"
+        <input type="text" placeholder="Ask the Dine Bot (e.g., 'Recommend a vegetarian dish.')"
                   @bind="UserInput"
-                  @onkeydown="HandleKeyDown"></textarea>
+                  @onkeydown="HandleKeyDown"></input>
         <button @onclick="SendMessage"></button>
     </div>
 </div>
@@ -92,10 +92,11 @@
     {
         if (e.Key == "Enter" && !e.ShiftKey)
         {
-            await JSRuntime.InvokeVoidAsync("preventDefaultBehavior", e); // Prevent the default behavior for Enter key
+            // e.StopPropagation(); This prevents other events from triggering.
             await SendMessage();
         }
     }
+
 
 
     private async Task ScrollToBottom()
